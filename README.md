@@ -205,9 +205,9 @@ $ kubectl delete job/fspin-27-x86-64-builder-update
 ### Creating Live Images
 Create the spins scripts:
 ```console
-$ for SPIN_NAME in workstation xfce soas lxde lxqt cinnamon mate_compiz kde
+$ for SPIN_NAME in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
 do
-  export SPIN_NAME=$(echo $SPIN_NAME|tr '_' '-')
+  export SPIN_NAME=$SPIN_NAME
   envsubst '${SPIN_NAME}' < "templates/f27-x86-64-template" > "spins/f27-x86-64-${SPIN_NAME}"; chmod +x "spins/f27-x86-64-${SPIN_NAME}"
 done
 ```
@@ -216,7 +216,7 @@ Create the jobs for the defined live spins:
 ```console
 $ for TARGET in $(cd spins; ls *)
 do
-  export TARGET=$(echo $TARGET|tr '_' '-')
+  export TARGET=$TARGET
   envsubst '${TARGET}' < "k8s/fspin-27-x86-64-live-spin-job.yaml" > "jobs/run-${TARGET}.yaml"
 done
 ```
