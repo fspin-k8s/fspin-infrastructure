@@ -1,0 +1,6 @@
+#!/bin/bash
+# Import upstream cloud base images into GCE
+
+wget https://download.fedoraproject.org/pub/fedora/linux/releases/27/CloudImages/x86_64/images/Fedora-Cloud-Base-27-1.6.x86_64.raw.xz
+unxz Fedora-Cloud-Base-27-1.6.x86_64.raw.xz
+gcloud --quiet beta compute images import fspin-27-1-6-x86-64 --source-file Fedora-Cloud-Base-27-1.6.x86_64.raw --os centos-7

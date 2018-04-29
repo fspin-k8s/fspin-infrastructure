@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fspin-repo-update
+spec:
+  template:
+    spec:
+      containers:
+      - name: fspin-repo-update
+        image: gcr.io/fspin-199819/fspin-repo-update
+        volumeMounts:
+        - mountPath: /mirror
+          name: fspin-mirror-storage
+      volumes:
+      - name: fspin-mirror-storage
+        gcePersistentDisk:
+          pdName: fspin-mirror-storage-release
+          fsType: ext4
+      restartPolicy: OnFailure

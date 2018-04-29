@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repo-fspin-org
+spec:
+  selector:
+    matchLabels:
+      app: repo
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: repo
+    spec:
+      containers:
+      - name: repo-nginx
+        image: gcr.io/fspin-199819/fspin-repo-server
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /mirror
+          name: fspin-mirror-storage
+          readOnly: true
+      volumes:
+      - name: fspin-mirror-storage
+        gcePersistentDisk:
+          pdName: fspin-mirror-storage-release
+          fsType: ext4
+          readOnly: true
+

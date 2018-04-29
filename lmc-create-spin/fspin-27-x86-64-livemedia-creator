@@ -1,0 +1,27 @@
+#!/bin/bash
+# Run spin snippets in the latest GCE fspin image for f27 x86_64
+LATEST_IMAGE=$(gcloud compute images list --filter="name~fspin-27-x86-64" --sort-by="~creationTimestamp" --limit=1 --format="json(NAME)"|jq -r .[].name)
+INSTANCE_NAME="${LATEST_IMAGE}-lmc-$(cat /proc/sys/kernel/random/uuid|awk -F- '{print $5}')"
+RESULTS_LOCATION="gs://build-results.fspin.org/live/${INSTANCE_NAME}/"
+ZONE="us-central1-f"
+BUILD_SCRIPT=${TARGET}
+
+# Create instance to run lmc
+echo "Starting spin for ${TARGET} on ${INSTANCE_NAME} using base image ${LATEST_IMAGE}..."
+gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 50GB --boot-disk-type pd-ssd --machine-type n1-standard-8 --preemptible --scopes storage-rw && \
+
+# Prep instance with targets (change to git)
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "mkdir -p /tmp/targets; git clone https://github.com/fspin-k8s/fspin-infrastructure.git; cp fspin-infrastructure/spins/${BUILD_SCRIPT} /tmp/targets/" && \
+
+# Run selected snippet
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'pushd /tmp/targets; chmod +x ${BUILD_SCRIPT}; ./${BUILD_SCRIPT}''" && \
+
+# Copy out results
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /var/lmc/* ${RESULTS_LOCATION}" && \
+echo "SUCCESS: Results located at ${RESULTS_LOCATION}"
+result=$?
+
+# Cleanup
+echo "Deleting ${INSTANCE_NAME}..."
+gcloud -q compute instances delete ${INSTANCE_NAME} --zone ${ZONE} --delete-disks all
+exit $result

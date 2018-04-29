@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fspin-27-lmc-${TARGET}
+  labels:
+    jobgroup: lmc-spinner
+spec:
+  template:
+    metadata:
+      name: fspin-27-x86-64-livemedia-creator
+      labels:
+        jobgroup: lmc-spinner
+    spec:
+      containers:
+      - name: fspin-27-x86-64-livemedia-creator
+        image: gcr.io/fspin-199819/fspin-27-x86-64-livemedia-creator
+        env:
+          - name: TARGET
+            value: "${TARGET}"
+      restartPolicy: OnFailure

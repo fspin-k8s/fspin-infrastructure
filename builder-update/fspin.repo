@@ -1,0 +1,39 @@
+[fspin-release]
+name=Fspin $releasever-${SNAPSHOT_ID} - $basearch
+baseurl=http://repo.fspin.org/${SNAPSHOT_ID}/releases/$releasever/Everything/$basearch/os/
+enabled=1
+repo_gpgcheck=0
+type=rpm
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=False
+
+[fspin-release-source]
+name=Fspin $releasever-${SNAPSHOT_ID} - Source
+baseurl=http://repo.fspin.org/${SNAPSHOT_ID}/releases/$releasever/Everything/source/tree/
+enabled=1
+repo_gpgcheck=0
+type=rpm
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=False
+
+[fspin-updates]
+name=Fspin $releasever-${SNAPSHOT_ID} - $basearch - Updates
+baseurl=http://repo.fspin.org/${SNAPSHOT_ID}/updates/$releasever/$basearch/
+enabled=1
+repo_gpgcheck=0
+type=rpm
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=False
+
+[fspin-updates-source]
+name=Fspin $releasever-${SNAPSHOT_ID} - Updates Source
+baseurl=http://repo.fspin.org/${SNAPSHOT_ID}/updates/$releasever/SRPMS/
+enabled=1
+repo_gpgcheck=0
+type=rpm
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=False

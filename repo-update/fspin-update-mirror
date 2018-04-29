@@ -1,0 +1,34 @@
+#!/bin/bash
+# Update mirror for target releases, creating a stable target for downstream jobs
+
+# Create paths
+mkdir -p /mirror/latest/releases/27/Everything/x86_64/os/ \
+	 /mirror/latest/releases/27/Everything/source/tree \
+	 /mirror/latest/updates/27/x86_64/ \
+	 /mirror/latest/updates/27/SRPMS/
+
+# Update local main copy of F27 x86_64 mirror
+rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/releases/27/Everything/x86_64/os/ /mirror/latest/releases/27/Everything/x86_64/os/
+rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-releases/27/Everything/x86_64/os/ /mirror/latest/releases/27/Everything/x86_64/os/
+
+# Update local main copy of F27 source mirror
+rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/releases/27/Everything/source/tree/ /mirror/latest/releases/27/Everything/source/tree/
+rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-releases/27/Everything/source/tree/ /mirror/latest/releases/27/Everything/source/tree/
+
+# Update local main copy of F27 updates x86_64 mirror
+rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/updates/27/x86_64/ /mirror/latest/updates/27/x86_64/
+rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-updates/27/x86_64/ /mirror/latest/updates/27/x86_64/
+
+# Update local main copy of F27 updates source mirror
+rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/updates/27/SRPMS/ /mirror/latest/updates/27/SRPMS/
+rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-updates/27/SRPMS/ /mirror/latest/updates/27/SRPMS/
+
+# Create a tagged repo for all downstream jobs
+SNAPSHOT_ID=$(date +%F-%s)
+echo "Creating ${SNAPSHOT_ID}..."
+mkdir -p /mirror/${SNAPSHOT_ID}/
+cp -val /mirror/latest/* /mirror/${SNAPSHOT_ID}/
+echo "${SNAPSHOT_ID}" > /mirror/latest_snapshot
+echo "Snapshot ${SNAPSHOT_ID} is ready for use!"
+echo "Current storage used:"
+df -h /mirror | tee /mirror/storage_usage

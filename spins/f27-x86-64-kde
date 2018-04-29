@@ -1,0 +1,10 @@
+#!/bin/bash
+# Compose from upstream Fedora 27 x86_64 kde
+source /tmp/snapshot_id
+export SPIN_ID=`echo $SNAPSHOT_ID|awk -F- '{print $4}'`
+pushd /usr/share/spin-kickstarts
+cp /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks
+mv fedora-live-mate_compiz.ks fedora-live-mate-compiz.ks
+ksflatten --config fedora-live-kde.ks -o flat-fedora-live-kde.ks --version F27
+livemedia-creator --ks flat-fedora-live-kde.ks --no-virt --resultdir /var/lmc --project Fedora-27-kde-${SPIN_ID}-Live --make-iso --volid Fedora-27-kde-${SPIN_ID} --iso-only --iso-name Fedora-27-kde-${SPIN_ID}-x86-64.iso --releasever 27 --title Fedora-27-kde-${SPIN_ID}-live --macboot
+popd

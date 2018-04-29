@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fspin-27-x86-64-pungi
+  labels:
+    jobgroup: pungi-spinner
+spec:
+  template:
+    metadata:
+      name: fspin-27-x86-64-pungi
+      labels:
+        jobgroup: pungi-spinner
+    spec:
+      containers:
+      - name: fspin-27-x86-64-pungi
+        image: gcr.io/fspin-199819/fspin-27-x86-64-pungi
+      restartPolicy: OnFailure
