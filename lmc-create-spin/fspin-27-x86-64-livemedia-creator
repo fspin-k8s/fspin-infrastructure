@@ -14,7 +14,7 @@ gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "mkdir -p /tmp/targets; git clone https://github.com/fspin-k8s/fspin-infrastructure.git; cp fspin-infrastructure/spins/${BUILD_SCRIPT} /tmp/targets/" && \
 
 # Run selected snippet
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'pushd /tmp/targets; chmod +x ${BUILD_SCRIPT}; ./${BUILD_SCRIPT}''" && \
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'pushd /tmp/targets; chmod +x ${BUILD_SCRIPT}; ./${BUILD_SCRIPT}'" && \
 
 # Copy out results
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /var/lmc/* ${RESULTS_LOCATION}" && \
