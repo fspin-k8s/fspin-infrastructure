@@ -13,7 +13,7 @@ gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "pushd /usr/share/spin-kickstarts && sudo sed -i '/%include fedora-repo.ks/d' fedora-live-base.ks && sudo cp /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && sudo cp /tmp/all-spins.ks . && ksflatten --config all-spins.ks -o /tmp/flat-all.ks --version F27; popd" && \
 
 # Run pungi
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'pungi -G -c /tmp/flat-all.ks --name F27 --ver 27 --force && pungi -C -c /tmp/flat-all.ks --name F27 --ver 27 --force && pungi -I -c /tmp/flat-all.ks --name F27 --ver 27 --sourceisos --force'" && \
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'source /tmp/snapshot_id && pungi -G -c /tmp/flat-all.ks --name \${SPIN_ID} --ver 27 --force && pungi -C -c /tmp/flat-all.ks --name \${SPIN_ID} --ver 27 --force && pungi -I -c /tmp/flat-all.ks --name \${SPIN_ID} --ver 27 --sourceisos --force'" && \
 
 # Copy out results
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp ./*/*/iso/*.iso ${RESULTS_LOCATION}" && \

@@ -1,7 +1,6 @@
 #!/bin/bash
 # Compose from upstream Fedora 27 x86_64 lxqt
 source /tmp/snapshot_id
-export SPIN_ID=`echo $SNAPSHOT_ID|awk -F- '{print $1$2$3}'`
 export SPIN_SHORT_NAME=`echo lxqt|cut -c1-4|awk '{print toupper($0)}'`
 pushd /usr/share/spin-kickstarts
 cp /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks
