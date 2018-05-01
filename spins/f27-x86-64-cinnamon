@@ -1,10 +1,10 @@
 #!/bin/bash
 # Compose from upstream Fedora 27 x86_64 cinnamon
 source /tmp/snapshot_id
-export SPIN_ID=`echo $SNAPSHOT_ID|awk -F- '{print $4}'`
+export SPIN_SHORT_NAME=`echo cinnamon|cut -c1-4|awk '{print toupper($0)}'`
 pushd /usr/share/spin-kickstarts
 cp /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks
 mv fedora-live-mate_compiz.ks fedora-live-mate-compiz.ks
 ksflatten --config fedora-live-cinnamon.ks -o flat-fedora-live-cinnamon.ks --version F27
-livemedia-creator --ks flat-fedora-live-cinnamon.ks --no-virt --resultdir /var/lmc --project Fedora-27-cinnamon-${SPIN_ID}-Live --make-iso --volid Fedora-27-cinnamon-${SPIN_ID} --iso-only --iso-name Fedora-27-cinnamon-${SPIN_ID}-x86-64.iso --releasever 27 --title Fedora-27-cinnamon-${SPIN_ID}-live --macboot
+livemedia-creator --ks flat-fedora-live-cinnamon.ks --no-virt --resultdir /var/lmc --project F27-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --make-iso --volid F27-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --iso-only --iso-name F27-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso --releasever 27 --title F27-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --macboot
 popd
