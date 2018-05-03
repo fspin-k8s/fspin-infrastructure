@@ -1,6 +1,17 @@
 #!/bin/bash
 # Import upstream cloud base images into GCE
 
-wget https://download.fedoraproject.org/pub/fedora/linux/releases/27/CloudImages/x86_64/images/Fedora-Cloud-Base-27-1.6.x86_64.raw.xz
-unxz Fedora-Cloud-Base-27-1.6.x86_64.raw.xz
+echo "Removing old images..."
+gcloud compute images delete fspin-27-1-6-x86-64 --quiet
+gcloud compute images delete fspin-28-1-1-x86-64 --quiet
+
+echo "Importing F27..."
+wget https://download.fedoraproject.org/pub/fedora/linux/releases/27/CloudImages/x86_64/images/Fedora-Cloud-Base-27-1.6.x86_64.raw.xz && \
+unxz Fedora-Cloud-Base-27-1.6.x86_64.raw.xz && \
 gcloud --quiet beta compute images import fspin-27-1-6-x86-64 --source-file Fedora-Cloud-Base-27-1.6.x86_64.raw --os centos-7
+
+# Not working with kernel > 4.16.3
+#echo "Importing F28..." && \
+#wget https://download.fedoraproject.org/pub/fedora/linux/releases/28/Cloud/x86_64/images/Fedora-Cloud-Base-28-1.1.x86_64.raw.xz && \
+#unxz Fedora-Cloud-Base-28-1.1.x86_64.raw.xz && \
+#gcloud --quiet beta compute images import fspin-28-1-1-x86-64 --source-file Fedora-Cloud-Base-28-1.1.x86_64.raw --os centos-7
