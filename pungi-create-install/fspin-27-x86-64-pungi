@@ -7,7 +7,7 @@ ZONE="us-central1-f"
 
 # Create instance to run pungi
 echo "Starting pungi run on ${INSTANCE_NAME} using base image ${LATEST_IMAGE}..."
-gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 50GB --boot-disk-type pd-ssd --machine-type n1-standard-16 --preemptible --scopes storage-rw && \
+gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 50GB --boot-disk-type pd-ssd --machine-type n1-standard-8 --preemptible --scopes storage-rw && \
 
 # Prep the kickstart
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "pushd /usr/share/spin-kickstarts && sudo sed -i '/%include fedora-repo.ks/d' fedora-live-base.ks && sudo cp /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && sudo cp /tmp/all-spins.ks . && ksflatten --config all-spins.ks -o /tmp/flat-all.ks --version F27; popd" && \
