@@ -1,5 +1,6 @@
 #!/bin/bash
 # Run pungi installer creation in the latest GCE fspin image for f27 x86_64
+set -x
 LATEST_IMAGE=$(gcloud compute images list --filter="name~fspin-27-x86-64" --sort-by="~creationTimestamp" --limit=1 --format="json(NAME)"|jq -r .[].name)
 INSTANCE_NAME="${LATEST_IMAGE}-pungi-$(cat /proc/sys/kernel/random/uuid|awk -F- '{print $5}')"
 RESULTS_LOCATION="gs://build-results.fspin.org/installer/${INSTANCE_NAME}/"
