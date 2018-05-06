@@ -205,9 +205,9 @@ $ kubectl delete job/fspin-27-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-$ for TARGET in $(cd spins; ls *)
+$ for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
 do
-  export TARGET=$TARGET
+  export TARGET=f27-x86-64-$TARGET
   envsubst '${TARGET}' < "k8s/fspin-27-x86-64-live-spin-job.yaml" > "jobs/run-${TARGET}.yaml"
 done
 ```
