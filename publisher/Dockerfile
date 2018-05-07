@@ -5,7 +5,7 @@ ARG release=latest
 ENV RELEASE_ID $release
 
 RUN set -x \
-       && apk --update add gettext libintl mktorrent
+       && apk --update add gettext libintl
 
 WORKDIR /opt
 

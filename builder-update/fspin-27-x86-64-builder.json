@@ -30,7 +30,7 @@
 	"sudo dnf -y config-manager --set-disabled '*'",
 	"sudo cp /tmp/fspin.repo /etc/yum.repos.d/",
 	"sudo dnf -y config-manager --set-enabled 'fspin-*' google-cloud-sdk",
-	"sudo dnf -y install vim-enhanced git wget mock",
+	"sudo dnf -y install vim-enhanced mock transmission-cli",
 	"sudo dnf -y install lorax-lmc-novirt pykickstart spin-kickstarts kernel-modules",
         "sudo dnf -y install pungi pungi-legacy yum kobo python2-productmd python-lockfile createrepo python2-kickstart repoview",
         "sudo dnf -y update",

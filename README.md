@@ -10,7 +10,6 @@
 * TODO: Write contributor docs.
 * TODO: Re-org docs to specific specialties.
 * TODO: Add F28.
-* TODO: Create publish job.
 * TODO: Make everything more generic.
 * TODO: A lot.
 
@@ -234,7 +233,7 @@ do
 done
 ```
 
-### Creating Installer/Source Images
+### Creating Source Images
 Run pungi to create the source ISO for the spins:
 ```console
 $ kubectl create -f k8s/fspin-27-x86-64-install-spin-job.yaml

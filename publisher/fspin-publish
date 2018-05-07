@@ -3,21 +3,15 @@
 set -x
 source /opt/release_id
 RELEASE_STRING=`echo ${RELEASE_ID}|sed 's/-//g'`
-RESULTS_LOCATION="gs://build-results.fspin.org/releases/"
+RESULTS_LOCATION="gs://build-results.fspin.org/releases/${RELEASE_ID}/"
 pushd ${RELEASE_ID}
-echo "Downloading spins for ${RELEASE_ID}..." && \
-gsutil cp gs://build-results.fspin.org/*/*/*${RELEASE_STRING}* . && \
-echo "Generating checksums for ${RELEASE_ID}..." && \
-sha512sum * > CHECKSUM512-${RELEASE_STRING}
-for SPIN in $(ls *.iso); do
-  echo "Creating torrent for ${SPIN}..." && \
-  mktorrent-borg -p -l 128 \
-  -a http://respins.fedorainfracloud.org:6969/announce \
-  -c "ISO SHA512SUM: `grep ${SPIN} CHECKSUM512-${RELEASE_STRING}`" \
-  $SPIN
-done
-popd
+echo "Downloading checksums for ${RELEASE_ID}..." && \
+gsutil cp gs://build-results.fspin.org/*/*/CHECKSUM512-*${RELEASE_STRING}* . && \
+echo "Combining checksums for ${RELEASE_ID}..." && \
+cat CHECKSUM512-* >> CHECKSUM512-${RELEASE_STRING} && \
 echo "Publishing ${RELEASE_ID} to ${RESULTS_LOCATION}..." && \
-gsutil cp ${RELEASE_ID} ${RESULTS_LOCATION} && \
+gsutil cp CHECKSUM512-${RELEASE_STRING} ${RESULTS_LOCATION} && \
+gsutil cp gs://build-results.fspin.org/{live,installer}/*${RELEASE_ID}*/*.iso ${RESULTS_LOCATION} && \
+gsutil cp gs://build-results.fspin.org/{live,installer}/*${RELEASE_ID}*/*.torrent ${RESULTS_LOCATION} && \
+gsutil cp README.md ${RESULTS_LOCATION} && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}"
-
