@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run pungi installer creation in the latest GCE fspin image for f27 x86_64
+# Run pungi in the latest GCE fspin image for F27 x86_64
 set -x
 LATEST_IMAGE=$(gcloud compute images list --filter="name~fspin-27-x86-64" --sort-by="~creationTimestamp" --limit=1 --format="json(NAME)"|jq -r .[].name)
 INSTANCE_NAME="${LATEST_IMAGE}-pungi-$(cat /proc/sys/kernel/random/uuid|awk -F- '{print $5}')"
@@ -10,14 +10,14 @@ ZONE="us-central1-f"
 echo "Starting pungi run on ${INSTANCE_NAME} using base image ${LATEST_IMAGE}..."
 gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 50GB --boot-disk-type pd-ssd --machine-type n1-standard-8 --preemptible --scopes storage-rw && \
 
-# Prep the kickstart
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "pushd /usr/share/spin-kickstarts && sudo sed -i '/%include fedora-repo.ks/d' fedora-live-base.ks && sudo cp /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && sudo cp /tmp/all-spins.ks . && ksflatten --config all-spins.ks -o /tmp/flat-all.ks --version F27; popd" && \
+# Prep instance with target script
+gcloud compute scp /opt/f27-x86-64-pungi-snippet ${INSTANCE_NAME}:/tmp/build_script --zone ${ZONE} && \
 
-# Run pungi
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'source /tmp/snapshot_id && pungi -G -c /tmp/flat-all.ks --name \${SPIN_ID} --ver 27 --force && pungi -C -c /tmp/flat-all.ks --name \${SPIN_ID} --ver 27 --force && pungi -I -c /tmp/flat-all.ks --name \${SPIN_ID} --ver 27 --sourceisos --force'" && \
+# Run selected snippet
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c '/tmp/build_script'" && \
 
 # Copy out results
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp ./*/*/iso/*.iso ${RESULTS_LOCATION}" && \
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /usr/share/spin-kickstarts/27/source/iso/* ${RESULTS_LOCATION}" && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}"
 result=$?
 

@@ -10,7 +10,6 @@
 * TODO: Write contributor docs.
 * TODO: Re-org docs to specific specialties.
 * TODO: Add F28.
-* TODO: Create publish job.
 * TODO: Make everything more generic.
 * TODO: A lot.
 
@@ -234,10 +233,26 @@ do
 done
 ```
 
-### Creating Installer/Source Images
+### Creating Source Images
 Run pungi to create the source ISO for the spins:
 ```console
 $ kubectl create -f k8s/fspin-27-x86-64-install-spin-job.yaml
 $ kubectl logs -f job/fspin-27-x86-64-pungi
 $ kubectl delete job/fspin-27-x86-64-pungi
+```
+
+### Publishing the Results
+Create the publisher container and push to GCR:
+*Change the release arg manually if needed.*
+```
+$ docker build --build-arg release=$(date +%F) \
+    -t gcr.io/fspin-199819/fspin-publish publisher
+$ docker push gcr.io/fspin-199819/fspin-publish
+```
+
+Run the publishing job:
+```
+$ kubectl create -f k8s/fspin-publish-job.yaml
+$ kubectl logs -f job/fspin-publish
+$ kubectl delete job/fspin-publish
 ```
