@@ -13,9 +13,4 @@ pungi -I -c flat-all.ks --name ${SPIN_ID} --ver 27 --sourceisos --force
 popd
 pushd /usr/share/spin-kickstarts/27/source/iso
 sha512sum *.iso > CHECKSUM512-${SPIN_ID}-DVD-source-27
-transmission-create -p -s 2048 \
-        -c "ISO SHA512SUM: $(cat CHECKSUM512*)" \
-        -t http://respins.fedorainfracloud.org:6969/announce \
-        -o ${SPIN_ID}-DVD-source-27.torrent \
-        ${SPIN_ID}-DVD-source-27.iso
 popd
