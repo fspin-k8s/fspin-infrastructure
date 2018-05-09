@@ -3,7 +3,7 @@
     {
       "type": "googlecompute",
       "project_id": "fspin-199819",
-      "source_image": "fspin-27-1-6-x86-64",
+      "source_image_family": "fspin-27",
       "ssh_username": "packer",
       "zone": "us-central1-f",
       "name": "fspin-27-x86-64-${SNAPSHOT_ID}",
