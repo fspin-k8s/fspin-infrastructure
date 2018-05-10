@@ -1,0 +1,57 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "fspin-199819",
+      "source_image_family": "fspin-28",
+      "ssh_username": "packer",
+      "zone": "us-central1-f",
+      "name": "fspin-28-x86-64-${SNAPSHOT_ID}",
+      "image_name": "fspin-28-x86-64-${SNAPSHOT_ID}",
+      "disk_type": "pd-ssd",
+      "preemptible": "true",
+      "machine_type": "n1-standard-4"
+    }
+  ],
+  "provisioners": [
+    {
+     "type": "file",
+     "source": "/opt/fspin-snapshot.repo",
+     "destination": "/tmp/fspin.repo"
+    },
+    {
+     "type": "file",
+     "source": "/opt/mock-snapshot-fspin-f28-x86_64.cfg",
+     "destination": "/tmp/mock-snapshot-fspin-f28-x86_64.cfg"
+    },
+    {
+      "type": "shell",
+      "inline": [
+	"sudo dnf -y config-manager --set-disabled '*'",
+	"sudo cp /tmp/fspin.repo /etc/yum.repos.d/",
+	"sudo dnf -y config-manager --set-enabled 'fspin-*' google-cloud-sdk",
+	"sudo dnf -y install vim-enhanced mock transmission-cli",
+	"sudo dnf -y install lorax-lmc-novirt pykickstart spin-kickstarts kernel-modules",
+        "sudo dnf -y install pungi pungi-legacy yum kobo python2-productmd python-lockfile createrepo python2-kickstart repoview",
+        "sudo dnf -y update",
+	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
+	"sudo cp /tmp/mock-snapshot-fspin-f28-x86_64.cfg /etc/mock/fspin-snapshot-28-x86_64.cfg"
+      ]
+    },
+    {
+     "type": "file",
+     "source": "/opt/fspin-snapshot-repo-not-rawhide-with-source.ks",
+     "destination": "/tmp/fspin-snapshot-repo-not-rawhide-with-source.ks"
+    },
+    {
+     "type": "file",
+     "source": "/opt/all-spins.ks",
+     "destination": "/tmp/all-spins.ks"
+    },
+    {
+     "type": "file",
+     "source": "/opt/snapshot_id",
+     "destination": "/tmp/snapshot_id"
+    }
+  ]
+}
