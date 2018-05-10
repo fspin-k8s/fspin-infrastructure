@@ -12,6 +12,6 @@ cat CHECKSUM512-* >> CHECKSUM512-${RELEASE_STRING} && \
 echo "Publishing ${RELEASE_ID} to ${RESULTS_LOCATION}..." && \
 gsutil cp CHECKSUM512-${RELEASE_STRING} ${RESULTS_LOCATION} && \
 gsutil cp gs://build-results.fspin.org/{live,installer}/*${RELEASE_ID}*/*.iso ${RESULTS_LOCATION} && \
-gsutil cp gs://build-results.fspin.org/{live,installer}/*${RELEASE_ID}*/*.torrent ${RESULTS_LOCATION} && \
+gsutil cp gs://build-results.fspin.org/live/*${RELEASE_ID}*/*.torrent ${RESULTS_LOCATION} && \
 gsutil cp README.md ${RESULTS_LOCATION} && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}"
