@@ -169,8 +169,8 @@ $ docker push gcr.io/fspin-199819/fspin-cloud-image-import
 Create the container to build the updated GCE image and push to GCR:
 ```console
 $ docker build --build-arg snapshot=$(curl -s http://repo.fspin.org/latest_snapshot) \
-    -t gcr.io/fspin-199819/fspin-27-x86-64-builder-update builder-update
-$ docker push gcr.io/fspin-199819/fspin-27-x86-64-builder-update
+    -t gcr.io/fspin-199819/fspin-x86-64-builder-update builder-update
+$ docker push gcr.io/fspin-199819/fspin-x86-64-builder-update
 ```
 
 ### Create the livemedia-creator fspin Container
@@ -196,9 +196,9 @@ $ kubectl delete job/fspin-cloud-image-import
 
 ### Launch GCE Image Update Job
 ```console
-$ kubectl create -f k8s/fspin-27-x86-64-update-image-job.yaml
-$ kubectl logs -f job/fspin-27-x86-64-builder-update
-$ kubectl delete job/fspin-27-x86-64-builder-update
+$ kubectl create -f k8s/fspin-x86-64-update-image-job.yaml
+$ kubectl logs -f job/fspin-x86-64-builder-update
+$ kubectl delete job/fspin-x86-64-builder-update
 ```
 
 ### Creating Live Images
