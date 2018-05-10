@@ -1,5 +1,6 @@
 #!/bin/bash
 # Update mirror for target releases, creating a stable target for downstream jobs
+set -x
 
 # Create paths
 mkdir -p /mirror/latest/releases/27/Everything/x86_64/os/ \
@@ -36,12 +37,12 @@ rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/releases/28/Everythin
 rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-releases/28/Everything/source/tree/ /mirror/latest/releases/28/Everything/source/tree/
 
 # Update local main copy of F28 updates x86_64 mirror
-rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/updates/28/x86_64/ /mirror/latest/updates/28/x86_64/
-rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-updates/28/x86_64/ /mirror/latest/updates/28/x86_64/
+rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/updates/28/Everything/x86_64/ /mirror/latest/updates/28/x86_64/
+rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-updates/28/Everything/x86_64/ /mirror/latest/updates/28/x86_64/
 
 # Update local main copy of F28 updates source mirror
-rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/updates/28/SRPMS/ /mirror/latest/updates/28/SRPMS/
-rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-updates/28/SRPMS/ /mirror/latest/updates/28/SRPMS/
+rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/updates/28/Everything/SRPMS/ /mirror/latest/updates/28/SRPMS/
+rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-updates/28/Everything/SRPMS/ /mirror/latest/updates/28/SRPMS/
 
 # Create a tagged repo for all downstream jobs
 SNAPSHOT_ID=$(date +%F-%s)
