@@ -21,7 +21,7 @@ gcloud compute images create fspin-27-${IMPORT_TIME} \
     --family fspin-27 && \
 
 # Not working with kernel < 4.16.6
-# Needs ealier json-c injected into image for google components during the import process
+# Needs earlier json-c injected into image for google components during the import process
 echo "Importing F28..." && \
 # launch latest f27 image, download f28 image, decompress, mount, inject compat-json-c, unmount, pull raw image result
 gcloud compute instances create f28-inject-json-c \
