@@ -1,17 +1,50 @@
 #!/bin/bash
-# Import upstream cloud base images into GCE
+# Import upstream cloud base images into GCE for custom image family
+set -x
+IMPORT_TIME=$(date +%s)
+ZONE='us-central1-f'
+PROJECT='fspin-199819'
+COMPAT_JSON_C='https://jsteffan.fedorapeople.org/compat-json-c/compat-json-c-0.12.1-5.fc28.x86_64.rpm'
 
-echo "Removing old images..."
-gcloud compute images delete fspin-27-1-6-x86-64 --quiet
-gcloud compute images delete fspin-28-1-1-x86-64 --quiet
+gcloud config set project ${PROJECT}
+gcloud config set compute/zone ${ZONE}
 
-echo "Importing F27..."
+echo "Importing F27..." && \
 wget https://download.fedoraproject.org/pub/fedora/linux/releases/27/CloudImages/x86_64/images/Fedora-Cloud-Base-27-1.6.x86_64.raw.xz && \
 unxz Fedora-Cloud-Base-27-1.6.x86_64.raw.xz && \
-gcloud --quiet beta compute images import fspin-27-1-6-x86-64 --source-file Fedora-Cloud-Base-27-1.6.x86_64.raw --os centos-7
+gcloud --quiet beta compute images import fspin-27-1-6-x86-64-${IMPORT_TIME} \
+    --source-file Fedora-Cloud-Base-27-1.6.x86_64.raw \
+    --os centos-7 && \
+gcloud compute images create fspin-27-${IMPORT_TIME} \
+    --source-image fspin-27-1-6-x86-64-${IMPORT_TIME} \
+    --source-image-project ${PROJECT} \
+    --family fspin-27 && \
 
-# Not working with kernel > 4.16.3
-#echo "Importing F28..." && \
-#wget https://download.fedoraproject.org/pub/fedora/linux/releases/28/Cloud/x86_64/images/Fedora-Cloud-Base-28-1.1.x86_64.raw.xz && \
-#unxz Fedora-Cloud-Base-28-1.1.x86_64.raw.xz && \
-#gcloud --quiet beta compute images import fspin-28-1-1-x86-64 --source-file Fedora-Cloud-Base-28-1.1.x86_64.raw --os centos-7
+# Not working with kernel < 4.16.6
+# Needs earlier json-c injected into image for google components during the import process
+echo "Importing F28..." && \
+# launch latest f27 image, download f28 image, decompress, mount, inject compat-json-c, unmount, pull raw image result
+gcloud compute instances create f28-inject-json-c \
+    --image-family fspin-27 \
+    --boot-disk-size 50GB \
+    --boot-disk-type pd-ssd \
+    --machine-type n1-standard-4 && \
+gcloud compute ssh f28-inject-json-c \
+    --command "sudo bash -c 'dnf -y install wget xz && wget https://kojipkgs.fedoraproject.org/packages/Fedora-Cloud-Base/28/20180507.0/images/Fedora-Cloud-Base-28-20180507.0.x86_64.raw.xz && unxz Fedora-Cloud-Base-28-20180507.0.x86_64.raw.xz'" && \
+gcloud compute ssh f28-inject-json-c \
+    --command "sudo bash -c 'dnf -y install libguestfs-tools && mkdir -p /fcb && LIBGUESTFS_BACKEND=direct guestmount -a Fedora-Cloud-Base-28-20180507.0.x86_64.raw -i /fcb'" && \
+gcloud compute ssh f28-inject-json-c \
+    --command "sudo bash -c 'rpm -Uvh --root /fcb ${COMPAT_JSON_C}'" && \
+gcloud compute ssh f28-inject-json-c \
+    --command "sudo bash -c 'guestunmount /fcb && sleep 60'" && \
+gcloud compute scp f28-inject-json-c:Fedora-Cloud-Base-28-20180507.0.x86_64.raw . && \
+gcloud -q compute instances delete f28-inject-json-c --delete-disks all && \
+
+# run import with injected raw disk
+gcloud --quiet beta compute images import fspin-28-1-1-20180507-x86-64-${IMPORT_TIME} \
+    --source-file Fedora-Cloud-Base-28-20180507.0.x86_64.raw \
+    --os centos-7 && \
+gcloud compute images create fspin-28-${IMPORT_TIME} \
+    --source-image fspin-28-1-1-20180507-x86-64-${IMPORT_TIME} \
+    --source-image-project ${PROJECT} \
+    --family fspin-28

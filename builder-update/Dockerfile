@@ -23,7 +23,9 @@ RUN set -x \
        && envsubst '${SNAPSHOT_ID}' < "fspin-repo-not-rawhide-with-source.ks" > "fspin-snapshot-repo-not-rawhide-with-source.ks" \
        && envsubst '${SNAPSHOT_ID}' < "fspin-27-x86-64-builder.json" > "fspin-snapshot-27-x86-64-builder.json" \
        && envsubst '${SNAPSHOT_ID}' < "mock-fspin-f27-x86_64.cfg" > "mock-snapshot-fspin-f27-x86_64.cfg" \
+       && envsubst '${SNAPSHOT_ID}' < "fspin-28-x86-64-builder.json" > "fspin-snapshot-28-x86-64-builder.json" \
+       && envsubst '${SNAPSHOT_ID}' < "mock-fspin-f28-x86_64.cfg" > "mock-snapshot-fspin-f28-x86_64.cfg" \
        && echo "export SNAPSHOT_ID=${SNAPSHOT_ID}" > snapshot_id \
        && echo "export SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- '{print $1$2$3}'`" >> snapshot_id
 
-ENTRYPOINT /bin/packer build -force fspin-snapshot-27-x86-64-builder.json
+ENTRYPOINT /opt/fspin-packer-snapshot-builder

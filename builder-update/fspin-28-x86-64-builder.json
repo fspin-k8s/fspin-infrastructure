@@ -3,11 +3,11 @@
     {
       "type": "googlecompute",
       "project_id": "fspin-199819",
-      "source_image_family": "fspin-27",
+      "source_image_family": "fspin-28",
       "ssh_username": "packer",
       "zone": "us-central1-f",
-      "name": "fspin-27-x86-64-${SNAPSHOT_ID}",
-      "image_name": "fspin-27-x86-64-${SNAPSHOT_ID}",
+      "name": "fspin-28-x86-64-${SNAPSHOT_ID}",
+      "image_name": "fspin-28-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
       "preemptible": "true",
       "machine_type": "n1-standard-4"
@@ -21,8 +21,8 @@
     },
     {
      "type": "file",
-     "source": "/opt/mock-snapshot-fspin-f27-x86_64.cfg",
-     "destination": "/tmp/mock-snapshot-fspin-f27-x86_64.cfg"
+     "source": "/opt/mock-snapshot-fspin-f28-x86_64.cfg",
+     "destination": "/tmp/mock-snapshot-fspin-f28-x86_64.cfg"
     },
     {
       "type": "shell",
@@ -35,7 +35,7 @@
         "sudo dnf -y install pungi pungi-legacy yum kobo python2-productmd python-lockfile createrepo python2-kickstart repoview",
         "sudo dnf -y update",
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
-	"sudo cp /tmp/mock-snapshot-fspin-f27-x86_64.cfg /etc/mock/fspin-snapshot-27-x86_64.cfg"
+	"sudo cp /tmp/mock-snapshot-fspin-f28-x86_64.cfg /etc/mock/fspin-snapshot-28-x86_64.cfg"
       ]
     },
     {
