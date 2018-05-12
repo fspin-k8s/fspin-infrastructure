@@ -45,7 +45,7 @@ rsync -Pavy --delete-after mirror.oss.ou.edu::fedora/linux/updates/28/Everything
 rsync -Pavy --delete-after dl.fedoraproject.org::fedora-linux-updates/28/Everything/SRPMS/ /mirror/latest/updates/28/SRPMS/
 
 # Create a tagged repo for all downstream jobs
-SNAPSHOT_ID=$(date +%F-%s)
+SNAPSHOT_ID=$(date --utc +%F-%s)
 echo "Creating ${SNAPSHOT_ID}..."
 mkdir -p /mirror/${SNAPSHOT_ID}/
 cp -val /mirror/latest/* /mirror/${SNAPSHOT_ID}/

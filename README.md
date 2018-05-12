@@ -245,7 +245,7 @@ $ kubectl delete job/fspin-27-x86-64-pungi
 Create the publisher container and push to GCR:
 *Change the release arg manually if needed.*
 ```
-$ docker build --build-arg release=$(date +%F) \
+$ docker build --build-arg release=$(date --utc +%F) \
     -t gcr.io/fspin-199819/fspin-publish publisher
 $ docker push gcr.io/fspin-199819/fspin-publish
 ```
