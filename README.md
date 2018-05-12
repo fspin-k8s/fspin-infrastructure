@@ -176,8 +176,8 @@ $ docker push gcr.io/fspin-199819/fspin-x86-64-builder-update
 ### Create the livemedia-creator fspin Container
 Create the container that spins live images and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-27-x86-64-livemedia-creator lmc-create-spin
-$ docker push gcr.io/fspin-199819/fspin-27-x86-64-livemedia-creator
+$ docker build -t gcr.io/fspin-199819/fspin-x86-64-livemedia-creator lmc-create-spin
+$ docker push gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
 ```
 
 ### Create the pungi fspin Container
@@ -204,21 +204,25 @@ $ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-$ for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
+$ for RELEASE in 27 28
 do
-  export TARGET=f27-x86-64-$TARGET
-  envsubst '${TARGET}' < "k8s/fspin-27-x86-64-live-spin-job.yaml" > "jobs/run-${TARGET}.yaml"
+  export RELEASE=$RELEASE
+  for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
+    do
+      export TARGET=f${RELEASE}-x86-64-$TARGET
+      envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-${TARGET}.yaml"
+    done
 done
 ```
 
-For example, create a soas spin:
+For example, create a F27 soas spin:
 ```console
 $ kubectl create -f jobs/run-f27-x86-64-soas.yaml
 $ kubectl logs -f job/fspin-27-lmc-f27-x86-64-soas
 $ kubectl delete job/fspin-27-lmc-f27-x86-64-soas
 ```
 
-For example, create a workstation spin:
+For example, create a F27 workstation spin:
 ```console
 $ kubectl create -f jobs/run-f27-x86-64-workstation.yaml
 $ kubectl logs -f job/fspin-27-lmc-f27-x86-64-workstation
