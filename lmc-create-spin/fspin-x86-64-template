@@ -3,7 +3,7 @@
 set -x
 source /tmp/snapshot_id && \
 export SPIN_SHORT_NAME=`echo $SPIN_NAME|cut -c1-4|awk '{print toupper($0)}'` && \
-pushd /usr/share/spin-kickstarts  && \
+pushd /usr/share/spin-kickstarts && \
 \cp -f /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && \
 mv fedora-live-mate_compiz.ks fedora-live-mate-compiz.ks && \
 ksflatten --config fedora-live-${SPIN_NAME}.ks -o flat-fedora-live-${SPIN_NAME}.ks --version F${RELEASE} && \
