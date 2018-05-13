@@ -1,11 +1,11 @@
 #!/bin/bash
-# Run spin snippets in the latest GCE fspin image for f27 x86_64
+# Run spin snippets in the latest GCE fspin image for ${RELEASE} x86_64
 set -x
-LATEST_IMAGE=$(gcloud compute images list --filter="name~fspin-27-x86-64" --sort-by="~creationTimestamp" --limit=1 --format="json(NAME)"|jq -r .[].name)
+LATEST_IMAGE=$(gcloud compute images list --filter="name~fspin-${RELEASE}-x86-64" --sort-by="~creationTimestamp" --limit=1 --format="json(NAME)"|jq -r .[].name)
 INSTANCE_NAME="${LATEST_IMAGE}-lmc-$(cat /proc/sys/kernel/random/uuid|awk -F- '{print $5}')"
 RESULTS_LOCATION="gs://build-results.fspin.org/live/${INSTANCE_NAME}/"
 ZONE="us-central1-f"
-BUILD_SCRIPT=${TARGET}
+BUILD_SCRIPT="fspin-x86-64-${TARGET}"
 
 # Create instance to run lmc
 echo "Starting spin for ${TARGET} on ${INSTANCE_NAME} using base image ${LATEST_IMAGE}..." && \
@@ -15,7 +15,7 @@ gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST
 gcloud compute scp /opt/spins/${BUILD_SCRIPT} ${INSTANCE_NAME}:/tmp/build_script --zone ${ZONE} && \
 
 # Run selected snippet
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c '/tmp/build_script'" && \
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'export RELEASE=${RELEASE}; /tmp/build_script'" && \
 
 # Copy out results
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /var/lib/mock/*/root/var/lmc/* ${RESULTS_LOCATION}" && \

@@ -9,7 +9,6 @@
 * TODO: Write user docs.
 * TODO: Write contributor docs.
 * TODO: Re-org docs to specific specialties.
-* TODO: Add F28.
 * TODO: Make everything more generic.
 * TODO: A lot.
 
@@ -25,7 +24,7 @@ $ sudo dnf install docker kubernetes-client git
 
 Install gcloud sdk:
 ```console
-$ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
+$ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo < EOM
 [google-cloud-sdk]
 name=Google Cloud SDK
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
@@ -176,15 +175,15 @@ $ docker push gcr.io/fspin-199819/fspin-x86-64-builder-update
 ### Create the livemedia-creator fspin Container
 Create the container that spins live images and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-27-x86-64-livemedia-creator lmc-create-spin
-$ docker push gcr.io/fspin-199819/fspin-27-x86-64-livemedia-creator
+$ docker build -t gcr.io/fspin-199819/fspin-x86-64-livemedia-creator lmc-create-spin
+$ docker push gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
 ```
 
 ### Create the pungi fspin Container
 Create the container that creates source ISOs and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-27-x86-64-pungi pungi-create-install
-$ docker push gcr.io/fspin-199819/fspin-27-x86-64-pungi
+$ docker build -t gcr.io/fspin-199819/fspin-x86-64-pungi pungi-create-source
+$ docker push gcr.io/fspin-199819/fspin-x86-64-pungi
 ```
 
 ### Launch GCE Image Import Job
@@ -204,41 +203,69 @@ $ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-$ for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
+$ for RELEASE in 27 28
 do
-  export TARGET=f27-x86-64-$TARGET
-  envsubst '${TARGET}' < "k8s/fspin-27-x86-64-live-spin-job.yaml" > "jobs/run-${TARGET}.yaml"
+  export RELEASE="${RELEASE}"
+  for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
+    do
+      export TARGET="${TARGET}"
+      envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-f${RELEASE}-x86-64-$TARGET.yaml"
+    done
 done
 ```
 
-For example, create a soas spin:
+For example, create a F27 soas spin:
 ```console
 $ kubectl create -f jobs/run-f27-x86-64-soas.yaml
-$ kubectl logs -f job/fspin-27-lmc-f27-x86-64-soas
-$ kubectl delete job/fspin-27-lmc-f27-x86-64-soas
+$ kubectl logs -f job/fspin-27-lmc-soas
+$ kubectl delete job/fspin-27-lmc-soas
 ```
 
-For example, create a workstation spin:
+For example, create a F27 workstation spin:
 ```console
 $ kubectl create -f jobs/run-f27-x86-64-workstation.yaml
-$ kubectl logs -f job/fspin-27-lmc-f27-x86-64-workstation
-$ kubectl delete job/fspin-27-lmc-f27-x86-64-workstation
+$ kubectl logs -f job/fspin-27-lmc-workstation
+$ kubectl delete job/fspin-27-lmc-workstation
 ```
 
-Run all defined spins:
+For example, create a F28 workstation spin:
 ```console
-$ for SPIN in $(ls jobs/*)
-do
-  kubectl create -f $SPIN
-done
+$ kubectl create -f jobs/run-f28-x86-64-workstation.yaml
+$ kubectl logs -f job/fspin-28-lmc-workstation
+$ kubectl delete job/fspin-28-lmc-workstation
 ```
 
 ### Creating Source Images
-Run pungi to create the source ISO for the spins:
+Create the jobs for the defined releases:
 ```console
-$ kubectl create -f k8s/fspin-27-x86-64-install-spin-job.yaml
-$ kubectl logs -f job/fspin-27-x86-64-pungi
-$ kubectl delete job/fspin-27-x86-64-pungi
+$ for RELEASE in 27 28
+do
+  export RELEASE="${RELEASE}"
+  envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-x86-64-source.yaml"
+done
+```
+
+For example, run pungi to create the source ISO for the F27 spins:
+```console
+$ kubectl create -f jobs/run-f27-x86-64-source.yaml
+$ kubectl logs -f job/fspin-27-pungi
+$ kubectl delete job/fspin-27-pungi
+```
+
+For example, run pungi to create the source ISO for the F28 spins:
+```console
+$ kubectl create -f jobs/run-f28-x86-64-source.yaml
+$ kubectl logs -f job/fspin-28-pungi
+$ kubectl delete job/fspin-28-pungi
+```
+
+### Run All
+Run all defined jobs:
+```console
+$ for JOB in $(ls jobs/*)
+do
+  kubectl create -f $JOB
+done
 ```
 
 ### Publishing the Results

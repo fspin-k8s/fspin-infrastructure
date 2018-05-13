@@ -7,4 +7,4 @@ WORKDIR /opt
 
 COPY . .
 
-ENTRYPOINT /opt/fspin-27-x86-64-pungi
+ENTRYPOINT /opt/fspin-x86-64-pungi

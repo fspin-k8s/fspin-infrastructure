@@ -1,0 +1,16 @@
+#!/bin/bash
+# Generate source ISO for all F${RELEASE} x86_64 spins
+set -x
+source /tmp/snapshot_id && \
+pushd /usr/share/spin-kickstarts && \
+\cp -f /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && \
+sed -i '/%include fedora-repo.ks/d' fedora-live-base.ks && \
+cp /tmp/all-spins.ks . && \
+ksflatten --config all-spins.ks -o flat-all.ks --version F${RELEASE} && \
+pungi -G -c flat-all.ks --name ${SPIN_ID} --ver ${RELEASE} --force && \
+pungi -C -c flat-all.ks --name ${SPIN_ID} --ver ${RELEASE} --force && \
+pungi -I -c flat-all.ks --name ${SPIN_ID} --ver ${RELEASE} --sourceisos --force && \
+popd && \
+pushd /usr/share/spin-kickstarts/${RELEASE}/source/iso && \
+sha512sum *.iso > CHECKSUM512-${SPIN_ID}-DVD-source-${RELEASE} && \
+popd
