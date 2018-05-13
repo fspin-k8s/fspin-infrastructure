@@ -206,11 +206,9 @@ Create the jobs for the defined live spins:
 ```console
 $ for RELEASE in 27 28
 do
-  export RELEASE=$RELEASE
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
     do
-      export TARGET=f${RELEASE}-x86-64-$TARGET
-      envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-${TARGET}.yaml"
+      envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-f${RELEASE}-x86-64-$TARGET.yaml"
     done
 done
 ```
@@ -218,15 +216,15 @@ done
 For example, create a F27 soas spin:
 ```console
 $ kubectl create -f jobs/run-f27-x86-64-soas.yaml
-$ kubectl logs -f job/fspin-27-lmc-f27-x86-64-soas
-$ kubectl delete job/fspin-27-lmc-f27-x86-64-soas
+$ kubectl logs -f job/fspin-27-lmc-soas
+$ kubectl delete job/fspin-27-lmc-soas
 ```
 
 For example, create a F27 workstation spin:
 ```console
 $ kubectl create -f jobs/run-f27-x86-64-workstation.yaml
-$ kubectl logs -f job/fspin-27-lmc-f27-x86-64-workstation
-$ kubectl delete job/fspin-27-lmc-f27-x86-64-workstation
+$ kubectl logs -f job/fspin-27-lmc-workstation
+$ kubectl delete job/fspin-27-lmc-workstation
 ```
 
 Run all defined spins:

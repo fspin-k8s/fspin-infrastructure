@@ -1,22 +1,22 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-27-lmc-kde
+  name: fspin-28-lmc-workstation
   labels:
     jobgroup: lmc-spinner
 spec:
   template:
     metadata:
-      name: fspin-27-x86-64-livemedia-creator
+      name: fspin-28-x86-64-livemedia-creator
       labels:
         jobgroup: lmc-spinner
     spec:
       containers:
-      - name: fspin-27-x86-64-livemedia-creator
+      - name: fspin-28-x86-64-livemedia-creator
         image: gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
-            value: "kde"
+            value: "workstation"
           - name: RELEASE
-            value: "27"
+            value: "28"
       restartPolicy: OnFailure
