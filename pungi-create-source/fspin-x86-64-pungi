@@ -17,7 +17,7 @@ gcloud compute scp /opt/fspin-x86-64-pungi-snippet ${INSTANCE_NAME}:/tmp/build_s
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'export RELEASE=${RELEASE}; /tmp/build_script'" && \
 
 # Copy out results
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /usr/share/spin-kickstarts/27/source/iso/* ${RESULTS_LOCATION}" && \
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /usr/share/spin-kickstarts/${RELEASE}/source/iso/* ${RESULTS_LOCATION}" && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}"
 result=$?
 
