@@ -17,4 +17,10 @@ spec:
         env:
           - name: RELEASE
             value: "27"
+        volumeMounts:
+        - name: prevent-scale-down
+          mountPath: /opt/prevent-scale-down
+      volumes:
+      - name: prevent-scale-down
+        emptyDir: {}
       restartPolicy: OnFailure
