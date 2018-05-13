@@ -19,4 +19,10 @@ spec:
             value: "${TARGET}"
           - name: RELEASE
             value: "${RELEASE}"
+        volumeMounts:
+        - name: prevent-scale-down
+          mountPath: /opt/prevent-scale-down
+      volumes:
+      - name: prevent-scale-down
+        emptyDir: {}
       restartPolicy: OnFailure
