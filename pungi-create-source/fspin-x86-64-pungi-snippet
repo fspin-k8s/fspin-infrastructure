@@ -12,5 +12,6 @@ pungi -C -c flat-all.ks --name ${SPIN_ID} --ver ${RELEASE} --force && \
 pungi -I -c flat-all.ks --name ${SPIN_ID} --ver ${RELEASE} --sourceisos --force && \
 popd && \
 pushd /usr/share/spin-kickstarts/${RELEASE}/source/iso && \
+mv *.iso F${RELEASE}-source-${SPIN_ID}.iso && \
 sha512sum *.iso > CHECKSUM512-${SPIN_ID}-DVD-source-${RELEASE} && \
 popd

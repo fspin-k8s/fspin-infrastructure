@@ -1,16 +1,19 @@
 #!/bin/bash
 # Create a release candidate and push to GCS for the mirrors
 set -x
-source /opt/release_id
-RELEASE_STRING=`echo ${RELEASE_ID}|sed 's/-//g'`
-RESULTS_LOCATION="gs://build-results.fspin.org/releases/${RELEASE_ID}/"
-pushd ${RELEASE_ID}
+source /opt/release_id && \
+RELEASE_STRING=`echo ${RELEASE_ID}|sed 's/-//g'` && \
+RESULTS_LOCATION="gs://build-results.fspin.org/releases/${RELEASE_ID}/" && \
+pushd ${RELEASE_ID} && \
 echo "Downloading checksums for ${RELEASE_ID}..." && \
 gsutil cp gs://build-results.fspin.org/*/*/CHECKSUM512-*${RELEASE_STRING}* . && \
 echo "Combining checksums for ${RELEASE_ID}..." && \
 cat CHECKSUM512-* >> CHECKSUM512-${RELEASE_STRING} && \
+echo "Creating tracker hashfile for ${RELEASE_ID}..." && \
+cat *-torrenthash >> torrenthashes-${RELEASE_STRING} && \
 echo "Publishing ${RELEASE_ID} to ${RESULTS_LOCATION}..." && \
 gsutil cp CHECKSUM512-${RELEASE_STRING} ${RESULTS_LOCATION} && \
+gsutil cp torrenthashes-${RELEASE_STRING} ${RESULTS_LOCATION} && \
 gsutil cp gs://build-results.fspin.org/{live,installer}/*${RELEASE_ID}*/*.iso ${RESULTS_LOCATION} && \
 gsutil cp gs://build-results.fspin.org/live/*${RELEASE_ID}*/*.torrent ${RESULTS_LOCATION} && \
 gsutil cp README.md ${RESULTS_LOCATION} && \
