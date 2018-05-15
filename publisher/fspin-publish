@@ -9,6 +9,8 @@ echo "Downloading checksums for ${RELEASE_ID}..." && \
 gsutil cp gs://build-results.fspin.org/*/*/CHECKSUM512-*${RELEASE_STRING}* . && \
 echo "Combining checksums for ${RELEASE_ID}..." && \
 cat CHECKSUM512-* >> CHECKSUM512-${RELEASE_STRING} && \
+echo "Downloading tracker hashfiles for ${RELEASE_ID}..." && \
+gsutil cp gs://build-results.fspin.org/*/*/*${RELEASE_STRING}*-torrenthash . && \
 echo "Creating tracker hashfile for ${RELEASE_ID}..." && \
 cat *-torrenthash >> torrenthashes-${RELEASE_STRING} && \
 echo "Publishing ${RELEASE_ID} to ${RESULTS_LOCATION}..." && \
