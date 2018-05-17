@@ -19,6 +19,7 @@ transmission-create -p -s 2048 \
 	-t http://respins.fedorainfracloud.org:6969/announce \
 	-o F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.torrent \
 	F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso && \
-transmission-show F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.torrent | \
-	awk '/Hash/{print $2 " - "}' > F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-torrenthash && \
+	echo "`transmission-show F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.torrent | \
+	awk '/Hash/{print $2}'` F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso" > \
+	F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-torrenthash && \
 popd
