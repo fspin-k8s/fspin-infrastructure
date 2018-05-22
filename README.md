@@ -6,6 +6,7 @@
 * TODO: Automate k8s.fspin.org DNS management.
 * TODO: Automate TLS provisioning for Jenkins.
 * TODO: Connect Jenkins to FAS.
+* TODO: Automate openqa testing.
 * TODO: Write user docs.
 * TODO: Write contributor docs.
 * TODO: Re-org docs to specific specialties.
@@ -151,6 +152,11 @@ $ docker push gcr.io/fspin-199819/fspin-repo-server
 Create the repo server deployment:
 ```console
 $ kubectl create -f k8s/repo-fspin-org-deployment.yaml
+```
+
+Create the repo server horizontal pod autoscaler (if not already created):
+```console
+$ kubectl create -f k8s/repo-fspin-org-autoscaler.yaml
 ```
 
 Create the repo server ingress (if not already created):
