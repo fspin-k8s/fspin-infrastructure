@@ -193,6 +193,7 @@ $ docker push gcr.io/fspin-199819/fspin-x86-64-pungi
 ```
 
 ### Launch GCE Image Import Job
+This only needs to be done once or when updating the base image from an upstream release.
 ```console
 $ kubectl create -f k8s/fspin-cloud-image-import.yaml
 $ kubectl logs -f job/fspin-cloud-image-import
@@ -200,6 +201,7 @@ $ kubectl delete job/fspin-cloud-image-import
 ```
 
 ### Launch GCE Image Update Job
+This updates the upstream base image with the latest snapshot updates and creates the builder image.
 ```console
 $ kubectl create -f k8s/fspin-x86-64-update-image-job.yaml
 $ kubectl logs -f job/fspin-x86-64-builder-update
