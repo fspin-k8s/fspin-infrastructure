@@ -9,6 +9,7 @@ COMPAT_JSON_C='https://jsteffan.fedorapeople.org/compat-json-c/compat-json-c-0.1
 gcloud config set project ${PROJECT}
 gcloud config set compute/zone ${ZONE}
 
+# We need F27 to inject json-c into the F28 image
 echo "Importing F27..." && \
 wget https://dl.fedoraproject.org/pub/fedora/linux/releases/27/CloudImages/x86_64/images/Fedora-Cloud-Base-27-1.6.x86_64.raw.xz && \
 unxz Fedora-Cloud-Base-27-1.6.x86_64.raw.xz && \
