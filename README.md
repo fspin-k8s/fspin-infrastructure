@@ -81,8 +81,9 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-central1-f \
- --node-locations=us-central1-f --cluster-version=1.9.7-gke.0 \
+ --node-locations=us-central1-f --cluster-version=1.10.2-gke.3 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
+ --disk-size=50 --enable-autorepair \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
 ```
 
@@ -112,7 +113,7 @@ $ helm install --name fspin-jenkins stable/jenkins
 ### Create Repo Storage
 Create the network disk:
 ```console
-$ gcloud compute disks create --size=750GB --zone=us-central1-f fspin-mirror-storage-release
+$ gcloud compute disks create --size=400GB --zone=us-central1-f fspin-mirror-storage-release
 ```
 
 Create the filesystem on the disk:
@@ -211,7 +212,7 @@ $ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-$ for RELEASE in 27 28
+$ for RELEASE in 28
 do
   export RELEASE="${RELEASE}"
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
@@ -222,18 +223,11 @@ do
 done
 ```
 
-For example, create a F27 soas spin:
+For example, create a F28 soas spin:
 ```console
-$ kubectl create -f jobs/run-f27-x86-64-soas.yaml
-$ kubectl logs -f job/fspin-27-lmc-soas
-$ kubectl delete job/fspin-27-lmc-soas
-```
-
-For example, create a F27 workstation spin:
-```console
-$ kubectl create -f jobs/run-f27-x86-64-workstation.yaml
-$ kubectl logs -f job/fspin-27-lmc-workstation
-$ kubectl delete job/fspin-27-lmc-workstation
+$ kubectl create -f jobs/run-f28-x86-64-soas.yaml
+$ kubectl logs -f job/fspin-28-lmc-soas
+$ kubectl delete job/fspin-28-lmc-soas
 ```
 
 For example, create a F28 workstation spin:
@@ -246,18 +240,11 @@ $ kubectl delete job/fspin-28-lmc-workstation
 ### Creating Source Images
 Create the jobs for the defined releases:
 ```console
-$ for RELEASE in 27 28
+$ for RELEASE in 28
 do
   export RELEASE="${RELEASE}"
   envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-x86-64-source.yaml"
 done
-```
-
-For example, run pungi to create the source ISO for the F27 spins:
-```console
-$ kubectl create -f jobs/run-f27-x86-64-source.yaml
-$ kubectl logs -f job/fspin-27-pungi
-$ kubectl delete job/fspin-27-pungi
 ```
 
 For example, run pungi to create the source ISO for the F28 spins:
