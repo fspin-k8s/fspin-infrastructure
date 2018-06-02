@@ -6,7 +6,7 @@ ENV PACKER_VERSION 1.2.2
 ENV SNAPSHOT_ID $snapshot
 
 RUN set -x \
-       && apk --update add wget unzip gettext libintl
+       && apk --update add wget unzip gettext libintl jq
 
 WORKDIR /bin
 
