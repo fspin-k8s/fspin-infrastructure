@@ -3,7 +3,7 @@
 set -x
 LATEST_IMAGE=$(gcloud compute images list --filter="name~fspin-${RELEASE}-x86-64" --sort-by="~creationTimestamp" --limit=1 --format="json(NAME)"|jq -r .[].name)
 INSTANCE_NAME="${LATEST_IMAGE}-pungi-$(cat /proc/sys/kernel/random/uuid|awk -F- '{print $5}')"
-RESULTS_LOCATION="gs://build-results.fspin.org/installer/${INSTANCE_NAME}/"
+RESULTS_LOCATION="gs://build-results.fspin.org/source/${INSTANCE_NAME}/"
 ZONE="us-central1-f"
 
 # Create instance to run pungi
