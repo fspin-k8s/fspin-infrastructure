@@ -1,3 +1,10 @@
 #!/bin/bash
 # Build updated GCE images with packer
+# Clean up old images
+set -x
+BUILDER_IMAGES=5
+echo "Creating builder for F28..." && \
 /bin/packer build -force /opt/fspin-snapshot-28-x86-64-builder.json
+echo "Cleaning out stale images..."
+images=(); while read i; do images+=("$i"); done < <(gcloud compute images list --filter="name~fspin-[0-9]+-x86-64" --sort-by="~creationTimestamp" --format="json(NAME)"|jq -r .[].name)
+for image in ${images[@]:${BUILDER_IMAGES}}; do gcloud compute images delete $image; done
