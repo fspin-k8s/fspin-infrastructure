@@ -97,17 +97,36 @@ Verify cluster is correctly configured:
 $ kubectl get all --namespace kube-system
 ```
 
-### Install Tiller as Cluster Admin
+### Install Tiller
+Create the tiller service account:
 ```console
 $ kubectl create -f k8s/tiller-rbac-config.yaml
 serviceaccount "tiller" created
-clusterrolebinding "tiller" created
+clusterrolebinding.rbac.authorization.k8s.io "tiller" created
+```
+
+Install helm using the tiller service account:
+```console
 $ helm init --service-account tiller
 ```
 
 ### Install Jenkins
+Create the fspin-jenkins service account:
 ```console
-$ helm install --name fspin-jenkins stable/jenkins
+$ kubectl create -f k8s/jenkins-rbac-config.yaml
+serviceaccount "fspin-jenkins" created
+clusterrolebinding.rbac.authorization.k8s.io "fspin-jenkins" created
+```
+
+Install Jenkins using helm:
+```console
+$ helm install --name fspin-jenkins stable/jenkins --set rbac.install=true
+```
+
+Build the Jenkins runner container that has kubectl included:
+```console
+$ docker build -t gcr.io/fspin-199819/fspin-jenkins-runner jenkins-runner
+$ docker push gcr.io/fspin-199819/fspin-jenkins-runner
 ```
 
 ### Create Repo Storage
