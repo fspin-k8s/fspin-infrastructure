@@ -27,4 +27,4 @@ echo "Cleaning out old releases and builds..." && \
 gsutil rm -r gs://build-results.fspin.org/{live,source,releases} && \
 echo "Publishing ${RELEASE_ID} to ${RESULTS_LOCATION}" && \
 gsutil mv ${TMP_LOCATION} ${RESULTS_LOCATION} && \
-echo "SUCCESS: Results located at ${RESULTS_LOCATION}/${RELEASE_ID}/"
+echo "SUCCESS: Results located at ${RESULTS_LOCATION}${RELEASE_ID}/"
