@@ -1,4 +1,3 @@
 #!/bin/bash
 # Build updated GCE images with packer
-/bin/packer build -force /opt/fspin-snapshot-27-x86-64-builder.json && \
 /bin/packer build -force /opt/fspin-snapshot-28-x86-64-builder.json
