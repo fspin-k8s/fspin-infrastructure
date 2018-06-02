@@ -8,4 +8,5 @@ spec:
       containers:
       - name: fspin-publish
         image: gcr.io/fspin-199819/fspin-publish
-      restartPolicy: Never
+      restartPolicy: OnFailure
+  backoffLimit: 1
