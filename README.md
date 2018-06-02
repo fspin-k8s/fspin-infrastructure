@@ -111,6 +111,12 @@ $ helm init --service-account tiller
 ```
 
 ### Install Jenkins
+Build the Jenkins runner container that has kubectl included:
+```console
+$ docker build -t gcr.io/fspin-199819/fspin-jenkins-runner jenkins-runner
+$ docker push gcr.io/fspin-199819/fspin-jenkins-runner
+```
+
 Create the fspin-jenkins service account:
 ```console
 $ kubectl create -f k8s/jenkins-rbac-config.yaml
@@ -120,13 +126,8 @@ clusterrolebinding.rbac.authorization.k8s.io "fspin-jenkins" created
 
 Install Jenkins using helm:
 ```console
-$ helm install --name fspin-jenkins stable/jenkins --set rbac.install=true
-```
-
-Build the Jenkins runner container that has kubectl included:
-```console
-$ docker build -t gcr.io/fspin-199819/fspin-jenkins-runner jenkins-runner
-$ docker push gcr.io/fspin-199819/fspin-jenkins-runner
+$ helm install --name fspin-jenkins stable/jenkins \
+  --set rbac.install=true,Agent.Image=gcr.io/fspin-199819/fspin-jenkins-runner
 ```
 
 ### Create Repo Storage
