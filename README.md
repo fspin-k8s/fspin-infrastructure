@@ -112,7 +112,7 @@ $ helm init --service-account tiller
 ### Deploy Automatic DNS Management
 Install external-dns using helm:
 ```console
-helm install --name fspin-dns -f helm/external-dns-values.yaml stable/external-dns
+$ helm install --name fspin-dns -f helm/external-dns-values.yaml stable/external-dns
 ```
 
 ### Install Jenkins
