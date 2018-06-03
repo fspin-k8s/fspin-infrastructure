@@ -1,0 +1,7 @@
+provider: google
+google:
+  project: "fspin-199819"
+domainFilters: ["k8s.fspin.org"]
+rbac:
+  create: true
+  serviceAccountName: fspin-dns

@@ -3,6 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: repo-fspin-org
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: repo.k8s.fspin.org.
+    external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   selector:
     app: repo
