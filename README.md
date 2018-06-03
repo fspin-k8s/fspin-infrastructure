@@ -127,8 +127,6 @@ Install Jenkins using helm:
 $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 ```
 
-# get pw, update jenkins config to use service account name
-
 ### Create Repo Storage
 Create the network disk:
 ```console

@@ -3,11 +3,11 @@ Master:
     external-dns.alpha.kubernetes.io/hostname: jenkins.k8s.fspin.org.
     external-dns.alpha.kubernetes.io/ttl: "60"
   InstallPlugins:
-    - kubernetes:1.1
+    - kubernetes:1.7.0
     - workflow-aggregator:2.5
-    - workflow-job:2.15
-    - credentials-binding:1.13
-    - git:3.6.4
+    - workflow-job:2.21
+    - credentials-binding:1.16
+    - git:3.9.0
 
 Agent:
   Image: gcr.io/fspin-199819/fspin-jenkins-runner
