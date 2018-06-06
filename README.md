@@ -24,7 +24,7 @@ $ sudo dnf install docker kubernetes-client git
 
 Install gcloud sdk:
 ```console
-$ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo < EOM
+$ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-sdk]
 name=Google Cloud SDK
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
@@ -127,7 +127,7 @@ Install Jenkins using helm:
 $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 ```
 
-### Create Repo Storage
+### Create Repo Storage, If Needed
 Create the network disk:
 ```console
 $ gcloud compute disks create --size=400GB --zone=us-central1-f fspin-mirror-storage-release
@@ -141,7 +141,7 @@ $ gcloud compute ssh format-storage --zone us-central1-f --command 'sudo mount /
 $ gcloud compute instances delete format-storage --zone us-central1-f --quiet
 ```
 
-### Create Repo
+### Create/Update Repo
 Create the container to update the repo/snapshot and push to GCR:
 ```console
 $ docker build -t gcr.io/fspin-199819/fspin-repo-update repo-update
