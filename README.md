@@ -129,7 +129,7 @@ $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 
 Manually change the two following [Jenkins](https://jenkins.fspin.org/configure) settings:
 
-* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: fspin-jenkins
+* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: fspin-jenkins-run
 * Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: fspin-jenkins
 
 ### Create Repo Storage, If Needed
@@ -196,8 +196,7 @@ $ docker push gcr.io/fspin-199819/fspin-cloud-image-import
 
 Create the container to build the updated GCE image and push to GCR:
 ```console
-$ docker build --build-arg snapshot=$(curl -s http://repo.fspin.org/latest_snapshot) \
-    -t gcr.io/fspin-199819/fspin-x86-64-builder-update builder-update
+$ docker build -t gcr.io/fspin-199819/fspin-x86-64-builder-update builder-update
 $ docker push gcr.io/fspin-199819/fspin-x86-64-builder-update
 ```
 
