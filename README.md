@@ -127,6 +127,11 @@ Install Jenkins using helm:
 $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 ```
 
+Manually change the two following [Jenkins](https://jenkins.fspin.org/configure) settings:
+
+* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: fspin-jenkins
+* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: fspin-jenkins
+
 ### Create Repo Storage, If Needed
 Create the network disk:
 ```console
