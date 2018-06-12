@@ -1,0 +1,12 @@
+node {
+   stage('Re-Spin All') {
+       git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
+       sh 'find jobs -type f -iname \\*.yaml -exec kubectl delete --ignore-not-found -f  {} ";"'
+       sh 'find jobs -type f -iname \\*.yaml -exec kubectl create -f  {} ";"'
+       sleep 30
+       sh 'until kubectl get jobs -o json|jq -e \'[.items[].status|.conditions]|all\'; do sleep 60; done'
+   }
+   stage('Cleanup') {
+       sh 'find jobs -type f -iname \\*.yaml -exec kubectl delete -f  {} ";"'
+   }
+}
