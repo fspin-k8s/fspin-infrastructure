@@ -1,30 +1,35 @@
 #!/bin/bash
-# Publish a Build
+# Publish a Build Based on latest_snapshot in repo
 # - Clean out old releases
 # - Create a release candidate for the mirrors to sync
 # - Clean out all old builds
 set -x
-source /opt/release_id && \
-RELEASE_STRING=`echo ${RELEASE_ID}|sed 's/-//g'` && \
+export SNAPSHOT_ID=$(wget -q -O - http://repo.fspin.org/latest_snapshot)
+if [[ ! ${SNAPSHOT_ID+x} ]]; then exit 1; fi
+SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- -v OFS='-' '{print $1,$2,$3}'` && \
+RELEASE_STRING=`echo ${SPIN_ID}|sed 's/-//g'` && \
 RESULTS_LOCATION="gs://build-results.fspin.org/releases/" && \
-TMP_LOCATION="gs://build-results.fspin.org/${RELEASE_ID}/" && \
-pushd ${RELEASE_ID} && \
-echo "Downloading checksums for ${RELEASE_ID}..." && \
-gsutil cp gs://build-results.fspin.org/*/*/CHECKSUM512-*${RELEASE_STRING}* . && \
-echo "Combining checksums for ${RELEASE_ID}..." && \
+TMP_LOCATION="gs://build-results.fspin.org/${SPIN_ID}/" && \
+mkdir -p ${SPIN_ID} && \
+envsubst '${SPIN_ID}' < "README.template" > "${SPIN_ID}/README.md" && \
+echo "export SPIN_ID=${SPIN_ID}" > release_id && \
+pushd ${SPIN_ID} && \
+echo "Downloading checksums for ${SPIN_ID}..." && \
+gsutil cp gs://build-results.fspin.org/{live,source}/*/CHECKSUM512-*${RELEASE_STRING}* . && \
+echo "Combining checksums for ${SPIN_ID}..." && \
 cat CHECKSUM512-* >> CHECKSUM512-${RELEASE_STRING} && \
-echo "Downloading tracker hashfiles for ${RELEASE_ID}..." && \
-gsutil cp gs://build-results.fspin.org/*/*/*${RELEASE_STRING}*-torrenthash . && \
-echo "Creating tracker hashfile for ${RELEASE_ID}..." && \
+echo "Downloading tracker hashfiles for ${SPIN_ID}..." && \
+gsutil cp gs://build-results.fspin.org/{live,source}/*/*${RELEASE_STRING}*-torrenthash . && \
+echo "Creating tracker hashfile for ${SPIN_ID}..." && \
 cat *-torrenthash >> torrenthashes-${RELEASE_STRING} && \
-echo "Preparing ${RELEASE_ID} in ${TMP_LOCATION}..." && \
+echo "Preparing ${SPIN_ID} in ${TMP_LOCATION}..." && \
 gsutil cp CHECKSUM512-${RELEASE_STRING} ${TMP_LOCATION} && \
 gsutil cp torrenthashes-${RELEASE_STRING} ${TMP_LOCATION} && \
-gsutil mv gs://build-results.fspin.org/{live,source}/*${RELEASE_ID}*/*.iso ${TMP_LOCATION} && \
-gsutil mv gs://build-results.fspin.org/live/*${RELEASE_ID}*/*.torrent ${TMP_LOCATION} && \
+gsutil mv gs://build-results.fspin.org/{live,source}/*${SPIN_ID}*/*.iso ${TMP_LOCATION} && \
+gsutil mv gs://build-results.fspin.org/live/*${SPIN_ID}*/*.torrent ${TMP_LOCATION} && \
 gsutil cp README.md ${TMP_LOCATION} && \
 echo "Cleaning out old releases and builds..." && \
 gsutil rm -r gs://build-results.fspin.org/{live,source,releases} && \
-echo "Publishing ${RELEASE_ID} to ${RESULTS_LOCATION}" && \
+echo "Publishing ${SPIN_ID} to ${RESULTS_LOCATION}" && \
 gsutil mv ${TMP_LOCATION} ${RESULTS_LOCATION} && \
-echo "SUCCESS: Results located at ${RESULTS_LOCATION}${RELEASE_ID}/"
+echo "SUCCESS: Results located at ${RESULTS_LOCATION}${SPIN_ID}/"
