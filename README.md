@@ -286,7 +286,6 @@ done
 
 ### Publishing the Results
 Create the publisher container and push to GCR:
-*Change the release arg manually if needed.*
 ```
 $ docker build -t gcr.io/fspin-199819/fspin-publish publisher
 $ docker push gcr.io/fspin-199819/fspin-publish
