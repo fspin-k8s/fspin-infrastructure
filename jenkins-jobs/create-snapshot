@@ -1,0 +1,29 @@
+node {
+   stage('Shutdown Repo/Jobs') {
+       sh 'kubectl delete --ignore-not-found deploy/repo-fspin-org'
+       sh 'kubectl delete --ignore-not-found job/fspin-repo-update'
+       sh 'kubectl delete --ignore-not-found job/fspin-x86-64-builder-update'
+       sleep 10
+   }
+   stage('Update Repo and Snapshot') {
+       git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
+       sh 'kubectl create -f k8s/fspin-update-repo-job.yaml'
+       sleep 10
+       sh 'until kubectl get jobs fspin-repo-update -o jsonpath=\'{.status.conditions[?(@.type==\"Complete\")].status}\' | grep True ; do sleep 60 ; done'
+       sh 'kubectl logs job/fspin-repo-update'
+   }
+   stage('Start Repo') {
+       sh 'kubectl create -f k8s/repo-fspin-org-deployment.yaml'
+       sh 'until wget -q -O /dev/null http://repo.fspin.org/latest_snapshot; do sleep 10; done'
+   }
+   stage('Update Builder') {
+       sh 'kubectl create -f k8s/fspin-x86-64-update-image-job.yaml'
+       sleep 10
+       sh 'until kubectl get jobs fspin-x86-64-builder-update -o jsonpath=\'{.status.conditions[?(@.type==\"Complete\")].status}\' | grep True ; do sleep 60 ; done'
+       sh 'kubectl logs job/fspin-x86-64-builder-update'
+   }
+   stage('Cleanup') {
+       sh 'kubectl delete job/fspin-repo-update'
+       sh 'kubectl delete job/fspin-x86-64-builder-update'
+   }
+}

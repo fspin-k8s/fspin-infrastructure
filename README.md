@@ -3,7 +3,6 @@
 
 * TODO: Write Jenkins jobs and create pipeline.
 * TODO: Automate pipeline based on SCM events.
-* TODO: Automate k8s.fspin.org DNS management.
 * TODO: Automate TLS provisioning for Jenkins.
 * TODO: Connect Jenkins to FAS.
 * TODO: Automate openqa testing.
@@ -25,7 +24,7 @@ $ sudo dnf install docker kubernetes-client git
 
 Install gcloud sdk:
 ```console
-$ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo < EOM
+$ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-sdk]
 name=Google Cloud SDK
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
@@ -97,20 +96,43 @@ Verify cluster is correctly configured:
 $ kubectl get all --namespace kube-system
 ```
 
-### Install Tiller as Cluster Admin
+### Install Tiller
+Create the tiller service account:
 ```console
 $ kubectl create -f k8s/tiller-rbac-config.yaml
 serviceaccount "tiller" created
-clusterrolebinding "tiller" created
+clusterrolebinding.rbac.authorization.k8s.io "tiller" created
+```
+
+Install helm using the tiller service account:
+```console
 $ helm init --service-account tiller
 ```
 
-### Install Jenkins
+### Deploy Automatic DNS Management
+Install external-dns using helm:
 ```console
-$ helm install --name fspin-jenkins stable/jenkins
+$ helm install --name fspin-dns -f helm/external-dns-values.yaml stable/external-dns
 ```
 
-### Create Repo Storage
+### Install Jenkins
+Build the Jenkins runner container that has kubectl included:
+```console
+$ docker build -t gcr.io/fspin-199819/fspin-jenkins-runner jenkins-runner
+$ docker push gcr.io/fspin-199819/fspin-jenkins-runner
+```
+
+Install Jenkins using helm:
+```console
+$ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
+```
+
+Manually change the two following [Jenkins](https://jenkins.fspin.org/configure) settings:
+
+* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: fspin-jenkins-run
+* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: fspin-jenkins
+
+### Create Repo Storage, If Needed
 Create the network disk:
 ```console
 $ gcloud compute disks create --size=400GB --zone=us-central1-f fspin-mirror-storage-release
@@ -124,7 +146,7 @@ $ gcloud compute ssh format-storage --zone us-central1-f --command 'sudo mount /
 $ gcloud compute instances delete format-storage --zone us-central1-f --quiet
 ```
 
-### Create Repo
+### Create/Update Repo
 Create the container to update the repo/snapshot and push to GCR:
 ```console
 $ docker build -t gcr.io/fspin-199819/fspin-repo-update repo-update
@@ -174,8 +196,7 @@ $ docker push gcr.io/fspin-199819/fspin-cloud-image-import
 
 Create the container to build the updated GCE image and push to GCR:
 ```console
-$ docker build --build-arg snapshot=$(curl -s http://repo.fspin.org/latest_snapshot) \
-    -t gcr.io/fspin-199819/fspin-x86-64-builder-update builder-update
+$ docker build -t gcr.io/fspin-199819/fspin-x86-64-builder-update builder-update
 $ docker push gcr.io/fspin-199819/fspin-x86-64-builder-update
 ```
 
@@ -267,8 +288,7 @@ done
 Create the publisher container and push to GCR:
 *Change the release arg manually if needed.*
 ```
-$ docker build --build-arg release=$(date --utc +%F) \
-    -t gcr.io/fspin-199819/fspin-publish publisher
+$ docker build -t gcr.io/fspin-199819/fspin-publish publisher
 $ docker push gcr.io/fspin-199819/fspin-publish
 ```
 
