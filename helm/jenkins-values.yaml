@@ -1,9 +1,11 @@
 Master:
-  ServiceAnnotations:
-    external-dns.alpha.kubernetes.io/hostname: jenkins.k8s.fspin.org.
-    #external-dns.alpha.kubernetes.io/ttl: "60"
+  ServiceType: ClusterIP
+  HostName: "jenkins.fspin.org"
+  Ingress:
+    Annotations:
+      kubernetes.io/ingress.class: traefik
   InstallPlugins:
-    - kubernetes:1.7.1
+    - kubernetes:1.9.2
     - workflow-aggregator:2.5
     - workflow-job:2.21
     - credentials-binding:1.16

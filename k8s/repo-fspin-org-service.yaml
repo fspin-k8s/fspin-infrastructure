@@ -3,9 +3,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: repo-fspin-org
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: repo.k8s.fspin.org.
-    #external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   selector:
     app: repo
@@ -13,4 +10,18 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
-  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: repo-fspin-org
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: repo.fspin.org
+    http:
+      paths:
+      - backend:
+          serviceName: repo-fspin-org
+          servicePort: 80
