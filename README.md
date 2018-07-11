@@ -3,7 +3,6 @@
 
 * TODO: Write Jenkins jobs and create pipeline.
 * TODO: Automate pipeline based on SCM events.
-* TODO: Automate TLS provisioning for Jenkins.
 * TODO: Connect Jenkins to FAS.
 * TODO: Automate openqa testing.
 * TODO: Write user docs.
@@ -80,7 +79,7 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-central1-f \
- --node-locations=us-central1-f --cluster-version=1.10.2-gke.3 \
+ --node-locations=us-central1-f --cluster-version=1.10.5-gke.0 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
  --disk-size=50 --enable-autorepair \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
@@ -113,6 +112,17 @@ $ helm init --service-account tiller
 Install external-dns using helm:
 ```console
 $ helm install --name fspin-dns -f helm/external-dns-values.yaml stable/external-dns
+```
+
+### Deploy Traefik Ingress Controller
+Install traefik using helm:
+```console
+$ helm install --name fspin-ingress --namespace kube-system -f helm/traefik-values.yaml stable/traefik
+```
+
+Ensure that DNS is resolving before proceeding or ACME challenges will fail:
+```console
+$ watch dig +short traefik.k8s.fspin.org
 ```
 
 ### Install Jenkins
