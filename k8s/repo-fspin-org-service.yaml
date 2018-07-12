@@ -25,3 +25,9 @@ spec:
       - backend:
           serviceName: repo-fspin-org
           servicePort: 80
+  - host: repo-retry.fspin.org
+    http:
+      paths:
+      - backend:
+          serviceName: repo-fspin-org
+          servicePort: 80
