@@ -9,7 +9,7 @@
       "name": "fspin-28-x86-64-${SNAPSHOT_ID}",
       "image_name": "fspin-28-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
-      "preemptible": "true",
+      "preemptible": "false",
       "machine_type": "n1-standard-4"
     }
   ],
