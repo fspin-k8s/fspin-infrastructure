@@ -11,6 +11,7 @@ Master:
     - credentials-binding:1.16
     - git:3.9.1
     - openid:2.2
+    - matrix-auth:2.3
 
 Agent:
   Image: gcr.io/fspin-199819/fspin-jenkins-runner

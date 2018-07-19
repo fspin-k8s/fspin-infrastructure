@@ -142,6 +142,13 @@ Manually change the two following [Jenkins](https://jenkins.fspin.org/configure)
 * Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: fspin-jenkins-run
 * Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: fspin-jenkins
 
+Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fspin.org/configureSecurity) settings:
+
+* Configure Global Security -> Access Control -> OpenID SSO -> Provider URL: https://id.fedoraproject.org
+* Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Add user or group: respins-sig
+* Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Set "Administer" for "respins-sig"
+
+
 ### Create Repo Storage, If Needed
 Create the network disk:
 ```console
