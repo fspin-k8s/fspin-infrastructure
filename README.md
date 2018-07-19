@@ -60,7 +60,7 @@ Login to project and set config defaults:
 ```console
 $ gcloud init
 $ gcloud config set project fspin-199819
-$ gcloud config set compute/zone us-central1-f
+$ gcloud config set compute/zone us-east1-b
 $ gcloud auth configure-docker
 $ gcloud container clusters list
 ```
@@ -78,8 +78,8 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 
 Create the k8s cluster:
 ```console
-$ gcloud container clusters create fspin --zone=us-central1-f \
- --node-locations=us-central1-f --cluster-version=1.10.5-gke.0 \
+$ gcloud container clusters create fspin --zone=us-east1-b \
+ --node-locations=us-east1-b --cluster-version=1.10.5-gke.2 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
  --disk-size=50 --enable-autorepair \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
@@ -145,15 +145,15 @@ Manually change the two following [Jenkins](https://jenkins.fspin.org/configure)
 ### Create Repo Storage, If Needed
 Create the network disk:
 ```console
-$ gcloud compute disks create --size=400GB --zone=us-central1-f fspin-mirror-storage-release
+$ gcloud compute disks create --size=400GB --zone=us-east1-b fspin-mirror-storage-release
 ```
 
 Create the filesystem on the disk:
 ```console
-$ gcloud compute instances create format-storage --zone us-central1-f --disk name=fspin-mirror-storage-release
-$ gcloud compute ssh format-storage --zone us-central1-f --command 'sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb'
-$ gcloud compute ssh format-storage --zone us-central1-f --command 'sudo mount /dev/sdb /mnt && sudo chmod a+w /mnt'
-$ gcloud compute instances delete format-storage --zone us-central1-f --quiet
+$ gcloud compute instances create format-storage --zone us-east1-b --disk name=fspin-mirror-storage-release
+$ gcloud compute ssh format-storage --zone us-east1-b --command 'sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb'
+$ gcloud compute ssh format-storage --zone us-east1-b --command 'sudo mount /dev/sdb /mnt && sudo chmod a+w /mnt'
+$ gcloud compute instances delete format-storage --zone us-east1-b --quiet
 ```
 
 ### Create/Update Repo
