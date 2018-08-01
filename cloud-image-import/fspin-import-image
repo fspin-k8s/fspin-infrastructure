@@ -2,7 +2,7 @@
 # Import upstream cloud base images into GCE for custom image family
 set -x
 IMPORT_TIME=$(date --utc +%s)
-ZONE='us-east1-b'
+ZONE='us-east4-c'
 PROJECT='fspin-199819'
 COMPAT_JSON_C='https://jsteffan.fedorapeople.org/compat-json-c/compat-json-c-0.12.1-5.fc28.x86_64.rpm'
 
