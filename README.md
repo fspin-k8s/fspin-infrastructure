@@ -60,7 +60,7 @@ Login to project and set config defaults:
 ```console
 $ gcloud init
 $ gcloud config set project fspin-199819
-$ gcloud config set compute/zone us-east1-b
+$ gcloud config set compute/zone us-east4-c
 $ gcloud auth configure-docker
 $ gcloud container clusters list
 ```
@@ -78,10 +78,10 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 
 Create the k8s cluster:
 ```console
-$ gcloud container clusters create fspin --zone=us-east1-b \
- --node-locations=us-east1-b --cluster-version=1.10.5-gke.2 \
+$ gcloud container clusters create fspin --zone=us-east4-c \
+ --node-locations=us-east4-c --cluster-version=1.10.5-gke.3 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
- --disk-size=50 --enable-autorepair \
+ --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
 ```
 
@@ -139,28 +139,28 @@ $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 
 Manually change the two following [Jenkins](https://jenkins.fspin.org/configure) settings:
 
-* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: fspin-jenkins-run
-* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: fspin-jenkins
+* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: `fspin-jenkins-run`
+* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: `fspin-jenkins`
 
 Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fspin.org/configureSecurity) settings:
 
-* Configure Global Security -> Access Control -> OpenID SSO -> Provider URL: https://id.fedoraproject.org
-* Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Add user or group: respins-sig
+* Configure Global Security -> Access Control -> OpenID SSO -> Provider URL: `https://id.fedoraproject.org`
+* Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Add user or group: `respins-sig`
 * Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Set "Administer" for "respins-sig"
 
 
 ### Create Repo Storage, If Needed
 Create the network disk:
 ```console
-$ gcloud compute disks create --size=400GB --zone=us-east1-b fspin-mirror-storage-release
+$ gcloud compute disks create --size=400GB --zone=us-east4-c fspin-mirror-storage-release
 ```
 
 Create the filesystem on the disk:
 ```console
-$ gcloud compute instances create format-storage --zone us-east1-b --disk name=fspin-mirror-storage-release
-$ gcloud compute ssh format-storage --zone us-east1-b --command 'sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb'
-$ gcloud compute ssh format-storage --zone us-east1-b --command 'sudo mount /dev/sdb /mnt && sudo chmod a+w /mnt'
-$ gcloud compute instances delete format-storage --zone us-east1-b --quiet
+$ gcloud compute instances create format-storage --zone us-east4-c --disk name=fspin-mirror-storage-release
+$ gcloud compute ssh format-storage --zone us-east4-c --command 'sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb'
+$ gcloud compute ssh format-storage --zone us-east4-c --command 'sudo mount /dev/sdb /mnt && sudo chmod a+w /mnt'
+$ gcloud compute instances delete format-storage --zone us-east4-c --quiet
 ```
 
 ### Create/Update Repo
