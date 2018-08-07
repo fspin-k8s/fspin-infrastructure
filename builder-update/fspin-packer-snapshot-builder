@@ -2,7 +2,7 @@
 # Build updated GCE images with packer
 # Clean up old images
 set -x
-export SNAPSHOT_ID=$(wget -q -O - https://repo.fspin.org/latest_snapshot)
+export SNAPSHOT_ID=$(wget -q -O - http://repo.fspin.org/latest_snapshot)
 if [[ ! ${SNAPSHOT_ID+x} ]]; then exit 1; fi
 BUILDER_IMAGES=5
 envsubst '${SNAPSHOT_ID}' < "fspin.repo" > "fspin-snapshot.repo" && \
