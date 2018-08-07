@@ -144,6 +144,8 @@ Manually change the two following [Jenkins](https://jenkins.fspin.org/configure)
 
 Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fspin.org/configureSecurity) settings:
 
+*Do not do unless TLS is working.*
+
 * Configure Global Security -> Access Control -> OpenID SSO -> Provider URL: `https://id.fedoraproject.org`
 * Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Add user or group: `respins-sig`
 * Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Set "Administer" for "respins-sig"
