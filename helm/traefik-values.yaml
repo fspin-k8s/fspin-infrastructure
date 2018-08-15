@@ -4,10 +4,10 @@ service:
 rbac:
   enabled: true
 ssl:
-  enabled: false
-  enforced: false
+  enabled: true
+  enforced: true
 acme:
-  enabled: false
+  enabled: true
   staging: false
   email: jsteffan@fedoraproject.org
   challengeType: http-01
