@@ -258,7 +258,7 @@ do
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
     do
       export TARGET="${TARGET}"
-      envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-f${RELEASE}-x86-64-$TARGET.yaml"
+      envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-f${RELEASE}-$TARGET.yaml"
     done
 done
 ```
@@ -283,7 +283,7 @@ Create the jobs for the defined releases:
 $ for RELEASE in 28
 do
   export RELEASE="${RELEASE}"
-  envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-x86-64-source.yaml"
+  envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-source.yaml"
 done
 ```
 
