@@ -1,18 +1,18 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-${RELEASE}-lmc-${TARGET}
+  name: fspin-f${RELEASE}-$TARGET
   labels:
     jobgroup: lmc-spinner
 spec:
   template:
     metadata:
-      name: fspin-${RELEASE}-x86-64-livemedia-creator
+      name: fspin-f${RELEASE}-$TARGET
       labels:
         jobgroup: lmc-spinner
     spec:
       containers:
-      - name: fspin-${RELEASE}-x86-64-livemedia-creator
+      - name: build-f${RELEASE}-$TARGET
         image: gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET

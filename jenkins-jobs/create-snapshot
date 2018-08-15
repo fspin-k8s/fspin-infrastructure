@@ -5,8 +5,10 @@ node {
        sh 'kubectl delete --ignore-not-found job/fspin-x86-64-builder-update'
        sleep 10
    }
+   stage('Clone Git Repo') {
+      git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
+   }
    stage('Update Repo and Snapshot') {
-       git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
        sh 'kubectl create -f k8s/fspin-update-repo-job.yaml'
        sleep 10
        sh 'until kubectl get jobs fspin-repo-update -o jsonpath=\'{.status.conditions[?(@.type==\"Complete\")].status}\' | grep True ; do sleep 60 ; done'

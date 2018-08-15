@@ -1,18 +1,18 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-28-lmc-cinnamon
+  name: fspin-f28-cinnamon
   labels:
     jobgroup: lmc-spinner
 spec:
   template:
     metadata:
-      name: fspin-28-x86-64-livemedia-creator
+      name: fspin-f28-cinnamon
       labels:
         jobgroup: lmc-spinner
     spec:
       containers:
-      - name: fspin-28-x86-64-livemedia-creator
+      - name: build-f28-cinnamon
         image: gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
