@@ -1,12 +1,21 @@
-node {
-   stage('Re-Spin All') {
-       git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
-       sh 'find jobs -type f -iname \\*.yaml -exec kubectl delete --ignore-not-found -f  {} ";"'
-       sh 'find jobs -type f -iname \\*.yaml -exec kubectl create -f  {} ";"'
-       sleep 30
-       sh 'until kubectl get jobs -o json|jq -e \'[.items[].status|.conditions]|all\'; do sleep 60; done'
-   }
-   stage('Cleanup') {
-       sh 'find jobs -type f -iname \\*.yaml -exec kubectl delete -f  {} ";"'
+pipeline {
+   agent any
+   stages {
+      stage('Clone Git Repo') {
+         steps {
+            git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
+         }
+      }
+      stage ('Launch Compose') {
+         parallel {
+            stage('run-f28-cinnamon') {
+               steps {
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-cinnamon.yaml'
+                  sh 'kubectl create -f jobs/run-f28-cinnamon.yaml'
+                  sh 'until kubectl get job fspin-f28-cinnamon -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+               }
+            }
+         }
+      }
    }
 }

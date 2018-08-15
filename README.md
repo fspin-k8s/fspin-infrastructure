@@ -79,7 +79,7 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-east4-c \
- --node-locations=us-east4-c --cluster-version=1.10.5-gke.3 \
+ --node-locations=us-east4-c --cluster-version=1.10.5-gke.4 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
@@ -143,6 +143,8 @@ Manually change the two following [Jenkins](https://jenkins.fspin.org/configure)
 * Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: `fspin-jenkins`
 
 Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fspin.org/configureSecurity) settings:
+
+*Do not do unless TLS is working.*
 
 * Configure Global Security -> Access Control -> OpenID SSO -> Provider URL: `https://id.fedoraproject.org`
 * Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Add user or group: `respins-sig`
@@ -256,7 +258,7 @@ do
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
     do
       export TARGET="${TARGET}"
-      envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-f${RELEASE}-x86-64-$TARGET.yaml"
+      envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-f${RELEASE}-$TARGET.yaml"
     done
 done
 ```
@@ -281,7 +283,7 @@ Create the jobs for the defined releases:
 $ for RELEASE in 28
 do
   export RELEASE="${RELEASE}"
-  envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-x86-64-source.yaml"
+  envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-source.yaml"
 done
 ```
 

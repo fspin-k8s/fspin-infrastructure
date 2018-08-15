@@ -1,22 +1,22 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-28-lmc-xfce
+  name: fspin-f28-lxde
   labels:
     jobgroup: lmc-spinner
 spec:
   template:
     metadata:
-      name: fspin-28-x86-64-livemedia-creator
+      name: fspin-f28-lxde
       labels:
         jobgroup: lmc-spinner
     spec:
       containers:
-      - name: fspin-28-x86-64-livemedia-creator
+      - name: build-f28-lxde
         image: gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
-            value: "xfce"
+            value: "lxde"
           - name: RELEASE
             value: "28"
         volumeMounts:

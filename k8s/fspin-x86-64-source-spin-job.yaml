@@ -7,7 +7,7 @@ metadata:
 spec:
   template:
     metadata:
-      name: fspin-${RELEASE}-x86-64-pungi
+      name: fspin-${RELEASE}-pungi
       labels:
         jobgroup: pungi-spinner
     spec:

@@ -1,22 +1,20 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-28-lmc-cinnamon
+  name: fspin-28-pungi
   labels:
-    jobgroup: lmc-spinner
+    jobgroup: pungi-spinner
 spec:
   template:
     metadata:
-      name: fspin-28-x86-64-livemedia-creator
+      name: fspin-28-pungi
       labels:
-        jobgroup: lmc-spinner
+        jobgroup: pungi-spinner
     spec:
       containers:
-      - name: fspin-28-x86-64-livemedia-creator
-        image: gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
+      - name: fspin-28-x86-64-pungi
+        image: gcr.io/fspin-199819/fspin-x86-64-pungi
         env:
-          - name: TARGET
-            value: "cinnamon"
           - name: RELEASE
             value: "28"
         volumeMounts:

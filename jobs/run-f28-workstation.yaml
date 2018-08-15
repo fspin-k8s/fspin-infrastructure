@@ -1,20 +1,22 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-28-pungi
+  name: fspin-f28-workstation
   labels:
-    jobgroup: pungi-spinner
+    jobgroup: lmc-spinner
 spec:
   template:
     metadata:
-      name: fspin-28-x86-64-pungi
+      name: fspin-f28-workstation
       labels:
-        jobgroup: pungi-spinner
+        jobgroup: lmc-spinner
     spec:
       containers:
-      - name: fspin-28-x86-64-pungi
-        image: gcr.io/fspin-199819/fspin-x86-64-pungi
+      - name: build-f28-workstation
+        image: gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
         env:
+          - name: TARGET
+            value: "workstation"
           - name: RELEASE
             value: "28"
         volumeMounts:
