@@ -79,7 +79,7 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-east4-c \
- --node-locations=us-east4-c --cluster-version=1.10.6-gke.1 \
+ --node-locations=us-east4-c --cluster-version=1.10.6-gke.1 --machine-type n1-highcpu-2 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
@@ -106,6 +106,11 @@ clusterrolebinding.rbac.authorization.k8s.io "tiller" created
 Install helm using the tiller service account:
 ```console
 $ helm init --service-account tiller
+```
+
+Update helm charts:
+```console
+$ helm repo update
 ```
 
 ### Deploy Automatic DNS Management

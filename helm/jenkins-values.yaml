@@ -16,6 +16,13 @@ Master:
 Agent:
   Image: gcr.io/fspin-199819/fspin-jenkins-runner
   ImageTag: "latest"
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "1024Mi"
+    limits:
+      cpu: "1"
+      memory: "1024Mi"
 
 rbac:
   install: true
