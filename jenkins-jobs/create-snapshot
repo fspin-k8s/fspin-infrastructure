@@ -16,7 +16,7 @@ node {
    }
    stage('Start Repo') {
        sh 'kubectl create -f k8s/repo-fspin-org-deployment.yaml'
-       sh 'until wget -q -O /dev/null http://repo.fspin.org/latest_snapshot; do sleep 10; done'
+       sh 'until wget -q -O /dev/null https://repo.fspin.org/latest_snapshot; do sleep 10; done'
    }
    stage('Update Builder') {
        sh 'kubectl create -f k8s/fspin-x86-64-update-image-job.yaml'

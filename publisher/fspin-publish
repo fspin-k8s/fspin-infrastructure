@@ -4,7 +4,7 @@
 # - Create a release candidate for the mirrors to sync
 # - Clean out all old builds
 set -x
-export SNAPSHOT_ID=$(wget -q -O - http://repo.fspin.org/latest_snapshot)
+export SNAPSHOT_ID=$(wget -q -O - https://repo.fspin.org/latest_snapshot)
 if [[ ! ${SNAPSHOT_ID+x} ]]; then exit 1; fi
 SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- -v OFS='-' '{print $1,$2,$3}'` && \
 RELEASE_STRING=`echo ${SPIN_ID}|sed 's/-//g'` && \
