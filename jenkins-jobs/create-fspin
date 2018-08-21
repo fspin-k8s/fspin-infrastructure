@@ -73,5 +73,16 @@ pipeline {
             }
          }
       }
+      stage('Cleanup') {
+         sh 'kubectl delete job.batch/fspin-28-pungi'
+         sh 'kubectl delele job.batch/fspin-f28-cinnamon'
+         sh 'kubectl delele job.batch/fspin-f28-kde'
+         sh 'kubectl delele job.batch/fspin-f28-lxde'
+         sh 'kubectl delele job.batch/fspin-f28-lxqt'
+         sh 'kubectl delele job.batch/fspin-f28-mate-compiz'
+         sh 'kubectl delele job.batch/fspin-f28-soas'
+         sh 'kubectl delele job.batch/fspin-f28-workstation'
+         sh 'kubectl delele job.batch/fspin-f28-xfce'
+      }
    }
 }
