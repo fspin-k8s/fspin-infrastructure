@@ -1,18 +1,18 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-28-source
+  name: fspin-28-pungi
   labels:
-    jobgroup: source-spinner
+    jobgroup: pungi-spinner
 spec:
   template:
     metadata:
-      name: fspin-28-source
+      name: fspin-28-pungi
       labels:
-        jobgroup: source-spinner
+        jobgroup: pungi-spinner
     spec:
       containers:
-      - name: fspin-28-x86-64-source
+      - name: fspin-28-x86-64-pungi
         image: gcr.io/fspin-199819/fspin-x86-64-pungi
         env:
           - name: RELEASE
