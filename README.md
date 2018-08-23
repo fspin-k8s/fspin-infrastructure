@@ -293,8 +293,8 @@ done
 For example, run pungi to create the source ISO for the F28 spins:
 ```console
 $ kubectl create -f jobs/run-f28-x86-64-source.yaml
-$ kubectl logs -f job/fspin-28-pungi
-$ kubectl delete job/fspin-28-pungi
+$ kubectl logs -f job/fspin-28-source
+$ kubectl delete job/fspin-28-source
 ```
 
 ### Run All
