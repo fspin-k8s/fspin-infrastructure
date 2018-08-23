@@ -9,5 +9,5 @@ spec:
     kind: Deployment
     name: repo-fspin-org
   minReplicas: 1
-  maxReplicas: 3
+  maxReplicas: 4
   targetCPUUtilizationPercentage: 50
