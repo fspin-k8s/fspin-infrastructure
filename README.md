@@ -1,9 +1,7 @@
 # Fspin k8s Based Infrastructure
 ![Architecture](docs/architecture.png)
 
-* TODO: Write Jenkins jobs and create pipeline.
 * TODO: Automate pipeline based on SCM events.
-* TODO: Connect Jenkins to FAS.
 * TODO: Automate openqa testing.
 * TODO: Write user docs.
 * TODO: Write contributor docs.
