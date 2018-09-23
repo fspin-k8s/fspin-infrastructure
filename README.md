@@ -38,7 +38,7 @@ $ sudo dnf install google-cloud-sdk
 Update the repo from upstream, create a new snapshot and builder via `create-snapshot`. 
 Create a spin using the latest snapshot and matching builder via `create-fspin`. 
 Publish the results of a the spin via `publish-fspin`. 
-Results publish to [build-results](http://build-results.fspin.org)
+Results publish to [build-results](http://build-results.fspin.org) GCS.
 
 ### Create a Snapshot
 The snapshot job updates the repos to match current upstream, creates a time based snapshot of the repos, boots and updates the official image to the snapshot and creates a builder from that instance. This builder is now used for all spin activities to ensure all installed package and the running kernel matches the spin target.
