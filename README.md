@@ -208,7 +208,7 @@ Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-east4-c \
  --node-locations=us-east4-c --cluster-version=1.10.7-gke.2 --machine-type n1-highcpu-2 \
- --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
+ --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --disk-size=10 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
 ```
@@ -275,7 +275,7 @@ TODO: Automate adding of Jenkins jobs. For now, manually create the pipeline job
 ### Create Repo Storage, If Needed
 Create the network disk:
 ```console
-$ gcloud compute disks create --size=400GB --zone=us-east4-c fspin-mirror-storage-release
+$ gcloud compute disks create --size=250GB --zone=us-east4-c fspin-mirror-storage-release
 ```
 
 Create the filesystem on the disk:
