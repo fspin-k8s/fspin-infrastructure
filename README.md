@@ -54,13 +54,14 @@ To download the results browse to the [build-results](http://build-results.fspin
 
 List what releases are available:
 ```console
-gsutil ls gs://build-results.fspin.org/releases/
+$ gsutil ls gs://build-results.fspin.org/releases/
 ```
 
-Download a published spin locally:
+Download a published spin into httpd hosting:
 ```console
-gsutil cp -r gs://build-results.fspin.org/releases/YYYY-MM-DD .
+$ gsutil -m cp -r gs://build-results.fspin.org/releases/YYYY-MM-DD/ /var/www/html/
 ```
+*Note: Current user needs to be able to write to destination.*
 
 ## Developer Quickstart
 These are very specific to the fspin project.
