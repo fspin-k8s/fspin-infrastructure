@@ -352,15 +352,15 @@ done
 For example, create a F28 soas spin:
 ```console
 $ kubectl create -f jobs/run-f28-soas.yaml
-$ kubectl logs -f job/fspin-28-lmc-soas
-$ kubectl delete job/fspin-28-lmc-soas
+$ kubectl logs -f job/fspin-f28-soas
+$ kubectl delete job/fspin-f28-soas
 ```
 
 For example, create a F28 workstation spin:
 ```console
 $ kubectl create -f jobs/run-f28-workstation.yaml
-$ kubectl logs -f job/fspin-28-lmc-workstation
-$ kubectl delete job/fspin-28-lmc-workstation
+$ kubectl logs -f job/fspin-f28-workstation
+$ kubectl delete job/fspin-f28-workstation
 ```
 
 ### Creating Source Images
