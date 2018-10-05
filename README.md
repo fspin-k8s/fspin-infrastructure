@@ -351,14 +351,14 @@ done
 
 For example, create a F28 soas spin:
 ```console
-$ kubectl create -f jobs/run-f28-x86-64-soas.yaml
+$ kubectl create -f jobs/run-f28-soas.yaml
 $ kubectl logs -f job/fspin-28-lmc-soas
 $ kubectl delete job/fspin-28-lmc-soas
 ```
 
 For example, create a F28 workstation spin:
 ```console
-$ kubectl create -f jobs/run-f28-x86-64-workstation.yaml
+$ kubectl create -f jobs/run-f28-workstation.yaml
 $ kubectl logs -f job/fspin-28-lmc-workstation
 $ kubectl delete job/fspin-28-lmc-workstation
 ```
