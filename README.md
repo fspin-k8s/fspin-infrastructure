@@ -208,10 +208,20 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-east4-c \
- --node-locations=us-east4-c --cluster-version=1.10.7-gke.2 --machine-type n1-highcpu-2 \
+ --node-locations=us-east4-c --cluster-version=1.10.7-gke.6 --machine-type n1-highcpu-2 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --disk-size=10 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
+```
+
+Get credentials for the cluster:
+```console
+$ gcloud container clusters get-credentials fspin
+```
+
+Verify cluster is correctly configured on the client:
+```console
+$ kubectl get all --namespace kube-system
 ```
 
 ### Install Tiller
@@ -257,8 +267,9 @@ Install Jenkins using helm:
 $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 ```
 
-Manually change the two following [Jenkins](https://jenkins.fspin.org/configure) settings:
+Manually change the three following [Jenkins](https://jenkins.fspin.org/configure) settings:
 
+* Configure -> Jenkins Location -> Jenkins URL: `https://jenkins.fspin.org/`
 * Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: `fspin-jenkins-run`
 * Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: `fspin-jenkins`
 
