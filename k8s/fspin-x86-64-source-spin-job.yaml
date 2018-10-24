@@ -27,3 +27,4 @@ spec:
       - name: prevent-scale-down
         emptyDir: {}
       restartPolicy: OnFailure
+      backoffLimit: 60
