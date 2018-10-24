@@ -115,7 +115,7 @@ Login to project and set config defaults:
 ```console
 $ gcloud init
 $ gcloud config set project fspin-199819
-$ gcloud config set compute/zone us-east4-c
+$ gcloud config set compute/zone us-west2-a
 $ gcloud auth configure-docker
 $ gcloud container clusters list
 ```
@@ -207,8 +207,8 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 
 Create the k8s cluster:
 ```console
-$ gcloud container clusters create fspin --zone=us-east4-c \
- --node-locations=us-east4-c --cluster-version=1.10.7-gke.6 --machine-type n1-highcpu-2 \
+$ gcloud container clusters create fspin --zone=us-west2-a \
+ --node-locations=us-west2-a --cluster-version=1.10.7-gke.6 --machine-type n1-highcpu-2 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --disk-size=10 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
@@ -287,15 +287,15 @@ TODO: Automate adding of Jenkins jobs. For now, manually create the pipeline job
 ### Create Repo Storage, If Needed
 Create the network disk:
 ```console
-$ gcloud compute disks create --size=250GB --zone=us-east4-c fspin-mirror-storage-release
+$ gcloud compute disks create --size=250GB --zone=us-west2-a fspin-mirror-storage-release
 ```
 
 Create the filesystem on the disk:
 ```console
-$ gcloud compute instances create format-storage --zone us-east4-c --disk name=fspin-mirror-storage-release
-$ gcloud compute ssh format-storage --zone us-east4-c --command 'sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb'
-$ gcloud compute ssh format-storage --zone us-east4-c --command 'sudo mount /dev/sdb /mnt && sudo chmod a+w /mnt'
-$ gcloud compute instances delete format-storage --zone us-east4-c --quiet
+$ gcloud compute instances create format-storage --zone us-west2-a --disk name=fspin-mirror-storage-release
+$ gcloud compute ssh format-storage --zone us-west2-a --command 'sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb'
+$ gcloud compute ssh format-storage --zone us-west2-a --command 'sudo mount /dev/sdb /mnt && sudo chmod a+w /mnt'
+$ gcloud compute instances delete format-storage --zone us-west2-a --quiet
 ```
 
 ### Create/Update Repo

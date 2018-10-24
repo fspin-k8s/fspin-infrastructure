@@ -5,7 +5,7 @@
       "project_id": "fspin-199819",
       "source_image_family": "fspin-28",
       "ssh_username": "packer",
-      "zone": "us-east4-c",
+      "zone": "us-west2-a",
       "name": "fspin-28-x86-64-${SNAPSHOT_ID}",
       "image_name": "fspin-28-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
