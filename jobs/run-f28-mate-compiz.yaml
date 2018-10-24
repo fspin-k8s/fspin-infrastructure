@@ -5,6 +5,7 @@ metadata:
   labels:
     jobgroup: lmc-spinner
 spec:
+  backoffLimit: 60
   template:
     metadata:
       name: fspin-f28-mate-compiz
@@ -29,4 +30,3 @@ spec:
       - name: prevent-scale-down
         emptyDir: {}
       restartPolicy: OnFailure
-      backoffLimit: 60

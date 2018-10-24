@@ -5,6 +5,7 @@ metadata:
   labels:
     jobgroup: source-spinner
 spec:
+  backoffLimit: 60
   template:
     metadata:
       name: fspin-f28-source
@@ -27,4 +28,3 @@ spec:
       - name: prevent-scale-down
         emptyDir: {}
       restartPolicy: OnFailure
-      backoffLimit: 60
