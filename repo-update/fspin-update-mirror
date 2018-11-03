@@ -8,26 +8,26 @@ MIRROR_EXCLUDE='debug/*'
 MIRROR_SNAPSHOTS=5
 
 # Create paths
-mkdir -p /mirror/latest/releases/28/Everything/x86_64/os/ \
-         /mirror/latest/releases/28/Everything/source/tree \
-         /mirror/latest/updates/28/x86_64/ \
-         /mirror/latest/updates/28/SRPMS/
+mkdir -p /mirror/latest/releases/29/Everything/x86_64/os/ \
+         /mirror/latest/releases/29/Everything/source/tree \
+         /mirror/latest/updates/29/x86_64/ \
+         /mirror/latest/updates/29/SRPMS/
 
-# Update local main copy of F28 x86_64 mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/releases/28/Everything/x86_64/os/ /mirror/latest/releases/28/Everything/x86_64/os/
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/28/Everything/x86_64/os/ /mirror/latest/releases/28/Everything/x86_64/os/
+# Update local main copy of F29 x86_64 mirror
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/releases/29/Everything/x86_64/os/ /mirror/latest/releases/29/Everything/x86_64/os/
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/29/Everything/x86_64/os/ /mirror/latest/releases/29/Everything/x86_64/os/
 
-# Update local main copy of F28 source mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/releases/28/Everything/source/tree/ /mirror/latest/releases/28/Everything/source/tree/
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/28/Everything/source/tree/ /mirror/latest/releases/28/Everything/source/tree/
+# Update local main copy of F29 source mirror
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/releases/29/Everything/source/tree/ /mirror/latest/releases/29/Everything/source/tree/
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/29/Everything/source/tree/ /mirror/latest/releases/29/Everything/source/tree/
 
-# Update local main copy of F28 updates x86_64 mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/updates/28/Everything/x86_64/ /mirror/latest/updates/28/x86_64/
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/28/Everything/x86_64/ /mirror/latest/updates/28/x86_64/
+# Update local main copy of F29 updates x86_64 mirror
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/updates/29/Everything/x86_64/ /mirror/latest/updates/29/x86_64/
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/29/Everything/x86_64/ /mirror/latest/updates/29/x86_64/
 
-# Update local main copy of F28 updates source mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/updates/28/Everything/SRPMS/ /mirror/latest/updates/28/SRPMS/
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/28/Everything/SRPMS/ /mirror/latest/updates/28/SRPMS/
+# Update local main copy of F29 updates source mirror
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/updates/29/Everything/SRPMS/ /mirror/latest/updates/29/SRPMS/
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/29/Everything/SRPMS/ /mirror/latest/updates/29/SRPMS/
 
 # Create a tagged repo for all downstream jobs
 SNAPSHOT_ID=$(date --utc +%F-%s)

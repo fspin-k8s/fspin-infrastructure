@@ -57,21 +57,21 @@ gcloud config set compute/zone ${ZONE}
 # Needs earlier json-c and faked boost-regex injected into image for google components during the import process
 echo "Importing F29..." && \
 # launch latest f28 image, download f29 image, decompress, mount, inject compat-json-c, unmount, pull raw image result
-gcloud compute instances create f29-inject-json-c \
+gcloud compute instances create f29-inject-deps \
     --image-family fspin-28 \
     --boot-disk-size 50GB \
     --boot-disk-type pd-ssd \
     --machine-type n1-standard-4 && \
-gcloud compute ssh f29-inject-json-c \
+gcloud compute ssh f29-inject-deps \
     --command "sudo bash -c 'dnf -y install wget xz && wget https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Cloud/x86_64/images/Fedora-Cloud-Base-29-1.2.x86_64.raw.xz && unxz Fedora-Cloud-Base-29-1.2.x86_64.raw.xz'" && \
-gcloud compute ssh f29-inject-json-c \
+gcloud compute ssh f29-inject-deps \
     --command "sudo bash -c 'dnf -y install libguestfs-tools && dnf -y update && mkdir -p /fcb && LIBGUESTFS_BACKEND=direct guestmount -a Fedora-Cloud-Base-29-1.2.x86_64.raw -i /fcb && echo \"nameserver 8.8.8.8\" > /fcb/etc/resolv.conf'" && \
-gcloud compute ssh f29-inject-json-c \
+gcloud compute ssh f29-inject-deps \
     --command "sudo bash -c 'chroot /fcb dnf -y install --releasever 29 ${COMPAT_JSON_C_F29} ${GCSDK_FAKE_BOOST_REGEX_F29}'" && \
-gcloud compute ssh f29-inject-json-c \
+gcloud compute ssh f29-inject-deps \
     --command "sudo bash -c 'chroot /fcb dnf clean all && rm -fv /fcb/etc/resolv.conf && guestunmount /fcb && sleep 60'" && \
-gcloud compute scp f29-inject-json-c:Fedora-Cloud-Base-29-1.2.x86_64.raw . && \
-gcloud -q compute instances delete f29-inject-json-c --delete-disks all && \
+gcloud compute scp f29-inject-deps:Fedora-Cloud-Base-29-1.2.x86_64.raw . && \
+gcloud -q compute instances delete f29-inject-deps --delete-disks all && \
 
 # run f29 import with injected raw disk
 gcloud --quiet beta compute images import fspin-29-1-2-x86-64-${IMPORT_TIME} \
