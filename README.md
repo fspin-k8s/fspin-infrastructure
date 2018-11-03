@@ -208,7 +208,7 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.10.7-gke.6 --machine-type n1-highcpu-2 \
+ --node-locations=us-west2-a --cluster-version=1.11.2-gke.9 --machine-type n1-highcpu-2 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --disk-size=10 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com
@@ -230,6 +230,11 @@ Create the tiller service account:
 $ kubectl create -f k8s/tiller-rbac-config.yaml
 serviceaccount "tiller" created
 clusterrolebinding.rbac.authorization.k8s.io "tiller" created
+```
+
+Install helm (yes, this is nasty):
+```console
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
 ```
 
 Install helm using the tiller service account:
