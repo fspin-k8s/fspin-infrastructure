@@ -209,7 +209,7 @@ Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-west2-a \
  --node-locations=us-west2-a --cluster-version=1.11.2-gke.9 --machine-type n1-highcpu-2 \
- --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --disk-size=10 \
+ --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --disk-size=20 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
  --metadata disable-legacy-endpoints=true
