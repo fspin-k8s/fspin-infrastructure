@@ -7,12 +7,12 @@ if [[ ! ${SNAPSHOT_ID+x} ]]; then exit 1; fi
 BUILDER_IMAGES=5
 envsubst '${SNAPSHOT_ID}' < "fspin.repo" > "fspin-snapshot.repo" && \
 envsubst '${SNAPSHOT_ID}' < "fspin-repo-not-rawhide-with-source.ks" > "fspin-snapshot-repo-not-rawhide-with-source.ks" && \
-envsubst '${SNAPSHOT_ID}' < "fspin-28-x86-64-builder.json" > "fspin-snapshot-28-x86-64-builder.json" && \
-envsubst '${SNAPSHOT_ID}' < "mock-fspin-f28-x86_64.cfg" > "mock-snapshot-fspin-f28-x86_64.cfg" && \
+envsubst '${SNAPSHOT_ID}' < "fspin-29-x86-64-builder.json" > "fspin-snapshot-29-x86-64-builder.json" && \
+envsubst '${SNAPSHOT_ID}' < "mock-fspin-f29-x86_64.cfg" > "mock-snapshot-fspin-f29-x86_64.cfg" && \
 echo "export SNAPSHOT_ID=${SNAPSHOT_ID}" > snapshot_id && \
 echo "export SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- '{print $1$2$3}'`" >> snapshot_id && \
-echo "Creating builder for F28..." && \
-/bin/packer build -force /opt/fspin-snapshot-28-x86-64-builder.json && \
+echo "Creating builder for F29..." && \
+/bin/packer build -force /opt/fspin-snapshot-29-x86-64-builder.json && \
 echo "Cleaning out stale images..." && \
 images=(); while read i; do images+=("$i"); done < <(gcloud compute images list --filter="name~fspin-[0-9]+-x86-64" --sort-by="~creationTimestamp" --format="json(NAME)"|jq -r .[].name) && \
 for image in ${images[@]:${BUILDER_IMAGES}}; do gcloud compute images delete $image; done
