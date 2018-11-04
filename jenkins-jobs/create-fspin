@@ -8,91 +8,91 @@ pipeline {
       }
       stage ('Launch Compose') {
          parallel {
-            stage('F28 cinnamon') {
+            stage('F29 cinnamon') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-cinnamon.yaml'
-                  sh 'kubectl create -f jobs/run-f28-cinnamon.yaml'
-                  sh 'until kubectl get job/fspin-f28-cinnamon && kubectl get job/fspin-f28-cinnamon -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-cinnamon'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-cinnamon.yaml'
+                  sh 'kubectl create -f jobs/run-f29-cinnamon.yaml'
+                  sh 'until kubectl get job/fspin-f29-cinnamon && kubectl get job/fspin-f29-cinnamon -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-cinnamon'
                }
             }
-            stage('F28 kde') {
+            stage('F29 kde') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-kde.yaml'
-                  sh 'kubectl create -f jobs/run-f28-kde.yaml'
-                  sh 'until kubectl get job/fspin-f28-kde && kubectl get job/fspin-f28-kde -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-kde'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-kde.yaml'
+                  sh 'kubectl create -f jobs/run-f29-kde.yaml'
+                  sh 'until kubectl get job/fspin-f29-kde && kubectl get job/fspin-f29-kde -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-kde'
                }
             }
-            stage('F28 lxde') {
+            stage('F29 lxde') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-lxde.yaml'
-                  sh 'kubectl create -f jobs/run-f28-lxde.yaml'
-                  sh 'until kubectl get job/fspin-f28-lxde && kubectl get job/fspin-f28-lxde -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-lxde'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-lxde.yaml'
+                  sh 'kubectl create -f jobs/run-f29-lxde.yaml'
+                  sh 'until kubectl get job/fspin-f29-lxde && kubectl get job/fspin-f29-lxde -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-lxde'
                }
             }
-            stage('F28 lxqt') {
+            stage('F29 lxqt') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-lxqt.yaml'
-                  sh 'kubectl create -f jobs/run-f28-lxqt.yaml'
-                  sh 'until kubectl get job/fspin-f28-lxqt && kubectl get job/fspin-f28-lxqt -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-lxqt'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-lxqt.yaml'
+                  sh 'kubectl create -f jobs/run-f29-lxqt.yaml'
+                  sh 'until kubectl get job/fspin-f29-lxqt && kubectl get job/fspin-f29-lxqt -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-lxqt'
                }
             }
-            stage('F28 mate-compiz') {
+            stage('F29 mate-compiz') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-mate-compiz.yaml'
-                  sh 'kubectl create -f jobs/run-f28-mate-compiz.yaml'
-                  sh 'until kubectl get job/fspin-f28-mate-compiz && kubectl get job/fspin-f28-mate-compiz -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-mate-compiz'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-mate-compiz.yaml'
+                  sh 'kubectl create -f jobs/run-f29-mate-compiz.yaml'
+                  sh 'until kubectl get job/fspin-f29-mate-compiz && kubectl get job/fspin-f29-mate-compiz -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-mate-compiz'
                }
             }
-            stage('F28 soas') {
+            stage('F29 soas') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-soas.yaml'
-                  sh 'kubectl create -f jobs/run-f28-soas.yaml'
-                  sh 'until kubectl get job/fspin-f28-soas && kubectl get job/fspin-f28-soas -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-soas'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-soas.yaml'
+                  sh 'kubectl create -f jobs/run-f29-soas.yaml'
+                  sh 'until kubectl get job/fspin-f29-soas && kubectl get job/fspin-f29-soas -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-soas'
                }
             }
-            stage('F28 source') {
+            stage('F29 source') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-source.yaml'
-                  sh 'kubectl create -f jobs/run-f28-source.yaml'
-                  sh 'until kubectl get job/fspin-f28-source && kubectl get job/fspin-f28-source -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-source'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-source.yaml'
+                  sh 'kubectl create -f jobs/run-f29-source.yaml'
+                  sh 'until kubectl get job/fspin-f29-source && kubectl get job/fspin-f29-source -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-source'
                }
             }
-            stage('F28 workstation') {
+            stage('F29 workstation') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-workstation.yaml'
-                  sh 'kubectl create -f jobs/run-f28-workstation.yaml'
-                  sh 'until kubectl get job/fspin-f28-workstation && kubectl get job/fspin-f28-workstation -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-workstation'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-workstation.yaml'
+                  sh 'kubectl create -f jobs/run-f29-workstation.yaml'
+                  sh 'until kubectl get job/fspin-f29-workstation && kubectl get job/fspin-f29-workstation -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-workstation'
                }
             }
-            stage('F28 xfce') {
+            stage('F29 xfce') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f28-xfce.yaml'
-                  sh 'kubectl create -f jobs/run-f28-xfce.yaml'
-                  sh 'until kubectl get job/fspin-f28-xfce && kubectl get job/fspin-f28-xfce -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f28-xfce'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f29-xfce.yaml'
+                  sh 'kubectl create -f jobs/run-f29-xfce.yaml'
+                  sh 'until kubectl get job/fspin-f29-xfce && kubectl get job/fspin-f29-xfce -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f29-xfce'
                }
             }
          }
       }
       stage('Cleanup') {
          steps {
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-source'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-cinnamon'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-kde'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-lxde'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-lxqt'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-mate-compiz'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-soas'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-workstation'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f28-xfce'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-source'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-cinnamon'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-kde'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-lxde'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-lxqt'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-mate-compiz'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-soas'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-workstation'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f29-xfce'
          }
       }
    }
