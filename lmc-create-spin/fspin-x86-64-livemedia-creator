@@ -2,7 +2,7 @@
 # Run spin snippets in the latest GCE fspin image for ${RELEASE} x86_64
 set -x
 LATEST_IMAGE=$(gcloud compute images list --filter="name~fspin-${RELEASE}-x86-64" --sort-by="~creationTimestamp" --limit=1 --format="json(NAME)"|jq -r .[].name)
-INSTANCE_NAME="${LATEST_IMAGE}-lmc-$(cat /proc/sys/kernel/random/uuid|awk -F- '{print $5}')-${TARGET}"
+INSTANCE_NAME="${LATEST_IMAGE}-lmc-$(cat /proc/sys/kernel/random/uuid|awk -F- '{print $1}')-${TARGET}"
 RESULTS_LOCATION="gs://build-results.fspin.org/live/${INSTANCE_NAME}/"
 ZONE="us-west2-a"
 BUILD_SCRIPT="fspin-x86-64-${TARGET}"

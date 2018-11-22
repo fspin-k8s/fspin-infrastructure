@@ -5,8 +5,8 @@ source /tmp/snapshot_id && \
 export SPIN_SHORT_NAME=`echo $SPIN_NAME|cut -c1-4|awk '{print toupper($0)}'` && \
 pushd /usr/share/spin-kickstarts && \
 \cp -f /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && \
-mv fedora-live-mate_compiz.ks fedora-live-mate-compiz.ks && \
 patch -p0 < fspin-kickstart-patches-20181121.patch && \
+mv fedora-live-mate_compiz.ks fedora-live-mate-compiz.ks && \
 ksflatten --config fedora-live-${SPIN_NAME}.ks -o flat-fedora-live-${SPIN_NAME}.ks --version F${RELEASE} && \
 mkfs.ext4 -F /dev/nvme0n1 && \
 mount /dev/nvme0n1 /var/lib/mock && \
