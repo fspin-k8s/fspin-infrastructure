@@ -1,0 +1,111 @@
+diff -up ./fedora-cinnamon-common.ks.orig ./fedora-cinnamon-common.ks
+--- ./fedora-cinnamon-common.ks.orig	2018-11-22 04:38:37.283575302 +0000
++++ ./fedora-cinnamon-common.ks	2018-11-22 04:42:19.734422545 +0000
+@@ -16,4 +16,7 @@ parole
+ # extra backgrounds
+ f29-backgrounds-extras-gnome
+ 
++# fspin custom
++kernel-devel
++
+ %end
+diff -up ./fedora-kde-common.ks.orig ./fedora-kde-common.ks
+--- ./fedora-kde-common.ks.orig	2018-11-22 04:39:14.021534172 +0000
++++ ./fedora-kde-common.ks	2018-11-22 04:42:35.250670711 +0000
+@@ -55,4 +55,7 @@ mediawriter
+ 
+ ## avoid serious bugs by omitting broken stuff
+ 
++# fspin custom
++kernel-devel
++
+ %end
+diff -up ./fedora-live-mate_compiz.ks.orig ./fedora-live-mate_compiz.ks
+--- ./fedora-live-mate_compiz.ks.orig	2018-11-22 04:46:20.678814527 +0000
++++ ./fedora-live-mate_compiz.ks	2018-11-22 04:46:43.793675530 +0000
+@@ -7,7 +7,7 @@
+ %include fedora-mate-common.ks
+ %include fedora-live-minimization.ks
+ 
+-part / --size 6144
++part / --size 6500
+ 
+ %post
+ cat >> /etc/rc.d/init.d/livesys << EOF
+diff -up ./fedora-lxde-common.ks.orig ./fedora-lxde-common.ks
+--- ./fedora-lxde-common.ks.orig	2018-11-22 04:39:22.728236149 +0000
++++ ./fedora-lxde-common.ks	2018-11-22 04:42:44.012375537 +0000
+@@ -59,5 +59,8 @@ metacity
+ -policycoreutils-gui
+ -gnome-disk-utility
+ 
++# fspin custom
++kernel-devel
++
+ %end
+ 
+diff -up ./fedora-lxqt-common.ks.orig ./fedora-lxqt-common.ks
+--- ./fedora-lxqt-common.ks.orig	2018-11-22 04:39:30.716880233 +0000
++++ ./fedora-lxqt-common.ks	2018-11-22 04:49:19.456219243 +0000
+@@ -45,12 +45,14 @@ wqy-microhei-fonts          # a compact
+ -@input-methods
+ -scim*
+ -m17n*
+--ibus*
+ -iok
+ 
+ # Fix https://bugzilla.redhat.com/show_bug.cgi?id=1429132
+ # Why is this not pulled in by anaconda???
+ storaged
+ 
++# fspin custom
++kernel-devel
++
+ %end
+ 
+diff -up ./fedora-mate-common.ks.orig ./fedora-mate-common.ks
+--- ./fedora-mate-common.ks.orig	2018-11-22 04:39:51.366545141 +0000
++++ ./fedora-mate-common.ks	2018-11-22 04:43:00.957738672 +0000
+@@ -51,4 +51,7 @@ nss-mdns
+ # Legacy cmdline things we don't want
+ -telnet
+ 
++# fspin custom
++kernel-devel
++
+ %end
+diff -up ./fedora-workstation-common.ks.orig ./fedora-workstation-common.ks
+--- ./fedora-workstation-common.ks.orig	2018-11-22 04:40:00.831308245 +0000
++++ ./fedora-workstation-common.ks	2018-11-22 04:43:07.157237373 +0000
+@@ -24,4 +24,7 @@
+ -gfs2-utils
+ -reiserfs-utils
+ 
++# fspin custom
++kernel-devel
++
+ %end
+diff -up ./fedora-xfce-common.ks.orig ./fedora-xfce-common.ks
+--- ./fedora-xfce-common.ks.orig	2018-11-22 04:40:06.984804374 +0000
++++ ./fedora-xfce-common.ks	2018-11-22 04:43:16.215966079 +0000
+@@ -39,4 +39,7 @@ system-config-printer
+ -aspell-*                   # dictionaries are big
+ -xfce4-sensors-plugin
+ 
++# fspin custom
++kernel-devel
++
+ %end
+diff --git ./fedora-live-cinnamon.ks.orig ./fedora-live-cinnamon.ks
+index 6aab086..f629c06 100644
+--- ./fedora-live-cinnamon.ks.orig
++++ ./fedora-live-cinnamon.ks
+@@ -9,7 +9,7 @@
+ %include fedora-live-base.ks
+ %include fedora-cinnamon-common.ks
+
+-part / --size=6144
++part / --size=6500
+
+ %post
+ # cinnamon configuration
