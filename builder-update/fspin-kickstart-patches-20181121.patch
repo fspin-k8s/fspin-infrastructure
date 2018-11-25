@@ -96,3 +96,16 @@ diff -up ./fedora-xfce-common.ks.orig ./fedora-xfce-common.ks
 +kernel-devel
 +
  %end
+diff --git ./fedora-live-cinnamon.ks.orig ./fedora-live-cinnamon.ks
+index 6aab086..f629c06 100644
+--- ./fedora-live-cinnamon.ks.orig
++++ ./fedora-live-cinnamon.ks
+@@ -9,7 +9,7 @@
+ %include fedora-live-base.ks
+ %include fedora-cinnamon-common.ks
+
+-part / --size=6144
++part / --size=6500
+
+ %post
+ # cinnamon configuration
