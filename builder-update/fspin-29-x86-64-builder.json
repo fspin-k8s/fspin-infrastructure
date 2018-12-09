@@ -25,17 +25,23 @@
      "destination": "/tmp/mock-snapshot-fspin-f29-x86_64.cfg"
     },
     {
+     "type": "file",
+     "source": "/opt/fspin-kickstart-patches-20181121.patch",
+     "destination": "/tmp/fspin-kickstart-patches-20181121.patch"
+    },
+    {
       "type": "shell",
       "inline": [
 	"sudo dnf -y config-manager --set-disabled '*'",
 	"sudo cp /tmp/fspin.repo /etc/yum.repos.d/",
 	"sudo dnf -y config-manager --set-enabled 'fspin-*' google-cloud-sdk",
-	"sudo dnf -y install vim-enhanced mock transmission-cli",
+	"sudo dnf -y install vim-enhanced mock transmission-cli patch",
 	"sudo dnf -y install lorax-lmc-novirt pykickstart spin-kickstarts kernel-modules",
-        "sudo dnf -y install pungi pungi-legacy yum python2-kobo python2-productmd python2-lockfile createrepo python2-kickstart repoview",
+        "sudo dnf -y install pungi pungi-legacy yum python2-kobo python2-productmd python2-lockfile createrepo python2-kickstart repoview https://jsteffan.fedorapeople.org/python2-createrepo/python2-createrepo-0.10.3-16.fc29.noarch.rpm",
         "sudo dnf -y update",
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
-	"sudo cp /tmp/mock-snapshot-fspin-f29-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
+	"sudo cp /tmp/mock-snapshot-fspin-f29-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg",
+	"sudo cp /tmp/fspin-kickstart-patches-20181121.patch /usr/share/spin-kickstarts/fspin-kickstart-patches-20181121.patch"
       ]
     },
     {

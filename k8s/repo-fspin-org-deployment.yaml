@@ -21,6 +21,20 @@ spec:
         - mountPath: /mirror
           name: fspin-mirror-storage
           readOnly: true
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
       volumes:
       - name: fspin-mirror-storage
         gcePersistentDisk:
