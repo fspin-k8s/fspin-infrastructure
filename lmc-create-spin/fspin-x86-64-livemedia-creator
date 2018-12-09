@@ -18,7 +18,8 @@ gcloud compute scp /opt/spins/${BUILD_SCRIPT} ${INSTANCE_NAME}:/tmp/build_script
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'export RELEASE=${RELEASE}; /tmp/build_script'" && \
 
 # Copy out results
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /var/lib/mock/*/root/var/lmc/* ${RESULTS_LOCATION}" && \
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil -m cp -c /var/lib/mock/*/root/var/lmc/* ${RESULTS_LOCATION}" && \
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil -m cp -r -c /var/lib/mock/*/root/var/lmc/*.castr gs://build-results.fspin.org/" && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}"
 result=$?
 

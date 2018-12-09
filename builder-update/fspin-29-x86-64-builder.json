@@ -35,7 +35,7 @@
 	"sudo dnf -y config-manager --set-disabled '*'",
 	"sudo cp /tmp/fspin.repo /etc/yum.repos.d/",
 	"sudo dnf -y config-manager --set-enabled 'fspin-*' google-cloud-sdk",
-	"sudo dnf -y install vim-enhanced mock transmission-cli patch",
+	"sudo dnf -y install vim-enhanced mock transmission-cli patch casync",
 	"sudo dnf -y install lorax-lmc-novirt pykickstart spin-kickstarts kernel-modules",
         "sudo dnf -y install pungi pungi-legacy yum python2-kobo python2-productmd python2-lockfile createrepo python2-kickstart repoview https://jsteffan.fedorapeople.org/python2-createrepo/python2-createrepo-0.10.3-16.fc29.noarch.rpm",
         "sudo dnf -y update",

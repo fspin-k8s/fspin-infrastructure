@@ -25,4 +25,6 @@ transmission-create -p -s 2048 \
 	echo "`transmission-show F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.torrent | \
 	awk '/Hash/{print $2}'` F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso" > \
 	F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-torrenthash && \
+casync -v make --chunk-size 1048576 --store F${RELEASE}.castr F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso.caibx \
+	F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso && \
 popd
