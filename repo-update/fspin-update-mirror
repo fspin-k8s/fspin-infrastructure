@@ -2,8 +2,7 @@
 # Update mirror for target releases, creating a stable target for downstream jobs
 set -x
 
-MIRROR_HOST='mirror.oss.ou.edu'
-#MIRROR_HOST='mirror.cc.vt.edu'
+MIRROR_HOST='mirror.sfo12.us.leaseweb.net'
 MIRROR_EXCLUDE='debug/*'
 MIRROR_SNAPSHOTS=5
 
