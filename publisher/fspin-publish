@@ -10,6 +10,7 @@ export SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- -v OFS='-' '{print $1,$2,$3}'` && \
 export RELEASE_STRING=`echo ${SPIN_ID}|sed 's/-//g'` && \
 export RESULTS_LOCATION="gs://build-results.fspin.org/releases/" && \
 export TMP_LOCATION="gs://build-results.fspin.org/${SPIN_ID}/" && \
+export NUM_RELEASES=2 && \
 mkdir -p ${SPIN_ID} && \
 envsubst '${SPIN_ID}' < "README.template" > "${SPIN_ID}/README.md" && \
 echo "export SPIN_ID=${SPIN_ID}" > release_id && \
@@ -29,7 +30,9 @@ gsutil -m cp -c -r gs://build-results.fspin.org/{live,source}/*${SPIN_ID}*/*.iso
 gsutil -m cp -c -r gs://build-results.fspin.org/live/*${SPIN_ID}*/*.{torrent,caibx} ${TMP_LOCATION}
 gsutil cp -c README.md ${TMP_LOCATION}
 echo "Cleaning out old releases and builds..." && \
-gsutil -m rm -r gs://build-results.fspin.org/{live,source,releases}
+gsutil -m rm -r gs://build-results.fspin.org/{live,source}
+releases=(); while read i; do releases+=("$i"); done < <(gsutil ls ${RESULTS_LOCATION}) && \
+for release in ${releases[@]:0:${NUM_RELEASES}}; do gsutil -m rm -r $release; done
 echo "Publishing ${SPIN_ID} to ${RESULTS_LOCATION}" && \
 gsutil -m mv ${TMP_LOCATION} ${RESULTS_LOCATION} && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}${SPIN_ID}/"
