@@ -15,6 +15,9 @@ mkdir -p ${SPIN_ID} && \
 envsubst '${SPIN_ID}' < "README.template" > "${SPIN_ID}/README.md" && \
 echo "export SPIN_ID=${SPIN_ID}" > release_id && \
 pushd ${SPIN_ID} && \
+echo "Checking build-results for ${SPIN_ID}..." && \
+gsutil ls gs://build-results.fspin.org/{live,source}/*/CHECKSUM512-*${RELEASE_STRING}* || \
+{ echo "ERROR: No build-results found for ${SPIN_ID}!"; exit 1; }
 echo "Downloading checksums for ${SPIN_ID}..." && \
 gsutil -m cp -c gs://build-results.fspin.org/{live,source}/*/CHECKSUM512-*${RELEASE_STRING}* .
 echo "Combining checksums for ${SPIN_ID}..." && \

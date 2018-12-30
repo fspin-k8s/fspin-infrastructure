@@ -1,11 +1,13 @@
 node {
+   stage('Clone Git Repo') {
+      git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
+   }
    stage('Publish Latest Snapshot') {
        sh 'kubectl delete --ignore-not-found job/fspin-publish'
-       git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
        sh 'kubectl create -f k8s/fspin-publish-job.yaml'
        sleep 10
        timeout(5) {
-          sh 'until kubectl get jobs fspin-publish -o jsonpath=\'{.status.conditions[?(@.type==\"Complete\")].status}\' | grep True ; do sleep 10 ; done'
+          sh 'until kubectl get job.batch/fspin-publish && false; do if [ $(kubectl get job.batch/fspin-publish -o json|jq -e \'.status.succeeded\') == 1 ]; then exit 0; fi; if [ $(kubectl get job.batch/fspin-publish -o json|jq -e \'.status.failed\') == 1 ]; then echo \'Job Failed, does the release exist on build-results?\'; exit 1; fi; sleep 10; done'
        }
        sh 'kubectl logs job/fspin-publish'
    }
