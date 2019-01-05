@@ -19,23 +19,23 @@ echo "Checking build-results for ${SPIN_ID}..." && \
 gsutil ls gs://build-results.fspin.org/{live,source}/*/CHECKSUM512-*${RELEASE_STRING}* || \
 { echo "ERROR: No build-results found for ${SPIN_ID}!"; exit 1; }
 echo "Downloading checksums for ${SPIN_ID}..." && \
-gsutil -m cp -c gs://build-results.fspin.org/{live,source}/*/CHECKSUM512-*${RELEASE_STRING}* .
+gsutil -m cp -c gs://build-results.fspin.org/{live,source}/*/CHECKSUM512-*${RELEASE_STRING}* . && \
 echo "Combining checksums for ${SPIN_ID}..." && \
-cat CHECKSUM512-* >> CHECKSUM512-${RELEASE_STRING}
+cat CHECKSUM512-* >> CHECKSUM512-${RELEASE_STRING} && \
 echo "Downloading tracker hashfiles for ${SPIN_ID}..." && \
-gsutil -m cp -c gs://build-results.fspin.org/live/*/*${RELEASE_STRING}*-torrenthash .
+gsutil -m cp -c gs://build-results.fspin.org/live/*/*${RELEASE_STRING}*-torrenthash . && \
 echo "Creating tracker hashfile for ${SPIN_ID}..." && \
-cat *-torrenthash >> torrenthashes-${RELEASE_STRING}
+cat *-torrenthash >> torrenthashes-${RELEASE_STRING} && \
 echo "Preparing ${SPIN_ID} in ${TMP_LOCATION}..." && \
-gsutil cp -c CHECKSUM512-${RELEASE_STRING} ${TMP_LOCATION}
-gsutil cp -c torrenthashes-${RELEASE_STRING} ${TMP_LOCATION}
-gsutil -m cp -c -r gs://build-results.fspin.org/{live,source}/*${SPIN_ID}*/*.iso ${TMP_LOCATION}
-gsutil -m cp -c -r gs://build-results.fspin.org/live/*${SPIN_ID}*/*.{torrent,caibx} ${TMP_LOCATION}
-gsutil cp -c README.md ${TMP_LOCATION}
+gsutil cp -c CHECKSUM512-${RELEASE_STRING} ${TMP_LOCATION} && \
+gsutil cp -c torrenthashes-${RELEASE_STRING} ${TMP_LOCATION} && \
+gsutil -m cp -c -r gs://build-results.fspin.org/{live,source}/*${SPIN_ID}*/*.iso ${TMP_LOCATION} && \
+gsutil -m cp -c -r gs://build-results.fspin.org/live/*${SPIN_ID}*/*.{torrent,caibx} ${TMP_LOCATION} && \
+gsutil cp -c README.md ${TMP_LOCATION} && \
 echo "Cleaning out old releases and builds..." && \
-gsutil -m rm -r gs://build-results.fspin.org/{live,source}
-releases=(); while read i; do releases+=("$i"); done < <(gsutil ls ${RESULTS_LOCATION}) && \
-for release in ${releases[@]:0:${NUM_RELEASES}}; do gsutil -m rm -r $release; done
+gsutil -m rm -r gs://build-results.fspin.org/{live,source} && \
+releases=(); while read i; do releases+=("$i"); done < <(gsutil ls ${RESULTS_LOCATION}|sort -r) && \
+for release in ${releases[@]:${NUM_RELEASES-1}}; do gsutil -m rm -r $release; done
 echo "Publishing ${SPIN_ID} to ${RESULTS_LOCATION}" && \
 gsutil -m mv ${TMP_LOCATION} ${RESULTS_LOCATION} && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}${SPIN_ID}/"
