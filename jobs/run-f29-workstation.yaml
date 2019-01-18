@@ -5,7 +5,7 @@ metadata:
   labels:
     jobgroup: lmc-spinner
 spec:
-  backoffLimit: 60
+  backoffLimit: 10
   template:
     metadata:
       name: fspin-f29-workstation
