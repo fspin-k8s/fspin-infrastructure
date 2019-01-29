@@ -4,6 +4,7 @@ Master:
   Ingress:
     Annotations:
       kubernetes.io/ingress.class: traefik
+  ImageTag: "2.150.1"
   InstallPlugins:
     - kubernetes:1.14.1
     - workflow-aggregator:2.6
