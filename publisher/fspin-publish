@@ -35,7 +35,7 @@ gsutil cp -c README.md ${TMP_LOCATION} && \
 echo "Cleaning out old releases and builds..." && \
 gsutil -m rm -r gs://build-results.fspin.org/{live,source} && \
 releases=(); while read i; do releases+=("$i"); done < <(gsutil ls ${RESULTS_LOCATION}|sort -r) && \
-for release in ${releases[@]:${NUM_RELEASES-1}}; do gsutil -m rm -r $release; done
+for release in ${releases[@]:${NUM_RELEASES}}; do gsutil -m rm -r $release; done
 echo "Publishing ${SPIN_ID} to ${RESULTS_LOCATION}" && \
 gsutil -m mv ${TMP_LOCATION} ${RESULTS_LOCATION} && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}${SPIN_ID}/"
