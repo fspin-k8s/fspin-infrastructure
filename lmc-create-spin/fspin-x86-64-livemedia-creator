@@ -9,7 +9,7 @@ BUILD_SCRIPT="fspin-x86-64-${TARGET}"
 
 # Create instance to run lmc
 echo "Starting spin for ${TARGET} on ${INSTANCE_NAME} using base image ${LATEST_IMAGE}..." && \
-gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 30GB --boot-disk-type pd-ssd --local-ssd interface=NVME --machine-type n1-highcpu-16 --preemptible --scopes storage-rw && \
+gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 30GB --boot-disk-type pd-ssd --local-ssd interface=NVME --machine-type n1-highcpu-16 --scopes storage-rw && \
 
 # Prep instance with target script
 gcloud compute scp /opt/spins/${BUILD_SCRIPT} ${INSTANCE_NAME}:/tmp/build_script --zone ${ZONE} && \
