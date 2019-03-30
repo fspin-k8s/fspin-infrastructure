@@ -8,7 +8,7 @@ ZONE="us-west2-a"
 
 # Create instance to run pungi
 echo "Starting pungi run on ${INSTANCE_NAME} using base image ${LATEST_IMAGE}..."
-gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 50GB --boot-disk-type pd-ssd --local-ssd interface=NVME --machine-type n1-highcpu-16 --scopes storage-rw && \
+gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 50GB --boot-disk-type pd-ssd --local-ssd interface=NVME --machine-type n1-highcpu-16 --preemptible --scopes storage-rw && \
 
 # Prep instance with target script
 gcloud compute scp /opt/fspin-x86-64-pungi-snippet ${INSTANCE_NAME}:/tmp/build_script --zone ${ZONE} && \
