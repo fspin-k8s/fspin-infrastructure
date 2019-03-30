@@ -5,7 +5,7 @@ metadata:
   labels:
     jobgroup: source-spinner
 spec:
-  backoffLimit: 10
+  backoffLimit: 20
   template:
     metadata:
       name: fspin-f29-source

@@ -1,8 +1,9 @@
 Master:
   ServiceType: ClusterIP
-  HostName: "jenkins.fspin.org"
-  Ingress:
-    Annotations:
+  ingress:
+    enabled: true
+    hostName: "jenkins.fspin.org"
+    annotations:
       kubernetes.io/ingress.class: traefik
   InstallPlugins:
     - kubernetes:1.14.3
@@ -19,7 +20,7 @@ Agent:
   resources:
     requests:
       cpu: "200m"
-      memory: "1024Mi"
+      memory: "512Mi"
     limits:
       cpu: "1"
       memory: "1024Mi"
