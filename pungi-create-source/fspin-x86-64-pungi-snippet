@@ -7,11 +7,6 @@ pushd /usr/share/spin-kickstarts && \
 sed -i '/%include fedora-repo.ks/d' fedora-live-base.ks && \
 cp /tmp/all-spins.ks . && \
 ksflatten --config all-spins.ks -o flat-all.ks --version F${RELEASE} && \
-mkfs.ext4 -F /dev/nvme0n1 && \
-mkdir -p /usr/share/spin-kickstarts/${RELEASE} && \
-mount /dev/nvme0n1 /usr/share/spin-kickstarts/${RELEASE} && \
-mkdir -p /usr/share/spin-kickstarts/${RELEASE}/cache && \
-mount -o bind /var/cache/pungi /usr/share/spin-kickstarts/${RELEASE}/cache && \
 pungi -G -c flat-all.ks --name ${SPIN_ID} --ver ${RELEASE} --force && \
 pungi -C -c flat-all.ks --name ${SPIN_ID} --ver ${RELEASE} --force && \
 pungi -I -c flat-all.ks --name ${SPIN_ID} --ver ${RELEASE} --sourceisos --force && \

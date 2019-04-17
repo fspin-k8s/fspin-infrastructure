@@ -7,6 +7,8 @@ diff -up ./fedora-cinnamon-common.ks.orig ./fedora-cinnamon-common.ks
  
 +# fspin custom
 +kernel-devel
++java-11-openjdk-headless
++java-openjdk-headless
 +
  %end
 diff -up ./fedora-kde-common.ks.orig ./fedora-kde-common.ks
@@ -72,6 +74,8 @@ diff -up ./fedora-mate-common.ks.orig ./fedora-mate-common.ks
  
 +# fspin custom
 +kernel-devel
++java-11-openjdk-headless
++java-openjdk-headless
 +
  %end
 diff -up ./fedora-workstation-common.ks.orig ./fedora-workstation-common.ks
@@ -83,6 +87,8 @@ diff -up ./fedora-workstation-common.ks.orig ./fedora-workstation-common.ks
  
 +# fspin custom
 +kernel-devel
++java-11-openjdk-headless
++java-openjdk-headless
 +
  %end
 diff -up ./fedora-xfce-common.ks.orig ./fedora-xfce-common.ks

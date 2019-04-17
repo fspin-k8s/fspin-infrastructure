@@ -6,10 +6,10 @@ Master:
     annotations:
       kubernetes.io/ingress.class: traefik
   InstallPlugins:
-    - kubernetes:1.14.3
+    - kubernetes:1.15.0
     - workflow-aggregator:2.6
-    - workflow-job:2.31
-    - credentials-binding:1.17
+    - workflow-job:2.32
+    - credentials-binding:1.18
     - git:3.9.3
     - openid:2.3
     - matrix-auth:2.3

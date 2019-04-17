@@ -5,7 +5,7 @@ metadata:
   labels:
     jobgroup: lmc-spinner
 spec:
-  backoffLimit: 30
+  backoffLimit: 20
   template:
     metadata:
       name: fspin-f${RELEASE}-$TARGET

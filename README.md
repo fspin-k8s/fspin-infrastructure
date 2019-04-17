@@ -219,7 +219,7 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.12.6-gke.7 --machine-type n1-highcpu-2 \
+ --node-locations=us-west2-a --cluster-version=1.12.6-gke.10 --machine-type n1-highcpu-2 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --disk-size=20 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
