@@ -5,10 +5,20 @@ LATEST_IMAGE=$(gcloud compute images list --filter="name~fspin-${RELEASE}-x86-64
 INSTANCE_NAME="${LATEST_IMAGE}-pungi-$(cat /proc/sys/kernel/random/uuid|awk -F- '{print $5}')"
 RESULTS_LOCATION="gs://build-results.fspin.org/source/${INSTANCE_NAME}/"
 ZONE="us-west2-a"
+TRIES="0"
+LIMIT="10"
+SLEEP="30"
 
 # Create instance to run pungi
 echo "Starting pungi run on ${INSTANCE_NAME} using base image ${LATEST_IMAGE}..."
-gcloud compute instances create ${INSTANCE_NAME} --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 50GB --boot-disk-type pd-ssd --local-ssd interface=NVME --machine-type n1-highcpu-16 --preemptible --scopes storage-rw && \
+gcloud compute instances create ${INSTANCE_NAME} --preemptible --zone ${ZONE} --image ${LATEST_IMAGE} --boot-disk-size 50GB --boot-disk-type pd-ssd --local-ssd interface=NVME --machine-type n1-standard-8 --scopes storage-rw && \
+
+# Ensure instance is available and connections are working
+while [[ $TRIES -lt $LIMIT ]]; do
+       gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command 'uptime' && break || \
+       sleep $SLEEP && \
+       let TRIES=TRIES+1
+done
 
 # Prep instance with target script
 gcloud compute scp /opt/fspin-x86-64-pungi-snippet ${INSTANCE_NAME}:/tmp/build_script --zone ${ZONE} && \
@@ -17,7 +27,7 @@ gcloud compute scp /opt/fspin-x86-64-pungi-snippet ${INSTANCE_NAME}:/tmp/build_s
 gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "sudo bash -c 'export RELEASE=${RELEASE}; /tmp/build_script'" && \
 
 # Copy out results
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /usr/share/spin-kickstarts/${RELEASE}/source/iso/* ${RESULTS_LOCATION}" && \
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} --command "gsutil cp /usr/share/fedora-kickstarts/${RELEASE}/source/iso/* ${RESULTS_LOCATION}" && \
 echo "SUCCESS: Results located at ${RESULTS_LOCATION}"
 result=$?
 

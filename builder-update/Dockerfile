@@ -1,6 +1,6 @@
 FROM google/cloud-sdk:alpine
 
-ENV PACKER_VERSION 1.3.2
+ENV PACKER_VERSION 1.4.0
 
 RUN set -x \
        && apk --update add wget unzip gettext libintl jq

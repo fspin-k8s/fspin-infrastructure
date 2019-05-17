@@ -3,16 +3,20 @@
 set -x
 source /tmp/snapshot_id && \
 export SPIN_SHORT_NAME=`echo $SPIN_NAME|cut -c1-4|awk '{print toupper($0)}'` && \
-pushd /usr/share/spin-kickstarts && \
+pushd /usr/share && \
+git clone https://pagure.io/forks/jsteffan/fedora-kickstarts.git && \
+pushd /usr/share/fedora-kickstarts && \
+git checkout fspin-f29 && \
 \cp -f /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && \
-patch -p0 < fspin-kickstart-patches-20190416.patch && \
 mv fedora-live-mate_compiz.ks fedora-live-mate-compiz.ks && \
 ksflatten --config fedora-live-${SPIN_NAME}.ks -o flat-fedora-live-${SPIN_NAME}.ks --version F${RELEASE} && \
+mkfs.ext4 -F /dev/nvme0n1 && \
+mount /dev/nvme0n1 /var/lib/mock && \
 mock -r fspin-snapshot-x86_64 --init && \
 mock -r fspin-snapshot-x86_64 --install lorax-lmc-novirt && \
 mock -r fspin-snapshot-x86_64 --copyin flat-fedora-live-${SPIN_NAME}.ks . && \
 mock -r fspin-snapshot-x86_64 --old-chroot --chroot "livemedia-creator --ks flat-fedora-live-${SPIN_NAME}.ks --no-virt --resultdir /var/lmc --project F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --make-iso --volid F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --iso-only --iso-name F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso --releasever ${RELEASE} --title F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --macboot" && \
-popd && \
+popd && popd && \
 pushd /var/lib/mock/fspin-snapshot-x86_64/root/var/lmc/ && \
 sha512sum * > CHECKSUM512-F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live && \
 transmission-create -p -s 2048 \
@@ -23,6 +27,4 @@ transmission-create -p -s 2048 \
 	echo "`transmission-show F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.torrent | \
 	awk '/Hash/{print $2}'` F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso" > \
 	F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-torrenthash && \
-casync -v make --chunk-size 1048576 --store F${RELEASE}.castr F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso.caibx \
-	F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso && \
 popd

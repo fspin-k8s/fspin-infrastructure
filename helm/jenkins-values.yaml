@@ -1,11 +1,11 @@
-Master:
-  ServiceType: ClusterIP
+master:
+  serviceType: ClusterIP
   ingress:
     enabled: true
     hostName: "jenkins.fspin.org"
     annotations:
       kubernetes.io/ingress.class: traefik
-  InstallPlugins:
+  installPlugins:
     - kubernetes:1.15.0
     - workflow-aggregator:2.6
     - workflow-job:2.32
@@ -14,9 +14,9 @@ Master:
     - openid:2.3
     - matrix-auth:2.3
 
-Agent:
-  Image: gcr.io/fspin-199819/fspin-jenkins-runner
-  ImageTag: "latest"
+agent:
+  image: gcr.io/fspin-199819/fspin-jenkins-runner
+  imageTag: "latest"
   resources:
     requests:
       cpu: "200m"
@@ -25,8 +25,5 @@ Agent:
       cpu: "1"
       memory: "1024Mi"
 
-rbac:
-  install: true
-  serviceAccountName: fspin-jenkins
-  apiVersion: v1beta1
-  roleRef: cluster-admin
+serviceAccount:
+  name: fspin-jenkins

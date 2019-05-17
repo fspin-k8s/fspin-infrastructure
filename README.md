@@ -31,11 +31,6 @@ Install gcloud SDK:
 $ sudo dnf install google-cloud-sdk
 ```
 
-Optionally, install casync for faster downloads:
-```console
-$ sudo dnf install casync
-```
-
 ### Login to Jenkins
 [Jenkins](https://jenkins.fspin.org/) is configured to run all of the needed jobs. Login with your FAS account with spin SIG membership.
 
@@ -67,12 +62,6 @@ Download a published spin into httpd hosting:
 $ gsutil -m cp -r gs://build-results.fspin.org/releases/YYYY-MM-DD/ /var/www/html/
 ```
 *Note: Current user needs to be able to write to destination.*
-
-Updating to a newer spin from an existing spin using [casync](https://github.com/systemd/casync):
-```console
-$ casync -v extract --seed F29-SPIN-x86_64-YYYYMMDD-Live.iso --store http://build-results.fspin.org/F29.castr/ http://build-results.fspin.org/releases/YYYY-MM-DD/F29-SPIN-x86_64-YYYYMMDD-Live.iso.caibx F29-SPIN-x86_64-YYYYMMDD-Live.iso
-```
-*Note: You can point casync anywhere that the caibx & castr are accessible, locally or remotely. `man casync` for more info.*
 
 ## Developer Quickstart
 These are very specific to the fspin project.
@@ -219,8 +208,8 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.12.6-gke.10 --machine-type n1-highcpu-2 \
- --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --disk-size=20 \
+ --node-locations=us-west2-a --cluster-version=1.12.7-gke.10 \
+ --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
  --metadata disable-legacy-endpoints=true
