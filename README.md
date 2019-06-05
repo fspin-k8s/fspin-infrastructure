@@ -208,7 +208,7 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.12.7-gke.10 \
+ --node-locations=us-west2-a --cluster-version=1.13.6-gke.5 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
@@ -268,16 +268,19 @@ $ watch dig +short traefik.k8s.fspin.org
 ### Install Jenkins
 Make sure you have already created the `jenkins-runner` docker image before running this step.
 
+Create the fspin-jenkins service account:
+```console
+$ kubectl create -f k8s/jenkins-rbac-config.yaml
+```
+
 Install Jenkins using helm:
 ```console
 $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 ```
 
-Manually change the three following [Jenkins](https://jenkins.fspin.org/configure) settings:
+Manually change the following [Jenkins](https://jenkins.fspin.org/configure) settings:
 
 * Configure -> Jenkins Location -> Jenkins URL: `https://jenkins.fspin.org/`
-* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Name: `fspin-jenkins-run`
-* Configure -> Cloud -> Kubernetes -> Images -> Kubernetes Pod Template -> Advanced -> Service Account: `fspin-jenkins`
 
 Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fspin.org/configureSecurity) settings:
 

@@ -6,24 +6,25 @@ master:
     annotations:
       kubernetes.io/ingress.class: traefik
   installPlugins:
-    - kubernetes:1.15.0
+    - kubernetes:1.15.6
     - workflow-aggregator:2.6
     - workflow-job:2.32
-    - credentials-binding:1.18
-    - git:3.9.3
+    - credentials-binding:1.19
+    - git:3.10.0
     - openid:2.3
-    - matrix-auth:2.3
+    - matrix-auth:2.4.2
 
 agent:
   image: gcr.io/fspin-199819/fspin-jenkins-runner
   imageTag: "latest"
+  podName: fspin-jenkins-run
   resources:
     requests:
       cpu: "200m"
       memory: "512Mi"
     limits:
       cpu: "1"
-      memory: "1024Mi"
+      memory: "1Gi"
 
-serviceAccount:
+serviceAccountAgent:
   name: fspin-jenkins

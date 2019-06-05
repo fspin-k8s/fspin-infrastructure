@@ -11,4 +11,3 @@ acme:
   staging: false
   email: jsteffan@fedoraproject.org
   challengeType: http-01
-cpuLimit: 1
