@@ -3,5 +3,5 @@ google:
   project: "fspin-199819"
 policy: sync
 rbac:
-  create: true
   serviceAccountName: fspin-dns
+  create: false

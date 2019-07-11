@@ -6,11 +6,11 @@ master:
     annotations:
       kubernetes.io/ingress.class: traefik
   installPlugins:
-    - kubernetes:1.15.6
+    - kubernetes:1.17.1
     - workflow-aggregator:2.6
-    - workflow-job:2.32
+    - workflow-job:2.33
     - credentials-binding:1.19
-    - git:3.10.0
+    - git:3.10.1
     - openid:2.3
     - matrix-auth:2.4.2
 
@@ -27,4 +27,5 @@ agent:
       memory: "1Gi"
 
 serviceAccountAgent:
-  name: fspin-jenkins
+  name: fspin-jenkins-agent
+  create: false

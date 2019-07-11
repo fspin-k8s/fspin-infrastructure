@@ -5,8 +5,8 @@ IMPORT_TIME=$(date --utc +%s)
 ZONE='us-west2-a'
 PROJECT='fspin-199819'
 #COMPAT_JSON_C_F28='https://jsteffan.fedorapeople.org/compat-json-c/f28/compat-json-c-0.12.1-5.fc28.x86_64.rpm'
-COMPAT_JSON_C_F29='https://jsteffan.fedorapeople.org/compat-json-c/f29/compat-json-c-0.12.1-5.fc29.x86_64.rpm'
-GCSDK_FAKE_BOOST_REGEX_F29='https://jsteffan.fedorapeople.org/gcsdk-fake-boost-regex/gcsdk-fake-boost-regex-1.53.0-1.fc29.x86_64.rpm'
+#COMPAT_JSON_C_F29='https://jsteffan.fedorapeople.org/compat-json-c/f29/compat-json-c-0.12.1-5.fc29.x86_64.rpm'
+#GCSDK_FAKE_BOOST_REGEX_F29='https://jsteffan.fedorapeople.org/gcsdk-fake-boost-regex/gcsdk-fake-boost-regex-1.53.0-1.fc29.x86_64.rpm'
 
 gcloud config set project ${PROJECT}
 gcloud config set compute/zone ${ZONE}
@@ -55,29 +55,43 @@ gcloud config set compute/zone ${ZONE}
 
 # WARNING: This requires that the --image-family fspin-28 already exists
 # Needs earlier json-c and faked boost-regex injected into image for google components during the import process
-echo "Importing F29..." && \
+#echo "Importing F29..." && \
 # launch latest f28 image, download f29 image, decompress, mount, inject compat-json-c, unmount, pull raw image result
-gcloud compute instances create f29-inject-deps \
-    --image-family fspin-28 \
-    --boot-disk-size 50GB \
-    --boot-disk-type pd-ssd \
-    --machine-type n1-standard-4 && \
-gcloud compute ssh f29-inject-deps \
-    --command "sudo bash -c 'dnf -y install wget xz && wget https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Cloud/x86_64/images/Fedora-Cloud-Base-29-1.2.x86_64.raw.xz && unxz Fedora-Cloud-Base-29-1.2.x86_64.raw.xz'" && \
-gcloud compute ssh f29-inject-deps \
-    --command "sudo bash -c 'dnf -y install libguestfs-tools && dnf -y update && mkdir -p /fcb && LIBGUESTFS_BACKEND=direct guestmount -a Fedora-Cloud-Base-29-1.2.x86_64.raw -i /fcb && echo \"nameserver 8.8.8.8\" > /fcb/etc/resolv.conf'" && \
-gcloud compute ssh f29-inject-deps \
-    --command "sudo bash -c 'chroot /fcb dnf -y install --releasever 29 ${COMPAT_JSON_C_F29} ${GCSDK_FAKE_BOOST_REGEX_F29}'" && \
-gcloud compute ssh f29-inject-deps \
-    --command "sudo bash -c 'chroot /fcb dnf clean all && rm -fv /fcb/etc/resolv.conf && guestunmount /fcb && sleep 60'" && \
-gcloud compute scp f29-inject-deps:Fedora-Cloud-Base-29-1.2.x86_64.raw . && \
-gcloud -q compute instances delete f29-inject-deps --delete-disks all && \
+#gcloud compute instances create f29-inject-deps \
+#    --image-family fspin-28 \
+#    --boot-disk-size 50GB \
+#    --boot-disk-type pd-ssd \
+#    --machine-type n1-standard-4 && \
+#gcloud compute ssh f29-inject-deps \
+#    --command "sudo bash -c 'dnf -y install wget xz && wget https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Cloud/x86_64/images/Fedora-Cloud-Base-29-1.2.x86_64.raw.xz && unxz Fedora-Cloud-Base-29-1.2.x86_64.raw.xz'" && \
+#gcloud compute ssh f29-inject-deps \
+#    --command "sudo bash -c 'dnf -y install libguestfs-tools && dnf -y update && mkdir -p /fcb && LIBGUESTFS_BACKEND=direct guestmount -a Fedora-Cloud-Base-29-1.2.x86_64.raw -i /fcb && echo \"nameserver 8.8.8.8\" > /fcb/etc/resolv.conf'" && \
+#gcloud compute ssh f29-inject-deps \
+#    --command "sudo bash -c 'chroot /fcb dnf -y install --releasever 29 ${COMPAT_JSON_C_F29} ${GCSDK_FAKE_BOOST_REGEX_F29}'" && \
+#gcloud compute ssh f29-inject-deps \
+#    --command "sudo bash -c 'chroot /fcb dnf clean all && rm -fv /fcb/etc/resolv.conf && guestunmount /fcb && sleep 60'" && \
+#gcloud compute scp f29-inject-deps:Fedora-Cloud-Base-29-1.2.x86_64.raw . && \
+#gcloud -q compute instances delete f29-inject-deps --delete-disks all && \
+#
+## run f29 import with injected raw disk
+#gcloud --quiet beta compute images import fspin-29-1-2-x86-64-${IMPORT_TIME} \
+#    --source-file Fedora-Cloud-Base-29-1.2.x86_64.raw \
+#    --os centos-7 && \
+#gcloud compute images create fspin-29-${IMPORT_TIME} \
+#    --source-image fspin-29-1-2-x86-64-${IMPORT_TIME} \
+#    --source-image-project ${PROJECT} \
+#    --family fspin-29
 
-# run f29 import with injected raw disk
-gcloud --quiet beta compute images import fspin-29-1-2-x86-64-${IMPORT_TIME} \
-    --source-file Fedora-Cloud-Base-29-1.2.x86_64.raw \
+echo "Importing F30..." && \
+# download upstream raw image
+wget https://download.fedoraproject.org/pub/fedora/linux/releases/30/Cloud/x86_64/images/Fedora-Cloud-Base-30-1.2.x86_64.raw.xz && \
+unxz Fedora-Cloud-Base-30-1.2.x86_64.raw.xz && \
+
+# run f30 import from upstream raw disk
+gcloud --quiet beta compute images import fspin-30-1-2-x86-64-${IMPORT_TIME} \
+    --source-file Fedora-Cloud-Base-30-1.2.x86_64.raw \
     --os centos-7 && \
-gcloud compute images create fspin-29-${IMPORT_TIME} \
-    --source-image fspin-29-1-2-x86-64-${IMPORT_TIME} \
+gcloud compute images create fspin-30-${IMPORT_TIME} \
+    --source-image fspin-30-1-2-x86-64-${IMPORT_TIME} \
     --source-image-project ${PROJECT} \
-    --family fspin-29
+    --family fspin-30

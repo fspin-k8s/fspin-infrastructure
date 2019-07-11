@@ -2,12 +2,14 @@
   "builders": [
     {
       "type": "googlecompute",
+      "communicator": "ssh",
+      "ssh_timeout": "10m",
       "project_id": "fspin-199819",
-      "source_image_family": "fspin-29",
+      "source_image_family": "fspin-30",
       "ssh_username": "packer",
       "zone": "us-west2-a",
-      "name": "fspin-29-x86-64-${SNAPSHOT_ID}",
-      "image_name": "fspin-29-x86-64-${SNAPSHOT_ID}",
+      "name": "fspin-30-x86-64-${SNAPSHOT_ID}",
+      "image_name": "fspin-30-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
       "preemptible": "false",
       "machine_type": "n1-standard-4"
@@ -21,8 +23,8 @@
     },
     {
      "type": "file",
-     "source": "/opt/mock-snapshot-fspin-f29-x86_64.cfg",
-     "destination": "/tmp/mock-snapshot-fspin-f29-x86_64.cfg"
+     "source": "/opt/mock-snapshot-fspin-f30-x86_64.cfg",
+     "destination": "/tmp/mock-snapshot-fspin-f30-x86_64.cfg"
     },
     {
       "type": "shell",
@@ -32,10 +34,9 @@
 	"sudo dnf -y config-manager --set-enabled 'fspin-*' google-cloud-sdk",
 	"sudo dnf -y install vim-enhanced mock transmission-cli git",
 	"sudo dnf -y install lorax-lmc-novirt pykickstart kernel-modules",
-        "sudo dnf -y install pungi pungi-legacy yum python2-kobo python2-productmd python2-lockfile createrepo python2-kickstart repoview https://jsteffan.fedorapeople.org/python2-createrepo/python2-createrepo-0.10.3-16.fc29.noarch.rpm",
         "sudo dnf -y update",
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
-	"sudo cp /tmp/mock-snapshot-fspin-f29-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
+	"sudo cp /tmp/mock-snapshot-fspin-f30-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
       ]
     },
     {

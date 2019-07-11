@@ -5,7 +5,7 @@ source /tmp/snapshot_id && \
 pushd /usr/share && \
 git clone https://pagure.io/forks/jsteffan/fedora-kickstarts.git && \
 pushd /usr/share/fedora-kickstarts && \
-git checkout fspin-f29 && \
+git checkout fspin-f30 && \
 \cp -f /tmp/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && \
 sed -i '/%include fedora-repo.ks/d' fedora-live-base.ks && \
 cp /tmp/all-spins.ks . && \

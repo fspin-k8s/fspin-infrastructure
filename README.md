@@ -145,49 +145,49 @@ $ docker system prune -a
 
 Build the Jenkins runner image that has kubectl included and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-jenkins-runner jenkins-runner
+$ docker build --no-cache -t gcr.io/fspin-199819/fspin-jenkins-runner jenkins-runner
 $ docker push gcr.io/fspin-199819/fspin-jenkins-runner
 ```
 
 Create the image to update the repo/snapshot and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-repo-update repo-update
+$ docker build --no-cache -t gcr.io/fspin-199819/fspin-repo-update repo-update
 $ docker push gcr.io/fspin-199819/fspin-repo-update
 ```
 
 Create the image to serve the repo and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-repo-server repo-server
+$ docker build --no-cache -t gcr.io/fspin-199819/fspin-repo-server repo-server
 $ docker push gcr.io/fspin-199819/fspin-repo-server
 ```
 
 Create the image that imports the upstream image and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-cloud-image-import cloud-image-import
+$ docker build --no-cache -t gcr.io/fspin-199819/fspin-cloud-image-import cloud-image-import
 $ docker push gcr.io/fspin-199819/fspin-cloud-image-import
 ```
 
 Create the image to build the updated GCE image and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-x86-64-builder-update builder-update
+$ docker build --no-cache -t gcr.io/fspin-199819/fspin-x86-64-builder-update builder-update
 $ docker push gcr.io/fspin-199819/fspin-x86-64-builder-update
 ```
 
 Create the image that spins live images and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-x86-64-livemedia-creator lmc-create-spin
+$ docker build --no-cache -t gcr.io/fspin-199819/fspin-x86-64-livemedia-creator lmc-create-spin
 $ docker push gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
 ```
 
 Create the image that creates source ISOs and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-x86-64-pungi pungi-create-source
+$ docker build --no-cache -t gcr.io/fspin-199819/fspin-x86-64-pungi pungi-create-source
 $ docker push gcr.io/fspin-199819/fspin-x86-64-pungi
 ```
 
 Create the image that publishes content and push to GCR:
 ```console
-$ docker build -t gcr.io/fspin-199819/fspin-publish publisher
+$ docker build --no-cache -t gcr.io/fspin-199819/fspin-publish publisher
 $ docker push gcr.io/fspin-199819/fspin-publish
 ```
 
@@ -207,9 +207,10 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 
 Create the k8s cluster:
 ```console
-$ gcloud container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.13.6-gke.5 \
- --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 \
+$ gcloud beta container clusters create fspin --zone=us-west2-a \
+ --node-locations=us-west2-a --cluster-version=1.13.7-gke.8 \
+ --enable-autoscaling --num-nodes=2 --min-nodes=1 --max-nodes=10 \
+ --enable-vertical-pod-autoscaling --no-enable-autoupgrade \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
  --metadata disable-legacy-endpoints=true
@@ -229,8 +230,6 @@ $ kubectl get all --namespace kube-system
 Create the tiller service account:
 ```console
 $ kubectl create -f k8s/tiller-rbac-config.yaml
-serviceaccount "tiller" created
-clusterrolebinding.rbac.authorization.k8s.io "tiller" created
 ```
 
 Install helm (yes, this is nasty):
@@ -249,6 +248,11 @@ $ helm repo update
 ```
 
 ### Deploy Automatic DNS Management
+Create the fspin-dns service account:
+```
+$ kubectl create -f k8s/external-dns-rbac-config.yaml
+```
+
 Install external-dns using helm:
 ```console
 $ helm install --name fspin-dns -f helm/external-dns-values.yaml stable/external-dns
@@ -341,10 +345,26 @@ Only do this if you need to directly test the k8s jobs. Otherwise, use Jenkins.
 
 ### Launch Upstream Image GCE Import Job, If Needed
 This only needs to be done once or when updating the base image from an upstream release.
+
+Add IAM management role to the service account:
+```console
+$ gcloud projects add-iam-policy-binding fspin-199819 \
+  --member serviceAccount:fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
+  --role roles/resourcemanager.projectIamAdmin
+```
+
+Run the import:
 ```console
 $ kubectl create -f k8s/fspin-cloud-image-import.yaml
 $ kubectl logs -f job/fspin-cloud-image-import
 $ kubectl delete job/fspin-cloud-image-import
+```
+
+Remove IAM management role from the service account:
+```console
+$ gcloud projects remove-iam-policy-binding fspin-199819 \
+  --member serviceAccount:fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
+  --role roles/resourcemanager.projectIamAdmin
 ```
 
 ### Launch Fspin GCE Builder Update Job
@@ -358,7 +378,7 @@ $ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-$ for RELEASE in 29
+$ for RELEASE in 30
 do
   export RELEASE="${RELEASE}"
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
@@ -369,35 +389,35 @@ do
 done
 ```
 
-For example, create a F29 soas spin:
+For example, create a F30 soas spin:
 ```console
-$ kubectl create -f jobs/run-f29-soas.yaml
-$ kubectl logs -f job/fspin-f29-soas
-$ kubectl delete job/fspin-f29-soas
+$ kubectl create -f jobs/run-f30-soas.yaml
+$ kubectl logs -f job/fspin-f30-soas
+$ kubectl delete job/fspin-f30-soas
 ```
 
-For example, create a F29 workstation spin:
+For example, create a F30 workstation spin:
 ```console
-$ kubectl create -f jobs/run-f29-workstation.yaml
-$ kubectl logs -f job/fspin-f29-workstation
-$ kubectl delete job/fspin-f29-workstation
+$ kubectl create -f jobs/run-f30-workstation.yaml
+$ kubectl logs -f job/fspin-f30-workstation
+$ kubectl delete job/fspin-f30-workstation
 ```
 
 ### Creating Source Images
 Create the jobs for the defined releases:
 ```console
-$ for RELEASE in 29
+$ for RELEASE in 30
 do
   export RELEASE="${RELEASE}"
   envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-source.yaml"
 done
 ```
 
-For example, run pungi to create the source ISO for the F29 spins:
+For example, run pungi to create the source ISO for the F30 spins:
 ```console
-$ kubectl create -f jobs/run-f29-source.yaml
-$ kubectl logs -f job/fspin-f29-source
-$ kubectl delete job/fspin-f29-source
+$ kubectl create -f jobs/run-f30-source.yaml
+$ kubectl logs -f job/fspin-f30-source
+$ kubectl delete job/fspin-f30-source
 ```
 
 ### Run All
