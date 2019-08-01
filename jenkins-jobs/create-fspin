@@ -56,14 +56,6 @@ pipeline {
                   sh 'kubectl logs job/fspin-f30-soas'
                }
             }
-            stage('F30 source') {
-               steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f30-source.yaml'
-                  sh 'kubectl create -f jobs/run-f30-source.yaml'
-                  sh 'until kubectl get job/fspin-f30-source && kubectl get job/fspin-f30-source -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f30-source'
-               }
-            }
             stage('F30 workstation') {
                steps {
                   sh 'kubectl delete --ignore-not-found -f jobs/run-f30-workstation.yaml'

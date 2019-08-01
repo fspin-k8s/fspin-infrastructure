@@ -15,7 +15,7 @@ mount /dev/nvme0n1 /var/lib/mock && \
 mock -v -r fspin-snapshot-x86_64 --init && \
 mock -v -r fspin-snapshot-x86_64 --install lorax-lmc-novirt && \
 mock -v -r fspin-snapshot-x86_64 --copyin flat-fedora-live-${SPIN_NAME}.ks . && \
-mock -v -r fspin-snapshot-x86_64 --old-chroot --chroot "livemedia-creator --ks flat-fedora-live-${SPIN_NAME}.ks --no-virt --resultdir /var/lmc --project F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --make-iso --volid F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --iso-only --iso-name F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live.iso --releasever ${RELEASE} --title F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live --macboot" && \
+mock -v -r fspin-snapshot-x86_64 --old-chroot --chroot "livemedia-creator --ks flat-fedora-live-${SPIN_NAME}.ks --no-virt --resultdir /var/lmc --project F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID} --make-iso --volid F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID} --iso-only --iso-name F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID}.iso --releasever ${RELEASE} --title F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID} --macboot" && \
 popd && popd && \
 pushd /var/lib/mock/fspin-snapshot-x86_64/root/var/lmc/ && \
 sha512sum * > CHECKSUM512-F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-${SPIN_ID}-Live && \
