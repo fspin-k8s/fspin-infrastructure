@@ -208,7 +208,7 @@ $ gcloud projects add-iam-policy-binding fspin-199819 \
 Create the k8s cluster:
 ```console
 $ gcloud beta container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.13.7-gke.8 \
+ --node-locations=us-west2-a --cluster-version=1.13.7-gke.24 \
  --enable-autoscaling --num-nodes=2 --min-nodes=1 --max-nodes=10 \
  --enable-vertical-pod-autoscaling --no-enable-autoupgrade \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
