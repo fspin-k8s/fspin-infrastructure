@@ -5,14 +5,15 @@ master:
     hostName: "jenkins.fspin.org"
     annotations:
       kubernetes.io/ingress.class: traefik
+  tag: "lts"
   installPlugins:
-    - kubernetes:1.17.2
-    - workflow-aggregator:2.6
-    - workflow-job:2.33
-    - credentials-binding:1.19
-    - git:3.10.1
-    - openid:2.3
-    - matrix-auth:2.4.2
+    - kubernetes
+    - workflow-aggregator
+    - workflow-job
+    - credentials-binding
+    - git
+    - openid
+    - matrix-auth
 
 agent:
   image: gcr.io/fspin-199819/fspin-jenkins-runner
