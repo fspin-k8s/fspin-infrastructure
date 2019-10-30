@@ -346,6 +346,8 @@ Only do this if you need to directly test the k8s jobs. Otherwise, use Jenkins.
 ### Launch Upstream Image GCE Import Job, If Needed
 This only needs to be done once or when updating the base image from an upstream release.
 
+*You will also need to enable [Service Usage API](https://console.developers.google.com/apis/api/serviceusage.googleapis.com/overview) to be able to import.*
+
 Add IAM management role to the service account:
 ```console
 $ gcloud projects add-iam-policy-binding fspin-199819 \

@@ -82,16 +82,30 @@ gcloud config set compute/zone ${ZONE}
 #    --source-image-project ${PROJECT} \
 #    --family fspin-29
 
-echo "Importing F30..." && \
+#echo "Importing F30..." && \
+## download upstream raw image
+#wget https://download.fedoraproject.org/pub/fedora/linux/releases/30/Cloud/x86_64/images/Fedora-Cloud-Base-30-1.2.x86_64.raw.xz && \
+#unxz Fedora-Cloud-Base-30-1.2.x86_64.raw.xz && \
+#
+## run f30 import from upstream raw disk
+#gcloud --quiet beta compute images import fspin-30-1-2-x86-64-${IMPORT_TIME} \
+#    --source-file Fedora-Cloud-Base-30-1.2.x86_64.raw \
+#    --os centos-7 && \
+#gcloud compute images create fspin-30-${IMPORT_TIME} \
+#    --source-image fspin-30-1-2-x86-64-${IMPORT_TIME} \
+#    --source-image-project ${PROJECT} \
+#    --family fspin-30
+
+echo "Importing F31..." && \
 # download upstream raw image
-wget https://download.fedoraproject.org/pub/fedora/linux/releases/30/Cloud/x86_64/images/Fedora-Cloud-Base-30-1.2.x86_64.raw.xz && \
-unxz Fedora-Cloud-Base-30-1.2.x86_64.raw.xz && \
+wget https://download.fedoraproject.org/pub/fedora/linux/releases/31/Cloud/x86_64/images/Fedora-Cloud-Base-31-1.9.x86_64.raw.xz && \
+unxz Fedora-Cloud-Base-31-1.9.x86_64.raw.xz && \
 
 # run f30 import from upstream raw disk
-gcloud --quiet beta compute images import fspin-30-1-2-x86-64-${IMPORT_TIME} \
-    --source-file Fedora-Cloud-Base-30-1.2.x86_64.raw \
+gcloud --quiet beta compute images import fspin-31-1-9-x86-64-${IMPORT_TIME} \
+    --source-file Fedora-Cloud-Base-31-1.9.x86_64.raw \
     --os centos-7 && \
-gcloud compute images create fspin-30-${IMPORT_TIME} \
-    --source-image fspin-30-1-2-x86-64-${IMPORT_TIME} \
+gcloud compute images create fspin-31-${IMPORT_TIME} \
+    --source-image fspin-31-1-9-x86-64-${IMPORT_TIME} \
     --source-image-project ${PROJECT} \
-    --family fspin-30
+    --family fspin-31
