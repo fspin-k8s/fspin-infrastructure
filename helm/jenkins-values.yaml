@@ -7,7 +7,7 @@ master:
       kubernetes.io/ingress.class: traefik
   tag: "lts"
   installPlugins:
-    - kubernetes
+    - kubernetes:1.21.1
     - workflow-aggregator
     - workflow-job
     - credentials-binding
