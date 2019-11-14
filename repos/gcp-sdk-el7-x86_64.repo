@@ -1,5 +1,5 @@
-[gcp-sdk-el7-x86_64]
-name=gcp-sdk-el7-x86_64
+[fspin-gcp-sdk-el7-x86_64]
+name=fspin-gcp-sdk-el7-x86_64
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
 enabled=1
 gpgcheck=1
