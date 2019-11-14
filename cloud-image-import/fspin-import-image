@@ -111,9 +111,9 @@ gcloud compute ssh f31-workaround-gpg \
 gcloud compute ssh f31-workaround-gpg \
     --command "sudo bash -c 'dnf -y install libguestfs-tools && mkdir -p /fcb && LIBGUESTFS_BACKEND=direct guestmount -a Fedora-Cloud-Base-31-1.9.x86_64.raw -i /fcb && echo \"nameserver 8.8.8.8\" > /fcb/etc/resolv.conf'" && \
 gcloud compute ssh f31-workaround-gpg \
-    --command "sudo bash -c 'chroot /fcb curl https://raw.githubusercontent.com/fspin-k8s/fspin-infrastructure/master/repos/gcp-k8s-el7-x86_64.repo -o /etc/yum.repos.d/gcp-k8s-el7-x86_64.repo'" && \
+    --command "sudo bash -c 'chroot /fcb curl https://raw.githubusercontent.com/fspin-k8s/fspin-infrastructure/master/repos/fspin-gcp-k8s-el7-x86_64.repo -o /etc/yum.repos.d/fspin-gcp-k8s-el7-x86_64.repo'" && \
 gcloud compute ssh f31-workaround-gpg \
-    --command "sudo bash -c 'chroot /fcb curl https://raw.githubusercontent.com/fspin-k8s/fspin-infrastructure/master/repos/gcp-sdk-el7-x86_64.repo -o /etc/yum.repos.d/gcp-sdk-el7-x86_64.repo'" && \
+    --command "sudo bash -c 'chroot /fcb curl https://raw.githubusercontent.com/fspin-k8s/fspin-infrastructure/master/repos/fspin-gcp-sdk-el7-x86_64.repo -o /etc/yum.repos.d/fspin-gcp-sdk-el7-x86_64.repo'" && \
 gcloud compute ssh f31-workaround-gpg \
     --command "sudo bash -c 'chroot /fcb dnf -y makecache'" && \ # FIXME: sudo su -; chroot /fcb; dnf -y makecache
 gcloud compute ssh f31-workaround-gpg \
