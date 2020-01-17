@@ -3,7 +3,7 @@
 set -x
 IMPORT_TIME=$(date --utc +%s)
 ZONE='us-west2-a'
-PROJECT='fspin-199819'
+PROJECT='fspin-265404'
 #COMPAT_JSON_C_F28='https://jsteffan.fedorapeople.org/compat-json-c/f28/compat-json-c-0.12.1-5.fc28.x86_64.rpm'
 #COMPAT_JSON_C_F29='https://jsteffan.fedorapeople.org/compat-json-c/f29/compat-json-c-0.12.1-5.fc29.x86_64.rpm'
 #GCSDK_FAKE_BOOST_REGEX_F29='https://jsteffan.fedorapeople.org/gcsdk-fake-boost-regex/gcsdk-fake-boost-regex-1.53.0-1.fc29.x86_64.rpm'
@@ -117,7 +117,7 @@ gcloud compute ssh f31-workaround-gpg \
 gcloud compute ssh f31-workaround-gpg \
     --command "sudo bash -c 'chroot /fcb dnf -y makecache'" && \ # FIXME: sudo su -; chroot /fcb; dnf -y makecache
 gcloud compute ssh f31-workaround-gpg \
-    --command "sudo bash -c 'rm -vf /fcb/etc/resolv.conf && sed -i s/\"enabled=1\"/\"enabled=0\"/g /fcb/etc/yum.repos.d/gcp-k8s-el7-x86_64.repo /fcb/etc/yum.repos.d/gcp-sdk-el7-x86_64.repo'" && \
+    --command "sudo bash -c 'rm -vf /fcb/etc/resolv.conf && sed -i s/\"enabled=1\"/\"enabled=0\"/g /fcb/etc/yum.repos.d/fspin-gcp-k8s-el7-x86_64.repo /fcb/etc/yum.repos.d/fspin-gcp-sdk-el7-x86_64.repo'" && \
 gcloud compute ssh f31-workaround-gpg \
     --command "sudo bash -c 'guestunmount /fcb && sleep 60'" && \
 gcloud compute scp f31-workaround-gpg:Fedora-Cloud-Base-31-1.9.x86_64.raw . && \

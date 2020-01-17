@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: fspin-repo-update
-        image: gcr.io/fspin-199819/fspin-repo-update
+        image: gcr.io/fspin-265404/fspin-repo-update
         volumeMounts:
         - mountPath: /mirror
           name: fspin-mirror-storage

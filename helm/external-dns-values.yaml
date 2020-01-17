@@ -1,6 +1,6 @@
 provider: google
 google:
-  project: "fspin-199819"
+  project: "fspin-265404"
 policy: sync
 rbac:
   serviceAccountName: fspin-dns

@@ -4,7 +4,7 @@
       "type": "googlecompute",
       "communicator": "ssh",
       "ssh_timeout": "10m",
-      "project_id": "fspin-199819",
+      "project_id": "fspin-265404",
       "source_image_family": "fspin-30",
       "ssh_username": "packer",
       "zone": "us-west2-a",

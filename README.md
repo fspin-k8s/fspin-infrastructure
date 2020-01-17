@@ -114,7 +114,7 @@ $ newgrp docker
 Login to project and set config defaults:
 ```console
 $ gcloud init
-$ gcloud config set project fspin-199819
+$ gcloud config set project fspin-265404
 $ gcloud config set compute/zone us-west2-a
 $ gcloud auth configure-docker
 $ gcloud container clusters list
@@ -145,50 +145,50 @@ $ docker system prune -a
 
 Build the Jenkins runner image that has kubectl included and push to GCR:
 ```console
-$ docker build --no-cache -t gcr.io/fspin-199819/fspin-jenkins-runner jenkins-runner
-$ docker push gcr.io/fspin-199819/fspin-jenkins-runner
+$ docker build --no-cache -t gcr.io/fspin-265404/fspin-jenkins-runner jenkins-runner
+$ docker push gcr.io/fspin-265404/fspin-jenkins-runner
 ```
 
 Create the image to update the repo/snapshot and push to GCR:
 ```console
-$ docker build --no-cache -t gcr.io/fspin-199819/fspin-repo-update repo-update
-$ docker push gcr.io/fspin-199819/fspin-repo-update
+$ docker build --no-cache -t gcr.io/fspin-265404/fspin-repo-update repo-update
+$ docker push gcr.io/fspin-265404/fspin-repo-update
 ```
 
 Create the image to serve the repo and push to GCR:
 ```console
-$ docker build --no-cache -t gcr.io/fspin-199819/fspin-repo-server repo-server
-$ docker push gcr.io/fspin-199819/fspin-repo-server
+$ docker build --no-cache -t gcr.io/fspin-265404/fspin-repo-server repo-server
+$ docker push gcr.io/fspin-265404/fspin-repo-server
 ```
 
 Create the image that imports the upstream image and push to GCR:
 ```console
-$ docker build --no-cache -t gcr.io/fspin-199819/fspin-cloud-image-import cloud-image-import
-$ docker push gcr.io/fspin-199819/fspin-cloud-image-import
+$ docker build --no-cache -t gcr.io/fspin-265404/fspin-cloud-image-import cloud-image-import
+$ docker push gcr.io/fspin-265404/fspin-cloud-image-import
 ```
 
 Create the image to build the updated GCE image and push to GCR:
 ```console
-$ docker build --no-cache -t gcr.io/fspin-199819/fspin-x86-64-builder-update builder-update
-$ docker push gcr.io/fspin-199819/fspin-x86-64-builder-update
+$ docker build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-builder-update builder-update
+$ docker push gcr.io/fspin-265404/fspin-x86-64-builder-update
 ```
 
 Create the image that spins live images and push to GCR:
 ```console
-$ docker build --no-cache -t gcr.io/fspin-199819/fspin-x86-64-livemedia-creator lmc-create-spin
-$ docker push gcr.io/fspin-199819/fspin-x86-64-livemedia-creator
+$ docker build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-livemedia-creator lmc-create-spin
+$ docker push gcr.io/fspin-265404/fspin-x86-64-livemedia-creator
 ```
 
 Create the image that creates source ISOs and push to GCR:
 ```console
-$ docker build --no-cache -t gcr.io/fspin-199819/fspin-x86-64-pungi pungi-create-source
-$ docker push gcr.io/fspin-199819/fspin-x86-64-pungi
+$ docker build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-pungi pungi-create-source
+$ docker push gcr.io/fspin-265404/fspin-x86-64-pungi
 ```
 
 Create the image that publishes content and push to GCR:
 ```console
-$ docker build --no-cache -t gcr.io/fspin-199819/fspin-publish publisher
-$ docker push gcr.io/fspin-199819/fspin-publish
+$ docker build --no-cache -t gcr.io/fspin-265404/fspin-publish publisher
+$ docker push gcr.io/fspin-265404/fspin-publish
 ```
 
 ## Initial Cluster Setup
@@ -197,22 +197,22 @@ This only needs to be done if the cluster is not already setup.
 Create the service account for the cluster nodes, if not already created:
 ```console
 $ gcloud iam service-accounts create fspin-k8s-nodes --display-name "Fspin GKE Nodes"
-$ gcloud projects add-iam-policy-binding fspin-199819 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
+$ gcloud projects add-iam-policy-binding fspin-265404 \
+  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
   --role roles/editor
-$ gcloud projects add-iam-policy-binding fspin-199819 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
+$ gcloud projects add-iam-policy-binding fspin-265404 \
+  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
   --role roles/compute.instanceAdmin.v1
 ```
 
 Create the k8s cluster:
 ```console
 $ gcloud beta container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.14.7-gke.14 \
+ --node-locations=us-west2-a --cluster-version=1.15.7-gke.2 \
  --enable-autoscaling --num-nodes=2 --min-nodes=1 --max-nodes=10 \
  --enable-vertical-pod-autoscaling --no-enable-autoupgrade \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
- --service-account=fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
+ --service-account=fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
  --metadata disable-legacy-endpoints=true
 ```
 
@@ -259,7 +259,7 @@ $ helm install --name fspin-dns -f helm/external-dns-values.yaml stable/external
 ```
 
 ### Deploy Traefik Ingress Controller
-Install traefik using helm:
+Install [traefik](https://containo.us/traefik/) using helm:
 ```console
 $ helm install --name fspin-ingress --namespace kube-system -f helm/traefik-values.yaml stable/traefik
 ```
@@ -350,8 +350,8 @@ This only needs to be done once or when updating the base image from an upstream
 
 Add IAM management role to the service account:
 ```console
-$ gcloud projects add-iam-policy-binding fspin-199819 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
+$ gcloud projects add-iam-policy-binding fspin-265404 \
+  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
   --role roles/resourcemanager.projectIamAdmin
 ```
 
@@ -364,8 +364,8 @@ $ kubectl delete job/fspin-cloud-image-import
 
 Remove IAM management role from the service account:
 ```console
-$ gcloud projects remove-iam-policy-binding fspin-199819 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-199819.iam.gserviceaccount.com \
+$ gcloud projects remove-iam-policy-binding fspin-265404 \
+  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
   --role roles/resourcemanager.projectIamAdmin
 ```
 

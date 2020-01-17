@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: fspin-f${RELEASE}-x86-64-source
-        image: gcr.io/fspin-199819/fspin-x86-64-pungi
+        image: gcr.io/fspin-265404/fspin-x86-64-pungi
         env:
           - name: RELEASE
             value: "${RELEASE}"

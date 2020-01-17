@@ -16,7 +16,7 @@ master:
     - matrix-auth
 
 agent:
-  image: gcr.io/fspin-199819/fspin-jenkins-runner
+  image: gcr.io/fspin-265404/fspin-jenkins-runner
   tag: "latest"
   podName: fspin-jenkins-run
   resources:

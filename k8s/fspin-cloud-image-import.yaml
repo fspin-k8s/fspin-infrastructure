@@ -7,5 +7,5 @@ spec:
     spec:
       containers:
       - name: fspin-cloud-image-import
-        image: gcr.io/fspin-199819/fspin-cloud-image-import
+        image: gcr.io/fspin-265404/fspin-cloud-image-import
       restartPolicy: OnFailure
