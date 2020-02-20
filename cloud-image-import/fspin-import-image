@@ -121,7 +121,7 @@ gcloud -q compute instances delete f31-virtual-boto-provides --delete-disks all 
 # run f31 import from upstream boto imported raw disk
 gcloud --quiet beta compute images import fspin-31-1-9-x86-64-${IMPORT_TIME} \
     --source-file /tmp/Fedora-Cloud-Base-31-1.9.x86_64.raw \
-    --os centos-8 && \
+    --os centos-7 && \
 gcloud compute images create fspin-31-${IMPORT_TIME} \
     --source-image fspin-31-1-9-x86-64-${IMPORT_TIME} \
     --source-image-project ${PROJECT} \
