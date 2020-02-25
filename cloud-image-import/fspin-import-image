@@ -7,7 +7,7 @@ PROJECT='fspin-265404'
 #COMPAT_JSON_C_F28='https://jsteffan.fedorapeople.org/compat-json-c/f28/compat-json-c-0.12.1-5.fc28.x86_64.rpm'
 #COMPAT_JSON_C_F29='https://jsteffan.fedorapeople.org/compat-json-c/f29/compat-json-c-0.12.1-5.fc29.x86_64.rpm'
 #GCSDK_FAKE_BOOST_REGEX_F29='https://jsteffan.fedorapeople.org/gcsdk-fake-boost-regex/gcsdk-fake-boost-regex-1.53.0-1.fc29.x86_64.rpm'
-GCSDK_VIRTUAL_BOTO_PROVIDES_F31='https://jsteffan.fedorapeople.org/gcsdk-virtual-boto-privides/python3-boto-2.49.0-2.fc31.noarch.rpm'
+GCSDK_VIRTUAL_BOTO_PROVIDES_F31='https://jsteffan.fedorapeople.org/gcsdk-virtual-boto-provides/python3-boto-2.49.0-2.fc31.noarch.rpm'
 
 gcloud config set project ${PROJECT}
 gcloud config set compute/zone ${ZONE}
