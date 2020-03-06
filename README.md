@@ -208,10 +208,11 @@ $ gcloud projects add-iam-policy-binding fspin-265404 \
 Create the k8s cluster:
 ```console
 $ gcloud beta container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.15.9-gke.8 \
+ --node-locations=us-west2-a --cluster-version=1.15.9-gke.12 \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --machine-type e2-medium \
  --enable-vertical-pod-autoscaling --no-enable-autoupgrade \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
+ --enable-shielded-nodes \
  --service-account=fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
  --metadata disable-legacy-endpoints=true
 ```
