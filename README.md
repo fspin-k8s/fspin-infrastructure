@@ -17,7 +17,7 @@ Setup the upstream gcloud SDK repo, if needed:
 $ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-sdk]
 name=Google Cloud SDK
-baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
 enabled=1
 gpgcheck=1
 repo_gpgcheck=1
@@ -77,7 +77,7 @@ Setup the upstream gcloud SDK repo, if needed:
 $ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-sdk]
 name=Google Cloud SDK
-baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
 enabled=1
 gpgcheck=1
 repo_gpgcheck=1
@@ -208,9 +208,9 @@ $ gcloud projects add-iam-policy-binding fspin-265404 \
 Create the k8s cluster:
 ```console
 $ gcloud beta container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --cluster-version=1.15.9-gke.12 \
+ --node-locations=us-west2-a --release-channel stable \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --machine-type e2-medium \
- --enable-vertical-pod-autoscaling --no-enable-autoupgrade \
+ --enable-vertical-pod-autoscaling --enable-autoupgrade \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --enable-shielded-nodes \
  --service-account=fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
@@ -256,7 +256,8 @@ $ kubectl create -f k8s/external-dns-rbac-config.yaml
 
 Install external-dns using helm:
 ```console
-$ helm install --name fspin-dns -f helm/external-dns-values.yaml stable/external-dns
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+$ helm install --name fspin-dns -f helm/external-dns-values.yaml bitnami/external-dns
 ```
 
 ### Deploy Traefik Ingress Controller

@@ -2,6 +2,8 @@ provider: google
 google:
   project: "fspin-265404"
 policy: sync
+serviceAccount:
+  create: false
+  name: "fspin-dns"
 rbac:
-  serviceAccountName: fspin-dns
   create: false
