@@ -284,17 +284,13 @@ Install Jenkins using helm:
 $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 ```
 
-Manually change the following [Jenkins](https://jenkins.fspin.org/configure) settings:
-
-* Configure -> Jenkins Location -> Jenkins URL: `https://jenkins.fspin.org/`
-
 Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fspin.org/configureSecurity) settings:
 
 *Do not do unless TLS is working.*
 
-* Configure Global Security -> Access Control -> OpenID SSO -> Provider URL: `https://id.fedoraproject.org`
-* Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Add user or group: `respins-sig`
-* Configure Global Security -> Access Control -> Authorization -> Matrix-based security -> Set "Administer" for "respins-sig"
+* Configure Global Security -> Authentication -> Security Realm -> OpenID SSO -> Provider URL: `https://id.fedoraproject.org`
+* Configure Global Security -> Authorization -> Authorization -> Matrix-based security -> Add user or group: `respins-sig`
+* Configure Global Security -> Authorization -> Authorization -> Matrix-based security -> Set "Administer" for "respins-sig"
 
 ### Install Jenkins Jobs
 TODO: Automate adding of Jenkins jobs. For now, manually create the pipeline jobs with the jobs defined in [jenkins-jobs](jenkins-jobs)
@@ -382,7 +378,7 @@ $ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-$ for RELEASE in 30
+$ for RELEASE in 32
 do
   export RELEASE="${RELEASE}"
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
@@ -393,35 +389,35 @@ do
 done
 ```
 
-For example, create a F30 soas spin:
+For example, create a F32 soas spin:
 ```console
-$ kubectl create -f jobs/run-f30-soas.yaml
-$ kubectl logs -f job/fspin-f30-soas
-$ kubectl delete job/fspin-f30-soas
+$ kubectl create -f jobs/run-f32-soas.yaml
+$ kubectl logs -f job/fspin-f32-soas
+$ kubectl delete job/fspin-f32-soas
 ```
 
-For example, create a F30 workstation spin:
+For example, create a F32 workstation spin:
 ```console
-$ kubectl create -f jobs/run-f30-workstation.yaml
-$ kubectl logs -f job/fspin-f30-workstation
-$ kubectl delete job/fspin-f30-workstation
+$ kubectl create -f jobs/run-f32-workstation.yaml
+$ kubectl logs -f job/fspin-f32-workstation
+$ kubectl delete job/fspin-f32-workstation
 ```
 
 ### Creating Source Images
 Create the jobs for the defined releases:
 ```console
-$ for RELEASE in 30
+$ for RELEASE in 32
 do
   export RELEASE="${RELEASE}"
   envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-source.yaml"
 done
 ```
 
-For example, run pungi to create the source ISO for the F30 spins:
+For example, run pungi to create the source ISO for the F32 spins:
 ```console
-$ kubectl create -f jobs/run-f30-source.yaml
-$ kubectl logs -f job/fspin-f30-source
-$ kubectl delete job/fspin-f30-source
+$ kubectl create -f jobs/run-f32-source.yaml
+$ kubectl logs -f job/fspin-f32-source
+$ kubectl delete job/fspin-f32-source
 ```
 
 ### Run All

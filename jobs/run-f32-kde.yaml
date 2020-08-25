@@ -1,25 +1,25 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-f30-soas
+  name: fspin-f32-kde
   labels:
     jobgroup: lmc-spinner
 spec:
   backoffLimit: 20
   template:
     metadata:
-      name: fspin-f30-soas
+      name: fspin-f32-kde
       labels:
         jobgroup: lmc-spinner
     spec:
       containers:
-      - name: build-f30-soas
+      - name: build-f32-kde
         image: gcr.io/fspin-265404/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
-            value: "soas"
+            value: "kde"
           - name: RELEASE
-            value: "30"
+            value: "32"
         volumeMounts:
         - name: prevent-scale-down
           mountPath: /opt/prevent-scale-down
