@@ -13,7 +13,7 @@ ksflatten --config fedora-live-${SPIN_NAME}.ks -o flat-fedora-live-${SPIN_NAME}.
 mkfs.ext4 -F /dev/nvme0n1 && \
 mount /dev/nvme0n1 /var/lib/mock && \
 mock -v -r fspin-snapshot-x86_64 --init && \
-mock -v -r fspin-snapshot-x86_64 --install libblockdev-plugins-all lorax\* kernel\* && \
+mock -v -r fspin-snapshot-x86_64 --install libblockdev-plugins-all kernel kernel-core kernel-devel lorax-lmc-novirt && \
 mock -v -r fspin-snapshot-x86_64 --copyin flat-fedora-live-${SPIN_NAME}.ks . && \
 mock -v -r fspin-snapshot-x86_64 --old-chroot --chroot "livemedia-creator --ks flat-fedora-live-${SPIN_NAME}.ks --no-virt --resultdir /var/lmc --project F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID} --make-iso --volid F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID} --iso-only --iso-name F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID}.iso --releasever ${RELEASE} --macboot" && \
 popd && popd && \

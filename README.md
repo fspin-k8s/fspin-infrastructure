@@ -12,23 +12,10 @@ Details on how to use Jenkins to create a respin and interact with the results.
 ### Install Tools
 Install gcloud sdk to make interacting with [GCS](https://cloud.google.com/storage/) easy via `gsutil`.
 
-Setup the upstream gcloud SDK repo, if needed:
+Install gcloud SDK using snap:
 ```console
-$ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
-[google-cloud-sdk]
-name=Google Cloud SDK
-baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOM
-```
-
-Install gcloud SDK:
-```console
-$ sudo dnf install google-cloud-sdk
+$ sudo dnf install snapd
+$ sudo snap install google-cloud-sdk --classic
 ```
 
 ### Login to Jenkins
@@ -69,31 +56,17 @@ These are very specific to the fspin project.
 ### Install Tools
 Install tools for working with this infrastructure:
 ```console
-$ sudo dnf install docker kubernetes-client git
+$ sudo dnf install docker kubernetes-client git snapd
 ```
 
-Setup the upstream gcloud SDK repo, if needed:
+Install gcloud SDK using snap:
 ```console
-$ sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
-[google-cloud-sdk]
-name=Google Cloud SDK
-baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOM
+$ sudo snap install google-cloud-sdk --classic
 ```
 
-Install gcloud SDK:
+Install helm using snap:
 ```console
-$ sudo dnf install google-cloud-sdk
-```
-
-Install helm (yes, this is nasty):
-```console
-curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+$ sudo snap install helm --classic
 ```
 
 ### Clone the Git Repo
@@ -227,27 +200,6 @@ Verify cluster is correctly configured on the client:
 $ kubectl get all --namespace kube-system
 ```
 
-### Install Tiller
-Create the tiller service account:
-```console
-$ kubectl create -f k8s/tiller-rbac-config.yaml
-```
-
-Install helm (yes, this is nasty):
-```console
-curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-```
-
-Install helm using the tiller service account:
-```console
-$ helm init --service-account tiller
-```
-
-Update helm charts:
-```console
-$ helm repo update
-```
-
 ### Deploy Automatic DNS Management
 Create the fspin-dns service account:
 ```
@@ -257,13 +209,16 @@ $ kubectl create -f k8s/external-dns-rbac-config.yaml
 Install external-dns using helm:
 ```console
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
-$ helm install --name fspin-dns -f helm/external-dns-values.yaml bitnami/external-dns
+$ helm repo update
+$ helm install fspin-dns -f helm/external-dns-values.yaml bitnami/external-dns
 ```
 
-### Deploy Traefik Ingress Controller
-Install [traefik](https://containo.us/traefik/) using helm:
+### Deploy NGINX Ingress Controller
+Install [NGINX](https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/) using helm:
 ```console
-$ helm install --name fspin-ingress --namespace kube-system -f helm/traefik-values.yaml stable/traefik
+$ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+$ helm repo update
+$ helm install fspin-ingress -f helm/ingress-nginx-values.yaml ingress-nginx/ingress-nginx
 ```
 
 Ensure that DNS is resolving before proceeding or [ACME](https://en.wikipedia.org/wiki/Automated_Certificate_Management_Environment) challenges will fail:
@@ -281,6 +236,7 @@ $ kubectl create -f k8s/jenkins-rbac-config.yaml
 
 Install Jenkins using helm:
 ```console
+$ helm repo update
 $ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
 ```
 
@@ -298,7 +254,7 @@ TODO: Automate adding of Jenkins jobs. For now, manually create the pipeline job
 ### Create Repo Storage, If Needed
 Create the network disk:
 ```console
-$ gcloud compute disks create --size=250GB --zone=us-west2-a fspin-mirror-storage-release
+$ gcloud compute disks create --size=300GB --zone=us-west2-a fspin-mirror-storage-release
 ```
 
 Create the filesystem on the disk:

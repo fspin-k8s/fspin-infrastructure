@@ -5,11 +5,11 @@
       "communicator": "ssh",
       "ssh_timeout": "10m",
       "project_id": "fspin-265404",
-      "source_image_family": "fspin-32",
+      "source_image_family": "fspin-33",
       "ssh_username": "packer",
       "zone": "us-west2-a",
-      "name": "fspin-32-x86-64-${SNAPSHOT_ID}",
-      "image_name": "fspin-32-x86-64-${SNAPSHOT_ID}",
+      "name": "fspin-33-x86-64-${SNAPSHOT_ID}",
+      "image_name": "fspin-33-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
       "preemptible": "false",
       "machine_type": "e2-standard-4"
@@ -23,8 +23,8 @@
     },
     {
      "type": "file",
-     "source": "/opt/mock-snapshot-fspin-f32-x86_64.cfg",
-     "destination": "/tmp/mock-snapshot-fspin-f32-x86_64.cfg"
+     "source": "/opt/mock-snapshot-fspin-f33-x86_64.cfg",
+     "destination": "/tmp/mock-snapshot-fspin-f33-x86_64.cfg"
     },
     {
       "type": "shell",
@@ -39,7 +39,7 @@
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
 	"sudo grub2-install /dev/sda",
 	"sudo grub2-mkconfig -o /boot/grub2/grub.cfg",
-	"sudo cp /tmp/mock-snapshot-fspin-f32-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
+	"sudo cp /tmp/mock-snapshot-fspin-f33-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
       ]
     },
     {
