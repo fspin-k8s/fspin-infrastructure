@@ -181,6 +181,9 @@ $ gcloud projects add-iam-policy-binding fspin-265404 \
 $ gcloud projects add-iam-policy-binding fspin-265404 \
   --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
   --role roles/compute.instanceAdmin.v1
+$ gcloud projects add-iam-policy-binding fspin-265404 \
+  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
+  --role roles/iam.serviceAccountUser
 ```
 
 Create the k8s cluster:
