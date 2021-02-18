@@ -1,3 +1,4 @@
-service:
-￼  annotations:
-￼    external-dns.alpha.kubernetes.io/hostname: "ingress.k8s.fspin.org"
+controller:
+  service:
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: ingress.k8s.fspin.org

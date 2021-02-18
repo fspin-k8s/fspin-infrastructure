@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Service
 apiVersion: v1
 metadata:
-  name: repo-fspin-org
+  name: repo-fspin-org-service
 spec:
   selector:
     app: repo
@@ -10,24 +10,3 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: repo-fspin-org
-  annotations:
-    kubernetes.io/ingress.class: traefik
-spec:
-  rules:
-  - host: repo.fspin.org
-    http:
-      paths:
-      - backend:
-          serviceName: repo-fspin-org
-          servicePort: 80
-  - host: repo-retry.fspin.org
-    http:
-      paths:
-      - backend:
-          serviceName: repo-fspin-org
-          servicePort: 80

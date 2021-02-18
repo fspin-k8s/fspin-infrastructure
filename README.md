@@ -56,7 +56,7 @@ These are very specific to the fspin project.
 ### Install Tools
 Install tools for working with this infrastructure:
 ```console
-$ sudo dnf install docker kubernetes-client git snapd
+$ sudo dnf install docker git snapd
 ```
 
 Install gcloud SDK using snap:
@@ -67,6 +67,11 @@ $ sudo snap install google-cloud-sdk --classic
 Install helm using snap:
 ```console
 $ sudo snap install helm --classic
+```
+
+Install kubectl using snap:
+```console
+$ sudo snap install kubectl --classic
 ```
 
 ### Clone the Git Repo
@@ -181,7 +186,7 @@ $ gcloud projects add-iam-policy-binding fspin-265404 \
 Create the k8s cluster:
 ```console
 $ gcloud beta container clusters create fspin --zone=us-west2-a \
- --node-locations=us-west2-a --release-channel stable \
+ --node-locations=us-west2-a --release-channel rapid \
  --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --machine-type e2-medium \
  --enable-vertical-pod-autoscaling --enable-autoupgrade \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
@@ -223,7 +228,24 @@ $ helm install fspin-ingress -f helm/ingress-nginx-values.yaml ingress-nginx/ing
 
 Ensure that DNS is resolving before proceeding or [ACME](https://en.wikipedia.org/wiki/Automated_Certificate_Management_Environment) challenges will fail:
 ```console
-$ watch dig +short traefik.k8s.fspin.org
+$ watch dig +short ingress.k8s.fspin.org
+```
+
+### Deploy cert-manager for Automatic TLS
+Install [cert-manager](https://cert-manager.io/) using helm:
+```console
+$ helm repo add jetstack https://charts.jetstack.io
+$ helm repo update
+$ helm install fspin-tls jetstack/cert-manager \
+  --set installCRDs=true \
+  --set ingressShim.defaultIssuerName=letsencrypt-prod \
+  --set ingressShim.defaultIssuerKind=ClusterIssuer \
+  --set ingressShim.defaultIssuerGroup=cert-manager.io
+```
+
+Install the ClusterIssuer once cert-manager has successfully started:
+```console
+$ kubectl create -f k8s/cert-manager-cluster-issuer.yaml
 ```
 
 ### Install Jenkins
@@ -270,7 +292,7 @@ Make sure you have already created the `repo-update` and `repo-server` docker im
 
 If repo already deployed, delete repo hosting (does not delete repo data):
 ```console
-$ kubectl delete deploy repo-fspin-org
+$ kubectl delete deploy repo-fspin-org-deployment
 ```
 
 Run the repo update/snapshot job:
@@ -285,15 +307,21 @@ Create the repo server deployment:
 $ kubectl create -f k8s/repo-fspin-org-deployment.yaml
 ```
 
+Create the repo server service (if not already created):
+```console
+$ kubectl create -f k8s/repo-fspin-org-service.yaml
+```
+
+Create the repo server ingress (if not already created):
+```console
+$ kubectl create -f k8s/repo-fspin-org-ingress.yaml
+```
+
 Create the repo server horizontal pod autoscaler (if not already created):
 ```console
 $ kubectl create -f k8s/repo-fspin-org-autoscaler.yaml
 ```
 
-Create the repo server ingress (if not already created):
-```console
-$ kubectl create -f k8s/repo-fspin-org-service.yaml
-```
 ## Manually Running Jobs
 Only do this if you need to directly test the k8s jobs. Otherwise, use Jenkins.
 

@@ -4,7 +4,7 @@ master:
     enabled: true
     hostName: "jenkins.fspin.org"
     annotations:
-      kubernetes.io/ingress.class: traefik
+      kubernetes.io/ingress.class: nginx
   tag: "lts"
   installPlugins:
     - kubernetes:1.26.4

@@ -1,6 +1,6 @@
 node {
    stage('Shutdown Repo/Jobs') {
-       sh 'kubectl delete --ignore-not-found deploy/repo-fspin-org'
+       sh 'kubectl delete --ignore-not-found deploy/repo-fspin-org-deployment'
        sh 'kubectl delete --ignore-not-found job/fspin-repo-update'
        sh 'kubectl delete --ignore-not-found job/fspin-x86-64-builder-update'
        sleep 10
