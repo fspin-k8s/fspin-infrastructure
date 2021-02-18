@@ -317,6 +317,11 @@ Create the repo server ingress (if not already created):
 $ kubectl create -f k8s/repo-fspin-org-ingress.yaml
 ```
 
+Create the retry repo server ingress (if not already created):
+```console
+$ kubectl create -f k8s/repo-retry-fspin-org-ingress.yaml
+```
+
 Create the repo server horizontal pod autoscaler (if not already created):
 ```console
 $ kubectl create -f k8s/repo-fspin-org-autoscaler.yaml
