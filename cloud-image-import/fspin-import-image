@@ -25,7 +25,7 @@ gcloud compute images create fspin-33-${IMPORT_TIME}-bootfix \
     --source-image fspin-33-1-2-x86-64-${IMPORT_TIME} \
     --source-image-project ${PROJECT} && \
 
-# boot image, wait for fixup, shutdown
+# boot image, wait for selinux fixup, shutdown
 gcloud compute instances create fspin-33-${IMPORT_TIME}-bootfix \
     --image fspin-33-${IMPORT_TIME}-bootfix \
     --image-project ${PROJECT} \
@@ -33,13 +33,13 @@ gcloud compute instances create fspin-33-${IMPORT_TIME}-bootfix \
     --boot-disk-size 30GB \
     --boot-disk-type pd-ssd \
     --machine-type n1-standard-8 && \
-sleep 300 && \
+sleep 120 && \
 gcloud compute instances stop fspin-33-${IMPORT_TIME}-bootfix && \
 
 # import resulting image
 gcloud compute images create fspin-33-${IMPORT_TIME} \
     --source-disk fspin-33-${IMPORT_TIME}-bootfix \
-    --source-disk-zone us-west2-a \
+    --source-disk-zone ${ZONE} \
     --family fspin-33 && \
 
 # remove instance
