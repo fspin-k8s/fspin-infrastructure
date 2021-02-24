@@ -2,8 +2,6 @@
   "builders": [
     {
       "type": "googlecompute",
-      "communicator": "ssh",
-      "ssh_timeout": "10m",
       "project_id": "fspin-265404",
       "source_image_family": "fspin-33",
       "ssh_username": "packer",
@@ -12,7 +10,6 @@
       "image_name": "fspin-33-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
       "disk_size": "30",
-      "preemptible": "false",
       "machine_type": "e2-standard-4"
     }
   ],
