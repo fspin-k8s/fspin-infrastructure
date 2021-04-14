@@ -261,8 +261,9 @@ $ kubectl create -f k8s/jenkins-rbac-config.yaml
 
 Install Jenkins using helm:
 ```console
+$ helm repo add jenkins https://charts.jenkins.io
 $ helm repo update
-$ helm install --name fspin-jenkins -f helm/jenkins-values.yaml stable/jenkins
+$ helm install fspin-jenkins -f helm/jenkins-values.yaml jenkins/jenkins
 ```
 
 Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fspin.org/configureSecurity) settings:
