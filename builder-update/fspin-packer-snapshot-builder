@@ -5,14 +5,15 @@ set -x
 export SNAPSHOT_ID=$(wget -q -O - https://repo.fspin.org/latest_snapshot)
 if [[ ! ${SNAPSHOT_ID+x} ]]; then exit 1; fi
 BUILDER_IMAGES=5
+FEDORA_VERSION=34
 envsubst '${SNAPSHOT_ID}' < "fspin.repo" > "fspin-snapshot.repo" && \
 envsubst '${SNAPSHOT_ID}' < "fspin-repo-not-rawhide-with-source.ks" > "fspin-snapshot-repo-not-rawhide-with-source.ks" && \
-envsubst '${SNAPSHOT_ID}' < "fspin-33-x86-64-builder.json" > "fspin-snapshot-33-x86-64-builder.json" && \
-envsubst '${SNAPSHOT_ID}' < "mock-fspin-f33-x86_64.cfg" > "mock-snapshot-fspin-f33-x86_64.cfg" && \
+envsubst '${SNAPSHOT_ID}' < "fspin-${FEDORA_VERSION}-x86-64-builder.json" > "fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json" && \
+envsubst '${SNAPSHOT_ID}' < "mock-fspin-f${FEDORA_VERSION}-x86_64.cfg" > "mock-snapshot-fspin-f${FEDORA_VERSION}-x86_64.cfg" && \
 echo "export SNAPSHOT_ID=${SNAPSHOT_ID}" > snapshot_id && \
 echo "export SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- '{print $1$2$3}'`" >> snapshot_id && \
-echo "Creating builder for F33..." && \
-/bin/packer build -force /opt/fspin-snapshot-33-x86-64-builder.json && \
+echo "Creating builder for F${FEDORA_VERSION}..." && \
+/bin/packer build -force /opt/fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json && \
 echo "Cleaning out stale images..."
 result=$?
 images=(); while read i; do images+=("$i"); done < <(gcloud compute images list --filter="name~fspin-[0-9]+-x86-64" --sort-by="~creationTimestamp" --format="json(NAME)"|jq -r .[].name) && \

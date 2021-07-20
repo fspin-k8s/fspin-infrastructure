@@ -5,28 +5,29 @@ set -x
 MIRROR_HOST='mirrors.xmission.com'
 MIRROR_EXCLUDE='debug/*'
 MIRROR_SNAPSHOTS=5
+FEDORA_VERSION=34
 
 # Create paths
-mkdir -p /mirror/latest/releases/33/Everything/x86_64/os/ \
-         /mirror/latest/releases/33/Everything/source/tree \
-         /mirror/latest/updates/33/x86_64/ \
-         /mirror/latest/updates/33/SRPMS/
+mkdir -p /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ \
+         /mirror/latest/releases/${FEDORA_VERSION}/Everything/source/tree \
+         /mirror/latest/updates/${FEDORA_VERSION}/x86_64/ \
+         /mirror/latest/updates/${FEDORA_VERSION}/SRPMS/
 
-# Update local main copy of F33 x86_64 mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/releases/33/Everything/x86_64/os/ /mirror/latest/releases/33/Everything/x86_64/os/
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/33/Everything/x86_64/os/ /mirror/latest/releases/33/Everything/x86_64/os/
+# Update local main copy of F${FEDORA_VERSION} x86_64 mirror
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/releases/${FEDORA_VERSION}/Everything/x86_64/os/ /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/${FEDORA_VERSION}/Everything/x86_64/os/ /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/
 
-# Update local main copy of F33 source mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/releases/33/Everything/source/tree/ /mirror/latest/releases/33/Everything/source/tree/
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/33/Everything/source/tree/ /mirror/latest/releases/33/Everything/source/tree/
+# Update local main copy of F${FEDORA_VERSION} source mirror
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/releases/${FEDORA_VERSION}/Everything/source/tree/ /mirror/latest/releases/${FEDORA_VERSION}/Everything/source/tree/
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/${FEDORA_VERSION}/Everything/source/tree/ /mirror/latest/releases/${FEDORA_VERSION}/Everything/source/tree/
 
-# Update local main copy of F33 updates x86_64 mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/updates/33/Everything/x86_64/ /mirror/latest/updates/33/x86_64/
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/33/Everything/x86_64/ /mirror/latest/updates/33/x86_64/
+# Update local main copy of F${FEDORA_VERSION} updates x86_64 mirror
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/updates/${FEDORA_VERSION}/Everything/x86_64/ /mirror/latest/updates/${FEDORA_VERSION}/x86_64/
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/${FEDORA_VERSION}/Everything/x86_64/ /mirror/latest/updates/${FEDORA_VERSION}/x86_64/
 
-# Update local main copy of F33 updates source mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/updates/33/Everything/SRPMS/ /mirror/latest/updates/33/SRPMS/
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/33/Everything/SRPMS/ /mirror/latest/updates/33/SRPMS/
+# Update local main copy of F${FEDORA_VERSION} updates source mirror
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/linux/updates/${FEDORA_VERSION}/Everything/SRPMS/ /mirror/latest/updates/${FEDORA_VERSION}/SRPMS/
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/${FEDORA_VERSION}/Everything/SRPMS/ /mirror/latest/updates/${FEDORA_VERSION}/SRPMS/
 
 # Create a tagged repo for all downstream jobs
 SNAPSHOT_ID=$(date --utc +%F-%s)
