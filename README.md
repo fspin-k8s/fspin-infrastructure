@@ -213,7 +213,7 @@ kubectl get all --namespace kube-system
 
 ### Deploy Automatic DNS Management
 Create the fspin-dns service account:
-```
+```console
 kubectl create -f k8s/external-dns-rbac-config.yaml
 ```
 
