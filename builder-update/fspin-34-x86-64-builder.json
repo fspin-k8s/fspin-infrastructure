@@ -6,6 +6,7 @@
       "source_image_family": "fspin-34",
       "ssh_username": "packer",
       "use_os_login": "true",
+      "temporary_key_pair_type": "ed25519",
       "zone": "us-west2-a",
       "name": "fspin-34-x86-64-${SNAPSHOT_ID}",
       "image_name": "fspin-34-x86-64-${SNAPSHOT_ID}",
