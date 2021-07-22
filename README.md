@@ -374,7 +374,7 @@ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-for RELEASE in 32
+for RELEASE in 34
 do
   export RELEASE="${RELEASE}"
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
@@ -385,35 +385,35 @@ do
 done
 ```
 
-For example, create a F32 soas spin:
+For example, create a F34 soas spin:
 ```console
-kubectl create -f jobs/run-f32-soas.yaml
-kubectl logs -f job/fspin-f32-soas
-kubectl delete job/fspin-f32-soas
+kubectl create -f jobs/run-f34-soas.yaml
+kubectl logs -f job/fspin-f34-soas
+kubectl delete job/fspin-f34-soas
 ```
 
-For example, create a F32 workstation spin:
+For example, create a F34 workstation spin:
 ```console
-kubectl create -f jobs/run-f32-workstation.yaml
-kubectl logs -f job/fspin-f32-workstation
-kubectl delete job/fspin-f32-workstation
+kubectl create -f jobs/run-f34-workstation.yaml
+kubectl logs -f job/fspin-f34-workstation
+kubectl delete job/fspin-f34-workstation
 ```
 
 ### Creating Source Images
 Create the jobs for the defined releases:
 ```console
-for RELEASE in 32
+for RELEASE in 34
 do
   export RELEASE="${RELEASE}"
   envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-source.yaml"
 done
 ```
 
-For example, run pungi to create the source ISO for the F32 spins:
+For example, run pungi to create the source ISO for the F34 spins:
 ```console
-kubectl create -f jobs/run-f32-source.yaml
-kubectl logs -f job/fspin-f32-source
-kubectl delete job/fspin-f32-source
+kubectl create -f jobs/run-f34-source.yaml
+kubectl logs -f job/fspin-f34-source
+kubectl delete job/fspin-f34-source
 ```
 
 ### Run All
