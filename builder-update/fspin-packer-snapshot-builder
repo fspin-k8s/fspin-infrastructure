@@ -10,6 +10,7 @@ envsubst '${SNAPSHOT_ID}' < "fspin.repo" > "fspin-snapshot.repo" && \
 envsubst '${SNAPSHOT_ID}' < "fspin-repo-not-rawhide-with-source.ks" > "fspin-snapshot-repo-not-rawhide-with-source.ks" && \
 envsubst '${SNAPSHOT_ID}' < "fspin-${FEDORA_VERSION}-x86-64-builder.json" > "fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json" && \
 envsubst '${SNAPSHOT_ID}' < "mock-fspin-f${FEDORA_VERSION}-x86_64.cfg" > "mock-snapshot-fspin-f${FEDORA_VERSION}-x86_64.cfg" && \
+\rm fspin.repo fspin-repo-not-rawhide-with-source.ks "fspin-${FEDORA_VERSION}-x86-64-builder.json" "mock-fspin-f${FEDORA_VERSION}-x86_64.cfg" && \
 echo "export SNAPSHOT_ID=${SNAPSHOT_ID}" > snapshot_id && \
 echo "export SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- '{print $1$2$3}'`" >> snapshot_id && \
 echo "Creating builder for F${FEDORA_VERSION}..." && \

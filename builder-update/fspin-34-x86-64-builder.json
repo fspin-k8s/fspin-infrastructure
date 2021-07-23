@@ -18,20 +18,16 @@
   "provisioners": [
     {
      "type": "file",
-     "source": "/opt/fspin-snapshot.repo",
-     "destination": "/tmp/fspin.repo"
-    },
-    {
-     "type": "file",
-     "source": "/opt/mock-snapshot-fspin-f34-x86_64.cfg",
-     "destination": "/tmp/mock-snapshot-fspin-f34-x86_64.cfg"
+     "source": "/opt",
+     "destination": "/tmp"
     },
     {
       "type": "shell",
       "inline": [
+	"sudo cp -r /tmp/opt/* /opt/",
 	"sudo dnf -y clean all",
 	"sudo dnf -y config-manager --set-disabled '*'",
-	"sudo cp /tmp/fspin.repo /etc/yum.repos.d/",
+	"sudo cp /opt/fspin-snapshot.repo /etc/yum.repos.d/",
 	"sudo dnf -y config-manager --set-enabled 'fspin-*' google-cloud-sdk",
         "sudo dnf -y update",
 	"sudo dnf -y install vim-enhanced mock transmission-cli git pykickstart",
@@ -39,23 +35,8 @@
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
 	"sudo grub2-install /dev/sda",
 	"sudo grub2-mkconfig -o /boot/grub2/grub.cfg",
-	"sudo cp /tmp/mock-snapshot-fspin-f34-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
+	"sudo cp /opt/mock-snapshot-fspin-f34-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
       ]
-    },
-    {
-     "type": "file",
-     "source": "/opt/fspin-snapshot-repo-not-rawhide-with-source.ks",
-     "destination": "/tmp/fspin-snapshot-repo-not-rawhide-with-source.ks"
-    },
-    {
-     "type": "file",
-     "source": "/opt/all-spins.ks",
-     "destination": "/tmp/all-spins.ks"
-    },
-    {
-     "type": "file",
-     "source": "/opt/snapshot_id",
-     "destination": "/tmp/snapshot_id"
     }
   ]
 }
