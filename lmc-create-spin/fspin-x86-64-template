@@ -10,6 +10,7 @@ git checkout f${RELEASE} && \
 \cp -f /opt/fspin-snapshot-repo-not-rawhide-with-source.ks fedora-repo-not-rawhide.ks && \
 mv fedora-live-mate_compiz.ks fedora-live-mate-compiz.ks && \
 ksflatten --config fedora-live-${SPIN_NAME}.ks -o flat-fedora-live-${SPIN_NAME}.ks --version F${RELEASE} && \
+dnf -y install kernel-modules-$(uname -r) && \
 mkfs.ext4 -F /dev/nvme0n1 && \
 mount /dev/nvme0n1 /var/lib/mock && \
 mock -v -r fspin-snapshot-x86_64 --init && \
