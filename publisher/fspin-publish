@@ -5,7 +5,7 @@
 # - Clean out all old builds
 set -x
 export SNAPSHOT_ID=$(wget -q -O - https://repo.fspin.org/latest_snapshot)
-if [[ ! ${SNAPSHOT_ID+x} ]]; then exit 1; fi
+[[ -z "${SNAPSHOT_ID}" ]] && exit 1
 export SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- -v OFS='-' '{print $1,$2,$3}'` && \
 export RELEASE_STRING=`echo ${SPIN_ID}|sed 's/-//g'` && \
 export RESULTS_LOCATION="gs://build-results.fspin.org/releases/" && \
