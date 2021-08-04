@@ -14,7 +14,7 @@ dnf -y install kernel-modules-$(uname -r) && \
 mkfs.ext4 -F /dev/nvme0n1 && \
 mount /dev/nvme0n1 /var/lib/mock && \
 mock -r fspin-snapshot-x86_64 --init && \
-mock -r fspin-snapshot-x86_64 --install lorax-lmc-novirt && \
+mock -r fspin-snapshot-x86_64 --install lorax-lmc-novirt hfsplus-tools && \
 mock -r fspin-snapshot-x86_64 --copyin flat-fedora-live-${SPIN_NAME}.ks . && \
 mock -r fspin-snapshot-x86_64 --isolation=simple --enable-network --chroot "livemedia-creator --ks flat-fedora-live-${SPIN_NAME}.ks --no-virt --resultdir /var/lmc --project F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID} --make-iso --volid F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID} --iso-only --iso-name F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID}.iso --releasever ${RELEASE} --macboot" && \
 popd && popd && \
