@@ -30,7 +30,7 @@
 	"sudo cp /opt/fspin-snapshot.repo /etc/yum.repos.d/",
 	"sudo dnf -y config-manager --set-enabled 'fspin-*' google-cloud-sdk",
         "sudo dnf -y update",
-	"sudo dnf -y install vim-enhanced mock transmission-cli git pykickstart",
+	"sudo dnf -y install vim-enhanced mock qemu-user-static transmission-cli git pykickstart",
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
 	"sudo grub2-install /dev/sda",
 	"sudo grub2-mkconfig -o /boot/grub2/grub.cfg",

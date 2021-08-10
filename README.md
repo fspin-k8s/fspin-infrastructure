@@ -377,7 +377,7 @@ Create the jobs for the defined live spins:
 for RELEASE in 34
 do
   export RELEASE="${RELEASE}"
-  for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde
+  for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde i3
     do
       export TARGET="${TARGET}"
       envsubst '${RELEASE} ${TARGET}' < "k8s/fspin-x86-64-live-spin-job.yaml" > "jobs/run-f${RELEASE}-$TARGET.yaml"
