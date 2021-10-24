@@ -7,6 +7,10 @@ controller:
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
       certmanager.k8s.io/acme-challenge-type: http01
+    tls:
+      - secretName: jenkins-fspin-org-tls
+        hosts:
+          - jenkins.fspin.org
 
   tag: "lts"
   installLatestPlugins: true
