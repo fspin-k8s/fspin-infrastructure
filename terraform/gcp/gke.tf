@@ -26,20 +26,6 @@ resource "google_service_account_iam_binding" "fspin-k8s-iam-binding-editor" {
     "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
   ]
 }
-resource "google_service_account_iam_binding" "fspin-k8s-iam-binding-instance-admin" {
-  service_account_id = google_service_account.fspin-k8s-nodes.name
-  role               = "roles/compute.instanceAdmin.v1"
-  members            = [
-    "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
-  ]
-}
-resource "google_service_account_iam_binding" "fspin-k8s-iam-binding-iap" {
-  service_account_id = google_service_account.fspin-k8s-nodes.name
-  role               = "roles/iap.tunnelResourceAccessor"
-  members            = [
-    "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
-  ]
-}
 
 # GKE Stable Cluster
 resource "google_container_cluster" "fspin" {
