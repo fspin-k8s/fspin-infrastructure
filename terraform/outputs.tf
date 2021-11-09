@@ -1,9 +1,14 @@
+output "project" {
+  value       = local.project_id
+  description = "GCP Project"
+}
+
 output "region" {
   value       = var.region
   description = "GCP Region"
 }
 
-output "project" {
+output "zone" {
   value       = local.project_id
   description = "GCP Project"
 }

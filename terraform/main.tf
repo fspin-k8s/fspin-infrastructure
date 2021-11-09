@@ -55,6 +55,7 @@ provider "google" {}
 module "gcp" {
   source         = "./gcp"
   region         = local.region
+  zone           = local.zone
   billing_id     = local.billing_id
   project_id     = local.project_id
   cluster_name   = local.cluster_name
