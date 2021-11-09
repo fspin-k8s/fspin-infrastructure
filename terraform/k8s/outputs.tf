@@ -9,6 +9,6 @@ output "project" {
 }
 
 output "cluster_name" {
-  value       = local.cluster_name
+  value       = google_container_cluster.fspin.name
   description = "GKE Cluster Name"
 }

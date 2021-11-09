@@ -1,14 +1,52 @@
-variable "region" {
-  type        = string
-  description = "The region within to launch the cluster."
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">= 4.0"
+    }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = ">= 2.6"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.3"
+    }
+  }
+  required_version = "~> 1.0.10"
 }
 
-variable "project_prefix" {
-  type        = string
-  description = "The project name prefix to create/manage."
+# Provider is configured using environment variables: GOOGLE_REGION, GOOGLE_PROJECT, GOOGLE_CREDENTIALS.
+# This can be set statically, if preferred. See docs for details.
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#full-reference
+provider "google" {}
+
+# Configure kubernetes provider with Oauth2 access token.
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config
+# This fetches a new token, which will expire in 1 hour.
+data "google_client_config" "fspin" {
 }
 
-variable "billing_id" {
-  type        = string
-  description = "The billing ID to charge resources against."
+# Defer reading the cluster data until the GKE cluster exists.
+data "google_container_cluster" "fspin" {
+  name = google_container_cluster.fspin.name
+  depends_on = [google_container_cluster.fspin]
+}
+
+provider "kubernetes" {
+  host  = "https://${data.google_container_cluster.fspin.endpoint}"
+  token = data.google_client_config.fspin.access_token
+  cluster_ca_certificate = base64decode(
+    data.google_container_cluster.fspin.master_auth[0].cluster_ca_certificate,
+  )
+}
+
+provider "helm" {
+  kubernetes {
+    host  = "https://${data.google_container_cluster.fspin.endpoint}"
+    token = data.google_client_config.fspin.access_token
+    cluster_ca_certificate = base64decode(
+      data.google_container_cluster.fspin.master_auth[0].cluster_ca_certificate,
+    )
+  }
 }
