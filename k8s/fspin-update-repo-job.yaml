@@ -7,13 +7,13 @@ spec:
     spec:
       containers:
       - name: fspin-repo-update
-        image: gcr.io/fspin-265404/fspin-repo-update
+        image: gcr.io/respin-sig-fspin-resources/fspin-repo-update
         volumeMounts:
         - mountPath: /mirror
           name: fspin-mirror-storage
       volumes:
       - name: fspin-mirror-storage
         gcePersistentDisk:
-          pdName: fspin-mirror-storage-release
+          pdName: fspin-mirror-storage
           fsType: ext4
       restartPolicy: OnFailure

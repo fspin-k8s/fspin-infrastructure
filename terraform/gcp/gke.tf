@@ -30,7 +30,7 @@ resource "google_service_account_iam_binding" "fspin-k8s-iam-binding-editor" {
 # GKE Stable Cluster
 resource "google_container_cluster" "fspin" {
   name                     = var.cluster_name
-  location                 = var.region
+  location                 = var.zone
   project                  = "${google_project.fspin.project_id}"
   release_channel {
     channel                = "STABLE"
@@ -43,9 +43,9 @@ resource "google_container_cluster" "fspin" {
 resource "google_container_node_pool" "fspin-nodes" {
   name               = "fspin-k8s-nodes"
   cluster            = var.cluster_name
-  location           = var.region
+  location           = var.zone
   project            = "${google_project.fspin.project_id}"
-  initial_node_count = 1
+  node_count = 1
 
   autoscaling {
     min_node_count   = 1
