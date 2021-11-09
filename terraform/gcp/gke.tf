@@ -6,7 +6,7 @@ resource "google_project_service" "fspin" {
 
 # GKE Autopilot Stable Cluster
 resource "google_container_cluster" "fspin" {
-  name             = local.cluster_name
+  name             = var.cluster_name
   location         = var.region
   project          = "${google_project.fspin.project_id}"
   enable_autopilot = true

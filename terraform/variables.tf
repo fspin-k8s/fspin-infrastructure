@@ -14,5 +14,8 @@ variable "billing_id" {
 }
 
 locals {
-  cluster_name = "${google_project.fspin.project_id}-gke-cluster"
+  region         = var.region
+  billing_id     = var.billing_id
+  project_id     = "${var.project_prefix}-fspin-resources"
+  cluster_name   = "${local.project_id}-gke-cluster"
 }

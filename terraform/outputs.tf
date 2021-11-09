@@ -4,7 +4,7 @@ output "region" {
 }
 
 output "project" {
-  value       = google_project.fspin.project_id
+  value       = local.project_id
   description = "GCP Project"
 }
 

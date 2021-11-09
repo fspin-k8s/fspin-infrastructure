@@ -25,12 +25,13 @@ provider "google" {}
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config
 # This fetches a new token, which will expire in 1 hour.
 data "google_client_config" "fspin" {
+  depends_on = [module.k8s]
 }
 
 # Defer reading the cluster data until the GKE cluster exists.
 data "google_container_cluster" "fspin" {
-  name = google_container_cluster.fspin.name
-  depends_on = [google_container_cluster.fspin]
+  name = local.cluster_name
+  depends_on = [module.k8s]
 }
 
 provider "kubernetes" {
@@ -49,4 +50,21 @@ provider "helm" {
       data.google_container_cluster.fspin.master_auth[0].cluster_ca_certificate,
     )
   }
+}
+
+module "gcp" {
+  source         = "./gcp"
+  region         = local.region
+  billing_id     = local.billing_id
+  project_id     = local.project_id
+  cluster_name   = local.cluster_name
+}
+
+module "k8s" {
+  depends_on       = [module.gcp]
+  source           = "./k8s"
+  region         = local.region
+  billing_id     = local.billing_id
+  project_id     = local.project_id
+  cluster_name   = local.cluster_name
 }
