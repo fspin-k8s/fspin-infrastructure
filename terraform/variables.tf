@@ -18,10 +18,14 @@ variable "billing_id" {
   description = "The billing ID to charge resources against."
 }
 
+resource "random_id" "project_name" {
+  byte_length = 5
+}
+
 locals {
   region         = var.region
   zone           = var.zone
   billing_id     = var.billing_id
-  project_id     = "${var.project_prefix}-fspin-resources"
+  project_id     = "${var.project_prefix}-${random_id.project_name.hex}"
   cluster_name   = "${local.project_id}-gke-cluster"
 }

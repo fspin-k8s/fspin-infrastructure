@@ -2,7 +2,7 @@
 resource "google_service_account" "fspin-k8s-nodes" {
   account_id   = "fspin-k8s-nodes"
   display_name = "Fspin GKE Nodes"
-  project      = "${google_project.fspin.project_id}"
+  project      = "${google_project_service.fspin-gke.project}"
 }
 
 ## Bind Policies to Service Account
@@ -25,7 +25,7 @@ resource "google_service_account" "fspin-k8s-nodes" {
 resource "google_container_cluster" "fspin" {
   name                     = var.cluster_name
   location                 = var.zone
-  project                  = "${google_project.fspin.project_id}"
+  project                  = "${google_project_service.fspin-gke.project}"
   release_channel {
     channel                = "STABLE"
   }
@@ -38,7 +38,7 @@ resource "google_container_node_pool" "fspin-nodes" {
   name               = "fspin-k8s-nodes"
   cluster            = "${google_container_cluster.fspin.name}"
   location           = var.zone
-  project            = "${google_project.fspin.project_id}"
+  project            = "${google_project_service.fspin-gke.project}"
   node_count = 1
 
   autoscaling {
