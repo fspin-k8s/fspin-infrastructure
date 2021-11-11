@@ -9,7 +9,7 @@ output "region" {
 }
 
 output "zone" {
-  value       = local.project_id
+  value       = local.zone
   description = "GCP Project"
 }
 

@@ -1,9 +1,3 @@
-# Enable GKE
-resource "google_project_service" "fspin" {
-  project = "${google_project.fspin.project_id}"
-  service = "container.googleapis.com"
-}
-
 # Create Specialized Service Account
 resource "google_service_account" "fspin-k8s-nodes" {
   account_id   = "fspin-k8s-nodes"
