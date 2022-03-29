@@ -10,12 +10,25 @@
 Details on how to use Jenkins to create a respin and interact with the results.
 
 ### Install Tools
-Install gcloud sdk to make interacting with [GCS](https://cloud.google.com/storage/) easy via `gsutil`.
+Install gcloud CLI to make interacting with [GCS](https://cloud.google.com/storage/) easy via `gsutil`.
 
-Install gcloud SDK using snap:
+Setup Google Cloud SDK repo:
 ```console
-sudo dnf install snapd
-sudo snap install google-cloud-sdk --classic
+sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
+[google-cloud-cli]
+name=Google Cloud CLI
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOM
+```
+
+Install required packages:
+```console
+sudo dnf install google-cloud-cli libxcrypt-compat
 ```
 
 ### Login to Jenkins
@@ -54,119 +67,124 @@ gsutil -m cp -r gs://build-results.fspin.org/releases/YYYY-MM-DD/ /var/www/html/
 These are very specific to the fspin project.
 
 ### Install Tools
-Install tools for working with this infrastructure:
+
+Setup Google Cloud SDK repo:
 ```console
-sudo dnf install docker git snapd
+sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
+[google-cloud-cli]
+name=Google Cloud CLI
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOM
 ```
 
-Install gcloud SDK using snap:
+Install required packages:
 ```console
-sudo snap install google-cloud-sdk --classic
+sudo dnf install dnf-plugins-core google-cloud-cli libxcrypt-compat git podman helm kubectl
 ```
 
-Install helm using snap:
+Install [Terraform](https://terraform.io/):
 ```console
-sudo snap install helm --classic
-```
-
-Install kubectl using snap:
-```console
-sudo snap install kubectl --classic
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+sudo dnf install terraform
 ```
 
 ### Clone the Git Repo
 Clone the git repo read/write:
 ```console
-git clone git@github.com:fspin-k8s/fspin-infrastructure.git
-```
-
-### Setup Docker Environment
-*https://developer.fedoraproject.org/tools/docker/docker-installation.html*
-Allow your user to use docker without sudo:
-```console
-sudo groupadd docker && sudo gpasswd -a ${USER} docker && sudo systemctl restart docker
-newgrp docker
+git clone git@github.com:fspin-k8s/fspin-infrastructure.git ~/fspin-infrastructure
 ```
 
 ### Setup GCP Environment
-Login to project and set config defaults:
+Authenticate and setup [ADC](https://cloud.google.com/sdk/gcloud/reference/auth/application-default) and helpers:
 ```console
-gcloud init
-gcloud config set project fspin-265404
-gcloud config set compute/zone us-central1-a
+gcloud auth login --brief
+gcloud auth application-default login
 gcloud auth configure-docker
+```
+
+### Setup GCP Infrastructure
+Create remote resources using terraform:
+```console
+pushd ~/fspin-infrastructure/terraform
+terraform init
+terraform plan
+terraform apply
+popd
+```
+
+### Configure Defaults
+```console
+pushd ~/fspin-infrastructure/terraform
+gcloud config set project `terraform output -raw project`
+gcloud config set compute/zone `terraform output -raw zone`
+popd
+```
+
+### Confirm Kubernetes Environment
+```console
+pushd ~/fspin-infrastructure/terraform
 gcloud container clusters list
-```
-
-Get credentials for the cluster:
-```console
-gcloud container clusters get-credentials fspin
-```
-
-Verify cluster is correctly configured on the client:
-```console
+gcloud container clusters get-credentials `terraform output -raw cluster_name`
 kubectl get all --namespace kube-system
+popd
 ```
 
-### Build Docker Layers and Push to [GCR](https://cloud.google.com/container-registry/)
+### Build Layers and Push to [GCR](https://cloud.google.com/container-registry/)
 This will build the layers locally and publish them as `latest` to GCR where the cluster pulls images from to run the containers. Please note that whatever is pushed last is considered `latest` even if it's an old version so be sure to know what you are pushing. This only needs to be done if you are changing the layers or they don't already exist in the registry.
-
-Start docker, if needed:
-```console
-sudo systemctl start docker
-```
-
-Make sure you are working with all of the latest layers. Clean up your local docker and start fresh:
-```console
-docker system prune -a
-```
 
 Build the Jenkins runner image that has kubectl included and push to GCR:
 ```console
-docker build --no-cache -t gcr.io/fspin-265404/fspin-jenkins-runner jenkins-runner
-docker push gcr.io/fspin-265404/fspin-jenkins-runner
+pushd ~/fspin-infrastructure/terraform
+podman build --no-cache -t gcr.io/`terraform output -raw project`/fspin-jenkins-runner jenkins-runner
+podman push gcr.io/`terraform output -raw project`/fspin-jenkins-runner
+popd
 ```
 
 Create the image to update the repo/snapshot and push to GCR:
 ```console
-docker build --no-cache -t gcr.io/fspin-265404/fspin-repo-update repo-update
-docker push gcr.io/fspin-265404/fspin-repo-update
+podman build --no-cache -t gcr.io/fspin-265404/fspin-repo-update repo-update
+podman push gcr.io/fspin-265404/fspin-repo-update
 ```
 
 Create the image to serve the repo and push to GCR:
 ```console
-docker build --no-cache -t gcr.io/fspin-265404/fspin-repo-server repo-server
-docker push gcr.io/fspin-265404/fspin-repo-server
+podman build --no-cache -t gcr.io/fspin-265404/fspin-repo-server repo-server
+podman push gcr.io/fspin-265404/fspin-repo-server
 ```
 
 Create the image that imports the upstream image and push to GCR:
 ```console
-docker build --no-cache -t gcr.io/fspin-265404/fspin-cloud-image-import cloud-image-import
-docker push gcr.io/fspin-265404/fspin-cloud-image-import
+podman build --no-cache -t gcr.io/fspin-265404/fspin-cloud-image-import cloud-image-import
+podman push gcr.io/fspin-265404/fspin-cloud-image-import
 ```
 
 Create the image to build the updated GCE image and push to GCR:
 ```console
-docker build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-builder-update builder-update
-docker push gcr.io/fspin-265404/fspin-x86-64-builder-update
+podman build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-builder-update builder-update
+podman push gcr.io/fspin-265404/fspin-x86-64-builder-update
 ```
 
 Create the image that spins live images and push to GCR:
 ```console
-docker build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-livemedia-creator lmc-create-spin
-docker push gcr.io/fspin-265404/fspin-x86-64-livemedia-creator
+podman build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-livemedia-creator lmc-create-spin
+podman push gcr.io/fspin-265404/fspin-x86-64-livemedia-creator
 ```
 
 Create the image that creates source ISOs and push to GCR:
 ```console
-docker build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-pungi pungi-create-source
-docker push gcr.io/fspin-265404/fspin-x86-64-pungi
+podman build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-pungi pungi-create-source
+podman push gcr.io/fspin-265404/fspin-x86-64-pungi
 ```
 
 Create the image that publishes content and push to GCR:
 ```console
-docker build --no-cache -t gcr.io/fspin-265404/fspin-publish publisher
-docker push gcr.io/fspin-265404/fspin-publish
+podman build --no-cache -t gcr.io/fspin-265404/fspin-publish publisher
+podman push gcr.io/fspin-265404/fspin-publish
 ```
 
 ## Initial Cluster Setup
@@ -255,7 +273,7 @@ kubectl create -f k8s/cert-manager-cluster-issuer.yaml
 ```
 
 ### Install Jenkins
-Make sure you have already created the `jenkins-runner` docker image before running this step.
+Make sure you have already created the `jenkins-runner` podman image before running this step.
 
 Create the fspin-jenkins service account:
 ```console
@@ -295,7 +313,7 @@ gcloud compute instances delete format-storage --zone us-central1-a --quiet
 ```
 
 ### Create/Update Repo
-Make sure you have already created the `repo-update` and `repo-server` docker images before running this step.
+Make sure you have already created the `repo-update` and `repo-server` podman images before running this step.
 
 If repo already deployed, delete repo hosting (does not delete repo data):
 ```console

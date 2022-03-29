@@ -13,7 +13,7 @@ terraform {
       version = ">= 2.3"
     }
   }
-  required_version = "~> 1.0.10"
+  required_version = "~> 1.1"
 }
 
 # Provider is configured using environment variables: GOOGLE_REGION, GOOGLE_PROJECT, GOOGLE_CREDENTIALS.
