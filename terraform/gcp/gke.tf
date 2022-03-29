@@ -5,21 +5,21 @@ resource "google_service_account" "fspin-k8s-nodes" {
   project      = "${google_project_service.fspin-gke.project}"
 }
 
-## Bind Policies to Service Account
-#resource "google_service_account_iam_binding" "fspin-k8s-iam-binding" {
-#  service_account_id = google_service_account.fspin-k8s-nodes.name
-#  role               = "roles/iam.serviceAccountUser"
-#  members            = [
-#    "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
-#  ]
-#}
-#resource "google_service_account_iam_binding" "fspin-k8s-iam-binding-editor" {
-#  service_account_id = google_service_account.fspin-k8s-nodes.name
-#  role               = "roles/editor"
-#  members            = [
-#    "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
-#  ]
-#}
+# Bind Policies to Service Account
+resource "google_service_account_iam_binding" "fspin-k8s-iam-binding" {
+  service_account_id = google_service_account.fspin-k8s-nodes.name
+  role               = "roles/iam.serviceAccountUser"
+  members            = [
+    "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
+  ]
+}
+resource "google_service_account_iam_binding" "fspin-k8s-iam-binding-editor" {
+  service_account_id = google_service_account.fspin-k8s-nodes.name
+  role               = "roles/editor"
+  members            = [
+    "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
+  ]
+}
 
 # GKE Stable Cluster
 resource "google_container_cluster" "fspin" {

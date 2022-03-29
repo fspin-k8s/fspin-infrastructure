@@ -25,3 +25,9 @@ resource "google_project_service" "fspin-gke" {
   project = "${google_project.fspin.project_id}"
   service = "container.googleapis.com"
 }
+
+# Enable DNS
+resource "google_project_service" "fspin-dns" {
+  project = "${google_project.fspin.project_id}"
+  service = "dns.googleapis.com"
+}
