@@ -139,52 +139,50 @@ This will build the layers locally and publish them as `latest` to GCR where the
 
 Build the Jenkins runner image that has kubectl included and push to GCR:
 ```console
-pushd ~/fspin-infrastructure/terraform
-podman build --no-cache -t gcr.io/`terraform output -raw project`/fspin-jenkins-runner jenkins-runner
-podman push gcr.io/`terraform output -raw project`/fspin-jenkins-runner
-popd
+podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-jenkins-runner jenkins-runner
+podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-jenkins-runner
 ```
 
 Create the image to update the repo/snapshot and push to GCR:
 ```console
-podman build --no-cache -t gcr.io/fspin-265404/fspin-repo-update repo-update
-podman push gcr.io/fspin-265404/fspin-repo-update
+podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-repo-update repo-update
+podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-repo-update
 ```
 
 Create the image to serve the repo and push to GCR:
 ```console
-podman build --no-cache -t gcr.io/fspin-265404/fspin-repo-server repo-server
-podman push gcr.io/fspin-265404/fspin-repo-server
+podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-repo-server repo-server
+podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-repo-server
 ```
 
 Create the image that imports the upstream image and push to GCR:
 ```console
-podman build --no-cache -t gcr.io/fspin-265404/fspin-cloud-image-import cloud-image-import
-podman push gcr.io/fspin-265404/fspin-cloud-image-import
+podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-cloud-image-import cloud-image-import
+podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-cloud-image-import
 ```
 
 Create the image to build the updated GCE image and push to GCR:
 ```console
-podman build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-builder-update builder-update
-podman push gcr.io/fspin-265404/fspin-x86-64-builder-update
+podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-builder-update builder-update
+podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-builder-update
 ```
 
 Create the image that spins live images and push to GCR:
 ```console
-podman build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-livemedia-creator lmc-create-spin
-podman push gcr.io/fspin-265404/fspin-x86-64-livemedia-creator
+podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-livemedia-creator lmc-create-spin
+podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-livemedia-creator
 ```
 
 Create the image that creates source ISOs and push to GCR:
 ```console
-podman build --no-cache -t gcr.io/fspin-265404/fspin-x86-64-pungi pungi-create-source
-podman push gcr.io/fspin-265404/fspin-x86-64-pungi
+podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-pungi pungi-create-source
+podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-pungi
 ```
 
 Create the image that publishes content and push to GCR:
 ```console
-podman build --no-cache -t gcr.io/fspin-265404/fspin-publish publisher
-podman push gcr.io/fspin-265404/fspin-publish
+podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-publish publisher
+podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-publish
 ```
 
 ## Initial Cluster Setup
@@ -193,17 +191,17 @@ This only needs to be done if the cluster is not already setup.
 Create the service account for the cluster nodes, if not already created:
 ```console
 gcloud iam service-accounts create fspin-k8s-nodes --display-name "Fspin GKE Nodes"
-gcloud projects add-iam-policy-binding fspin-265404 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
+  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
   --role roles/editor
-gcloud projects add-iam-policy-binding fspin-265404 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
+  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
   --role roles/compute.instanceAdmin.v1
-gcloud projects add-iam-policy-binding fspin-265404 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
+  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
   --role roles/iam.serviceAccountUser
-gcloud projects add-iam-policy-binding fspin-265404 \
-  --member=serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
+  --member=serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
   --role=roles/iap.tunnelResourceAccessor
 ```
 
@@ -215,7 +213,7 @@ gcloud beta container clusters create fspin --zone=us-central1-a \
  --enable-vertical-pod-autoscaling --enable-autoupgrade \
  --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
  --enable-shielded-nodes \
- --service-account=fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
+ --service-account=fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
  --metadata disable-legacy-endpoints=true
 ```
 
@@ -362,8 +360,8 @@ This only needs to be done once or when updating the base image from an upstream
 
 Add IAM management role to the service account:
 ```console
-gcloud projects add-iam-policy-binding fspin-265404 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
+  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
   --role roles/resourcemanager.projectIamAdmin
 ```
 
@@ -376,8 +374,8 @@ kubectl delete job/fspin-cloud-image-import
 
 Remove IAM management role from the service account:
 ```console
-gcloud projects remove-iam-policy-binding fspin-265404 \
-  --member serviceAccount:fspin-k8s-nodes@fspin-265404.iam.gserviceaccount.com \
+gcloud projects remove-iam-policy-binding `terraform -chdir=terraform output -raw project` \
+  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
   --role roles/resourcemanager.projectIamAdmin
 ```
 
