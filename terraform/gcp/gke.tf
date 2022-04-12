@@ -49,5 +49,8 @@ resource "google_container_node_pool" "fspin-nodes" {
   node_config {
     machine_type    = "e2-medium"
     service_account = google_service_account.fspin-k8s-nodes.email
+    oauth_scopes    = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
   }
 }
