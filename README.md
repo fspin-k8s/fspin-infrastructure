@@ -97,6 +97,7 @@ sudo dnf install terraform
 Clone the git repo read/write:
 ```console
 git clone git@github.com:fspin-k8s/fspin-infrastructure.git
+cd fspin-infrastructure
 ```
 
 ### Setup GCP Environment
@@ -110,28 +111,22 @@ gcloud auth configure-docker
 ### Setup GCP Infrastructure
 Create remote resources using terraform:
 ```console
-pushd terraform
-terraform init
-terraform plan
-terraform apply
-popd
+terraform -chdir=terraform init
+terraform -chdir=terraform plan
+terraform -chdir=terraform apply
 ```
 
 ### Configure Defaults
 ```console
-pushd terraform
-gcloud config set project `terraform output -raw project`
-gcloud config set compute/zone `terraform output -raw zone`
-popd
+gcloud config set project `terraform -chdir=terraform output -raw project`
+gcloud config set compute/zone `terraform -chdir=terraformoutput -raw zone`
 ```
 
 ### Confirm Kubernetes Environment
 ```console
-pushd terraform
 gcloud container clusters list
-gcloud container clusters get-credentials `terraform output -raw cluster_name`
+gcloud container clusters get-credentials `terraform -chdir=terraform output -raw cluster_name`
 kubectl get all --namespace kube-system
-popd
 ```
 
 ### Build Layers and Push to [GCR](https://cloud.google.com/container-registry/)
