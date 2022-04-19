@@ -3,6 +3,7 @@
     {
       "type": "googlecompute",
       "project_id": "fspin-7ce15ff175",
+      "image_family": "fspin",
       "source_image_project_id": "fedora-cloud",
       "source_image_family": "fedora-cloud-35",
       "ssh_username": "packer",
