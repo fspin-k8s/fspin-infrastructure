@@ -13,12 +13,12 @@ resource "google_service_account_iam_binding" "fspin-k8s-iam-binding" {
     "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
   ]
 }
-resource "google_service_account_iam_binding" "fspin-k8s-iam-binding-editor" {
-  service_account_id = google_service_account.fspin-k8s-nodes.name
-  role               = "roles/editor"
-  members            = [
-    "serviceAccount:${google_service_account.fspin-k8s-nodes.email}",
-  ]
+
+# Add Project IAM Permissions
+resource "google_project_iam_member" "fspin-k8s-iam-project-member" {
+  project = "${google_project_service.fspin-gke.project}"
+  role    = "roles/editor"
+  member  = "serviceAccount:${google_service_account.fspin-k8s-nodes.email}"
 }
 
 # GKE Stable Cluster

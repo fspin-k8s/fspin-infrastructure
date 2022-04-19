@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: repo-nginx
-        image: gcr.io/fspin-265404/fspin-repo-server
+        image: gcr.io/fspin-7ce15ff175/fspin-repo-server
         ports:
         - containerPort: 80
         volumeMounts:
@@ -38,7 +38,7 @@ spec:
       volumes:
       - name: fspin-mirror-storage
         gcePersistentDisk:
-          pdName: fspin-mirror-storage-release
+          pdName: fspin-mirror-storage
           fsType: ext4
           readOnly: true
 

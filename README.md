@@ -119,7 +119,7 @@ terraform -chdir=terraform apply
 ### Configure Defaults
 ```console
 gcloud config set project `terraform -chdir=terraform output -raw project`
-gcloud config set compute/zone `terraform -chdir=terraformoutput -raw zone`
+gcloud config set compute/zone `terraform -chdir=terraform output -raw zone`
 ```
 
 ### Confirm Kubernetes Environment

@@ -1,6 +1,4 @@
 provider: google
-google:
-  project: "fspin-265404"
 policy: sync
 serviceAccount:
   create: false
