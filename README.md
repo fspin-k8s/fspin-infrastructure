@@ -180,48 +180,6 @@ podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw projec
 podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-publish
 ```
 
-## Initial Cluster Setup
-This only needs to be done if the cluster is not already setup.
-
-Create the service account for the cluster nodes, if not already created:
-```console
-gcloud iam service-accounts create fspin-k8s-nodes --display-name "Fspin GKE Nodes"
-gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
-  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
-  --role roles/editor
-gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
-  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
-  --role roles/compute.instanceAdmin.v1
-gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
-  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
-  --role roles/iam.serviceAccountUser
-gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
-  --member=serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
-  --role=roles/iap.tunnelResourceAccessor
-```
-
-Create the k8s cluster:
-```console
-gcloud beta container clusters create fspin --zone=us-central1-a \
- --node-locations=us-central1-a --release-channel rapid \
- --enable-autoscaling --num-nodes=1 --min-nodes=1 --max-nodes=10 --machine-type e2-medium \
- --enable-vertical-pod-autoscaling --enable-autoupgrade \
- --enable-autorepair --no-enable-basic-auth --no-issue-client-certificate --enable-ip-alias \
- --enable-shielded-nodes \
- --service-account=fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
- --metadata disable-legacy-endpoints=true
-```
-
-Get credentials for the cluster:
-```console
-gcloud container clusters get-credentials fspin
-```
-
-Verify cluster is correctly configured on the client:
-```console
-kubectl get all --namespace kube-system
-```
-
 ### Deploy Automatic DNS Management
 Create the fspin-dns service account:
 ```console
@@ -291,20 +249,6 @@ Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fsp
 ### Install Jenkins Jobs
 TODO: Automate adding of Jenkins jobs. For now, manually create the pipeline jobs with the jobs defined in [jenkins-jobs](jenkins-jobs)
 
-### Create Repo Storage, If Needed
-Create the network disk:
-```console
-gcloud compute disks create --size=300GB --zone=us-central1-a fspin-mirror-storage
-```
-
-Create the filesystem on the disk:
-```console
-gcloud compute instances create format-storage --zone us-central1-a --disk name=fspin-mirror-storage
-gcloud compute ssh format-storage --zone us-central1-a --command 'sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb'
-gcloud compute ssh format-storage --zone us-central1-a --command 'sudo mount /dev/sdb /mnt && sudo chmod a+w /mnt'
-gcloud compute instances delete format-storage --zone us-central1-a --quiet
-```
-
 ### Create/Update Repo
 Make sure you have already created the `repo-update` and `repo-server` podman images before running this step.
 
@@ -348,32 +292,6 @@ kubectl create -f k8s/repo-fspin-org-autoscaler.yaml
 ## Manually Running Jobs
 Only do this if you need to directly test the k8s jobs. Otherwise, use Jenkins.
 
-### Launch Upstream Image GCE Import Job, If Needed
-This only needs to be done once or when updating the base image from an upstream release.
-
-*You will also need to enable [Service Usage API](https://console.developers.google.com/apis/api/serviceusage.googleapis.com/overview) to be able to import.*
-
-Add IAM management role to the service account:
-```console
-gcloud projects add-iam-policy-binding `terraform -chdir=terraform output -raw project` \
-  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
-  --role roles/resourcemanager.projectIamAdmin
-```
-
-Run the import:
-```console
-kubectl create -f k8s/fspin-cloud-image-import.yaml
-kubectl logs -f job/fspin-cloud-image-import
-kubectl delete job/fspin-cloud-image-import
-```
-
-Remove IAM management role from the service account:
-```console
-gcloud projects remove-iam-policy-binding `terraform -chdir=terraform output -raw project` \
-  --member serviceAccount:fspin-k8s-nodes@`terraform -chdir=terraform output -raw project`.iam.gserviceaccount.com \
-  --role roles/resourcemanager.projectIamAdmin
-```
-
 ### Launch Fspin GCE Builder Update Job
 This updates the upstream base image with the latest snapshot updates and creates the builder image.
 ```console
@@ -408,23 +326,6 @@ For example, create a F34 workstation spin:
 kubectl create -f jobs/run-f34-workstation.yaml
 kubectl logs -f job/fspin-f34-workstation
 kubectl delete job/fspin-f34-workstation
-```
-
-### Creating Source Images
-Create the jobs for the defined releases:
-```console
-for RELEASE in 34
-do
-  export RELEASE="${RELEASE}"
-  envsubst '${RELEASE}' < "k8s/fspin-x86-64-source-spin-job.yaml" > "jobs/run-f${RELEASE}-source.yaml"
-done
-```
-
-For example, run pungi to create the source ISO for the F34 spins:
-```console
-kubectl create -f jobs/run-f34-source.yaml
-kubectl logs -f job/fspin-f34-source
-kubectl delete job/fspin-f34-source
 ```
 
 ### Run All
