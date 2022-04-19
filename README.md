@@ -150,12 +150,6 @@ podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw projec
 podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-repo-server
 ```
 
-Create the image that imports the upstream image and push to GCR:
-```console
-podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-cloud-image-import cloud-image-import
-podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-cloud-image-import
-```
-
 Create the image to build the updated GCE image and push to GCR:
 ```console
 podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-builder-update builder-update
@@ -166,12 +160,6 @@ Create the image that spins live images and push to GCR:
 ```console
 podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-livemedia-creator lmc-create-spin
 podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-livemedia-creator
-```
-
-Create the image that creates source ISOs and push to GCR:
-```console
-podman build --no-cache -t gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-pungi pungi-create-source
-podman push gcr.io/`terraform -chdir=terraform output -raw project`/fspin-x86-64-pungi
 ```
 
 Create the image that publishes content and push to GCR:
