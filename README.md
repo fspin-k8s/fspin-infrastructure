@@ -302,14 +302,14 @@ do
 done
 ```
 
-For example, create a F34 soas spin:
+For example, create a F35 soas spin:
 ```console
 kubectl create -f jobs/run-f35-soas.yaml
 kubectl logs -f job/fspin-f35-soas
 kubectl delete job/fspin-f35-soas
 ```
 
-For example, create a F34 workstation spin:
+For example, create a F35 workstation spin:
 ```console
 kubectl create -f jobs/run-f35-workstation.yaml
 kubectl logs -f job/fspin-f35-workstation
