@@ -7,6 +7,7 @@ pushd /usr/share && \
 git clone https://pagure.io/fedora-kickstarts.git && \
 pushd /usr/share/fedora-kickstarts && \
 git checkout f${RELEASE} && \
+\cp -f /opt/fspin-repo.ks fedora-repo-not-rawhide.ks && \
 mv fedora-live-mate_compiz.ks fedora-live-mate-compiz.ks && \
 ksflatten --config fedora-live-${SPIN_NAME}.ks -o flat-fedora-live-${SPIN_NAME}.ks --version F${RELEASE} && \
 dnf -y install kernel-modules-$(uname -r) && \
