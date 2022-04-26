@@ -291,7 +291,7 @@ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-for RELEASE in 34
+for RELEASE in 35
 do
   export RELEASE="${RELEASE}"
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde i3
@@ -304,16 +304,16 @@ done
 
 For example, create a F34 soas spin:
 ```console
-kubectl create -f jobs/run-f34-soas.yaml
-kubectl logs -f job/fspin-f34-soas
-kubectl delete job/fspin-f34-soas
+kubectl create -f jobs/run-f35-soas.yaml
+kubectl logs -f job/fspin-f35-soas
+kubectl delete job/fspin-f35-soas
 ```
 
 For example, create a F34 workstation spin:
 ```console
-kubectl create -f jobs/run-f34-workstation.yaml
-kubectl logs -f job/fspin-f34-workstation
-kubectl delete job/fspin-f34-workstation
+kubectl create -f jobs/run-f35-workstation.yaml
+kubectl logs -f job/fspin-f35-workstation
+kubectl delete job/fspin-f35-workstation
 ```
 
 ### Run All
