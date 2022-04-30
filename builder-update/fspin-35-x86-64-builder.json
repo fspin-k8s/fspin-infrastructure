@@ -32,7 +32,7 @@
 	"sudo cp /opt/fspin-snapshot.repo /etc/yum.repos.d/",
 	"sudo dnf -y config-manager --set-enabled 'fspin-*'",
         "sudo dnf -y update",
-	"sudo dnf -y install google-cloud-cli vim-enhanced mock qemu-user-static transmission-cli git pykickstart",
+	"sudo dnf -y install google-cloud-cli google-cloud-ops-agent vim-enhanced mock qemu-user-static transmission-cli git pykickstart",
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
 	"sudo cp /opt/mock-snapshot-fspin-f35-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
       ]
