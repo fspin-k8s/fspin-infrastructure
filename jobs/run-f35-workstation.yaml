@@ -11,6 +11,10 @@ spec:
       name: fspin-f35-workstation
       labels:
         jobgroup: lmc-spinner
+      tolerations:
+         - key: "fspin_builder"
+           operator: "Equal"
+           value: "true"
     spec:
       containers:
       - name: build-f35-workstation

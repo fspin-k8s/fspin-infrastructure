@@ -28,7 +28,7 @@ EOM
 
 Install required packages:
 ```console
-sudo dnf install google-cloud-cli libxcrypt-compat
+sudo dnf install google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat
 ```
 
 ### Login to Jenkins
@@ -84,7 +84,7 @@ EOM
 
 Install required packages:
 ```console
-sudo dnf install dnf-plugins-core google-cloud-cli libxcrypt-compat git podman helm kubectl
+sudo dnf install dnf-plugins-core google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat git podman helm kubectl
 ```
 
 Install [Terraform](https://terraform.io/):

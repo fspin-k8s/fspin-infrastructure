@@ -33,13 +33,13 @@ resource "google_container_cluster" "fspin" {
   initial_node_count       = 1
 }
 
-# GKE Node Pool
+# GKE Node Pool - Infrastructure
 resource "google_container_node_pool" "fspin-nodes" {
   name               = "fspin-k8s-nodes"
   cluster            = "${google_container_cluster.fspin.name}"
   location           = var.zone
   project            = "${google_project_service.fspin-gke.project}"
-  node_count = 1
+  node_count         = 1
 
   autoscaling {
     min_node_count   = 1
@@ -51,6 +51,35 @@ resource "google_container_node_pool" "fspin-nodes" {
     service_account = google_service_account.fspin-k8s-nodes.email
     oauth_scopes    = [
       "https://www.googleapis.com/auth/cloud-platform"
+    ]
+  }
+}
+
+# GKE Node Pool - Builders
+resource "google_container_node_pool" "fspin-nodes-builders" {
+  name               = "fspin-k8s-nodes-builders"
+  cluster            = "${google_container_cluster.fspin.name}"
+  location           = var.zone
+  project            = "${google_project_service.fspin-gke.project}"
+  node_count         = 0
+
+  autoscaling {
+    min_node_count   = 0
+    max_node_count   = 20
+  }
+
+  node_config {
+    machine_type    = "e2-micro"
+    service_account = google_service_account.fspin-k8s-nodes.email
+    oauth_scopes    = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+    taint           = [
+        {
+            effect  = "NO_SCHEDULE"
+            key     = "fspin_builder"
+            value   = "true"
+        },
     ]
   }
 }
