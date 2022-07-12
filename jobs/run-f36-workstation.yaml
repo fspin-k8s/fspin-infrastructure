@@ -1,25 +1,25 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-f35-lxqt
+  name: fspin-f36-workstation
   labels:
     jobgroup: lmc-spinner
 spec:
   backoffLimit: 20
   template:
     metadata:
-      name: fspin-f35-lxqt
+      name: fspin-f36-workstation
       labels:
         jobgroup: lmc-spinner
     spec:
       containers:
-      - name: build-f35-lxqt
+      - name: build-f36-workstation
         image: gcr.io/fspin36-5e643e3932/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
-            value: "lxqt"
+            value: "workstation"
           - name: RELEASE
-            value: "35"
+            value: "36"
         volumeMounts:
         - name: prevent-scale-down
           mountPath: /opt/prevent-scale-down

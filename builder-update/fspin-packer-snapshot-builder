@@ -5,7 +5,7 @@ set -x
 export SNAPSHOT_ID=$(wget -q -O - https://repo.fspin.org/latest_snapshot)
 [[ -z "${SNAPSHOT_ID}" ]] && exit 1
 BUILDER_IMAGES=5
-FEDORA_VERSION=35
+FEDORA_VERSION=36
 envsubst '${SNAPSHOT_ID}' < "fspin.repo" > "fspin-snapshot.repo" && \
 envsubst '${SNAPSHOT_ID}' < "fspin-repo.ks" > "fspin-snapshot-repo.ks" && \
 envsubst '${SNAPSHOT_ID}' < "fspin-${FEDORA_VERSION}-x86-64-builder.json" > "fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json" && \

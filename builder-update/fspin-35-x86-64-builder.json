@@ -5,13 +5,13 @@
       "project_id": "fspin36-5e643e3932",
       "image_family": "fspin",
       "source_image_project_id": "fedora-cloud",
-      "source_image_family": "fedora-cloud-35",
+      "source_image_family": "fedora-cloud-36",
       "ssh_username": "packer",
       "use_os_login": "true",
       "temporary_key_pair_type": "ed25519",
       "zone": "us-central1-a",
-      "name": "fspin-35-x86-64-${SNAPSHOT_ID}",
-      "image_name": "fspin-35-x86-64-${SNAPSHOT_ID}",
+      "name": "fspin-36-x86-64-${SNAPSHOT_ID}",
+      "image_name": "fspin-36-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
       "disk_size": "30",
       "machine_type": "e2-standard-4"
@@ -34,7 +34,7 @@
         "sudo dnf -y update",
 	"sudo dnf -y install google-cloud-cli google-cloud-ops-agent vim-enhanced mock qemu-user-static transmission-cli git pykickstart",
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
-	"sudo cp /opt/mock-snapshot-fspin-f35-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
+	"sudo cp /opt/mock-snapshot-fspin-f36-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg"
       ]
     }
   ]

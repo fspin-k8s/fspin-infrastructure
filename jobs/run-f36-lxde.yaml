@@ -1,25 +1,25 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fspin-f35-cinnamon
+  name: fspin-f36-lxde
   labels:
     jobgroup: lmc-spinner
 spec:
   backoffLimit: 20
   template:
     metadata:
-      name: fspin-f35-cinnamon
+      name: fspin-f36-lxde
       labels:
         jobgroup: lmc-spinner
     spec:
       containers:
-      - name: build-f35-cinnamon
+      - name: build-f36-lxde
         image: gcr.io/fspin36-5e643e3932/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
-            value: "cinnamon"
+            value: "lxde"
           - name: RELEASE
-            value: "35"
+            value: "36"
         volumeMounts:
         - name: prevent-scale-down
           mountPath: /opt/prevent-scale-down
