@@ -6,7 +6,7 @@ set -x
 MIRROR_HOST='mirrors.kernel.org'
 MIRROR_EXCLUDE='debug/*'
 MIRROR_SNAPSHOTS=5
-FEDORA_VERSION=35
+FEDORA_VERSION=36
 
 # Create paths
 mkdir -p /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ \
