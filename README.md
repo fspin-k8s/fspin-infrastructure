@@ -118,7 +118,7 @@ terraform -chdir=terraform apply
 
 If desired, setup some defaults for the environment:
 ```console
-tee terraform/defaults.tfvars << EOM
+tee terraform/terraform.tfvars << EOM
 billing_id = "SOMETHING-VALID"
 project_prefix = "fspin"
 region = "us-central1"
