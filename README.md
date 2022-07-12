@@ -14,7 +14,7 @@ Install gcloud CLI to make interacting with [GCS](https://cloud.google.com/stora
 
 Setup Google Cloud SDK repo:
 ```console
-sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
+sudo tee /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-cli]
 name=Google Cloud CLI
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
@@ -70,7 +70,7 @@ These are very specific to the fspin project.
 
 Setup Google Cloud SDK repo:
 ```console
-sudo tee -a /etc/yum.repos.d/google-cloud-sdk.repo << EOM
+sudo tee /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-cli]
 name=Google Cloud CLI
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
@@ -114,6 +114,16 @@ Create remote resources using terraform:
 terraform -chdir=terraform init
 terraform -chdir=terraform plan
 terraform -chdir=terraform apply
+```
+
+If desired, setup some defaults for the environment:
+```console
+tee terraform/defaults.tfvars << EOM
+billing_id = "SOMETHING-VALID"
+project_prefix = "fspin"
+region = "us-central1"
+zone = "us-central1-a"
+EOM
 ```
 
 ### Configure Defaults

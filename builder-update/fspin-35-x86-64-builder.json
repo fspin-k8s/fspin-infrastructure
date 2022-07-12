@@ -2,7 +2,7 @@
   "builders": [
     {
       "type": "googlecompute",
-      "project_id": "fspin-7ce15ff175",
+      "project_id": "fspin36-5e643e3932",
       "image_family": "fspin",
       "source_image_project_id": "fedora-cloud",
       "source_image_family": "fedora-cloud-35",

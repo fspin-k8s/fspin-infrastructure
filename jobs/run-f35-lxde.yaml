@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: build-f35-lxde
-        image: gcr.io/fspin-7ce15ff175/fspin-x86-64-livemedia-creator
+        image: gcr.io/fspin36-5e643e3932/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
             value: "lxde"

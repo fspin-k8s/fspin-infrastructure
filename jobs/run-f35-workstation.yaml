@@ -11,14 +11,10 @@ spec:
       name: fspin-f35-workstation
       labels:
         jobgroup: lmc-spinner
-      tolerations:
-         - key: "fspin_builder"
-           operator: "Equal"
-           value: "true"
     spec:
       containers:
       - name: build-f35-workstation
-        image: gcr.io/fspin-7ce15ff175/fspin-x86-64-livemedia-creator
+        image: gcr.io/fspin36-5e643e3932/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
             value: "workstation"

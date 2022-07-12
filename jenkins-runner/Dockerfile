@@ -1,4 +1,4 @@
-FROM jenkins/inbound-agent:alpine
+FROM docker.io/jenkins/inbound-agent:alpine
 
 USER root
 
