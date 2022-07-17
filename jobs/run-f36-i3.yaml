@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: build-f36-i3
-        image: gcr.io/fspin36-5e643e3932/fspin-x86-64-livemedia-creator
+        image: gcr.io/fspin36-1d2e88cf18/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
             value: "i3"

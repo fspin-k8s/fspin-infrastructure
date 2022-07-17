@@ -2,10 +2,10 @@
   "builders": [
     {
       "type": "googlecompute",
-      "project_id": "fspin36-5e643e3932",
+      "project_id": "fspin36-1d2e88cf18",
       "image_family": "fspin",
-      "source_image_project_id": "fedora-cloud",
-      "source_image_family": "fedora-cloud-36",
+      "source_image_project_id": "fspin36-1d2e88cf18",
+      "source_image": "fspin-fedora-cloud-base-gcp-36-20220506",
       "ssh_username": "packer",
       "use_os_login": "true",
       "temporary_key_pair_type": "ed25519",
