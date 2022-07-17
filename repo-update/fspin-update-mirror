@@ -2,8 +2,8 @@
 # Update mirror for target releases, creating a stable target for downstream jobs
 set -x
 
-
-MIRROR_HOST='mirrors.kernel.org'
+MIRROR_HOST='ftp-chi.osuosl.org'
+MIRROR_PATH='fedora/linux'
 MIRROR_EXCLUDE='debug/*'
 MIRROR_SNAPSHOTS=5
 FEDORA_VERSION=36
@@ -13,11 +13,11 @@ mkdir -p /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ \
          /mirror/latest/updates/${FEDORA_VERSION}/x86_64/ \
 
 # Update local main copy of F${FEDORA_VERSION} x86_64 mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/releases/${FEDORA_VERSION}/Everything/x86_64/os/ /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ || exit 1
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::${MIRROR_PATH}/releases/${FEDORA_VERSION}/Everything/x86_64/os/ /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ || exit 1
 rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-releases/${FEDORA_VERSION}/Everything/x86_64/os/ /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ || exit 1
 
 # Update local main copy of F${FEDORA_VERSION} updates x86_64 mirror
-rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::fedora/updates/${FEDORA_VERSION}/Everything/x86_64/ /mirror/latest/updates/${FEDORA_VERSION}/x86_64/ || exit 1
+rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} ${MIRROR_HOST}::${MIRROR_PATH}/updates/${FEDORA_VERSION}/Everything/x86_64/ /mirror/latest/updates/${FEDORA_VERSION}/x86_64/ || exit 1
 rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} dl.fedoraproject.org::fedora-linux-updates/${FEDORA_VERSION}/Everything/x86_64/ /mirror/latest/updates/${FEDORA_VERSION}/x86_64/ || exit 1
 
 # Create a tagged repo for all downstream jobs
