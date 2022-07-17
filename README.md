@@ -292,6 +292,18 @@ Only do this if you need to directly test the k8s jobs. Otherwise, use Jenkins.
 
 ### Launch Fspin GCE Builder Update Job
 This updates the upstream base image with the latest snapshot updates and creates the builder image.
+
+Import upstream image (temporary until upstream adds this to the fedora-cloud resource in GCP):
+```console
+gcloud cloud-shell ssh
+wget https://download.fedoraproject.org/pub/alt/unofficial/releases/36/x86_64/images/Fedora-Cloud-Base-GCP-36-20220506.n.0.x86_64.tar.gz
+gsutil mb gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
+gsutil cp Fedora-Cloud-Base-GCP-36-20220506.n.0.x86_64.tar.gz gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
+gcloud compute images create fspin-fedora-cloud-base-gcp-36-20220506 --source-uri gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/Fedora-Cloud-Base-GCP-36-20220506.n.0.x86_64.tar.gz
+gsutil rm gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/*
+gsutil rb gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/
+```
+
 ```console
 kubectl create -f k8s/fspin-x86-64-update-image-job.yaml
 kubectl logs -f job/fspin-x86-64-builder-update
