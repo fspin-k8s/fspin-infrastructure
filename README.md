@@ -122,7 +122,7 @@ tee terraform/terraform.tfvars << EOM
 billing_id = "SOMETHING-VALID"
 project_prefix = "fspin"
 region = "us-central1"
-zone = "us-central1-a"
+zone = "us-central1-f"
 EOM
 ```
 

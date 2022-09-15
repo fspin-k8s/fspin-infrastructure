@@ -23,11 +23,18 @@ resource "google_project_iam_member" "fspin-k8s-iam-project-member" {
 
 # GKE Stable Cluster
 resource "google_container_cluster" "fspin" {
+  provider                 = google-beta
   name                     = var.cluster_name
   location                 = var.zone
   project                  = "${google_project_service.fspin-gke.project}"
   release_channel {
-    channel                = "STABLE"
+    channel                = "RAPID"
+  }
+  monitoring_config {
+    enable_components      = ["SYSTEM_COMPONENTS", "APISERVER", "CONTROLLER_MANAGER", "SCHEDULER"]
+    managed_prometheus {
+      enabled              = true
+    }
   }
   remove_default_node_pool = true
   initial_node_count       = 1
