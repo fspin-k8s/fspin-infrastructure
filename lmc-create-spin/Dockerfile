@@ -1,4 +1,4 @@
-FROM google/cloud-sdk:alpine
+FROM docker.io/google/cloud-sdk:alpine
 
 RUN set -x \
        && apk --update add jq gettext libintl
