@@ -9,7 +9,7 @@
       "ssh_username": "packer",
       "use_os_login": "true",
       "temporary_key_pair_type": "ed25519",
-      "zone": "us-central1-a",
+      "zone": "us-central1-f",
       "name": "fspin-36-x86-64-${SNAPSHOT_ID}",
       "image_name": "fspin-36-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
