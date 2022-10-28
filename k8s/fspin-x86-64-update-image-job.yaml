@@ -7,5 +7,5 @@ spec:
     spec:
       containers:
       - name: fspin-x86-64-builder-update
-        image: gcr.io/fspin36-1d2e88cf18/fspin-x86-64-builder-update
+        image: gcr.io/fspin36-23276e975a/fspin-x86-64-builder-update
       restartPolicy: OnFailure
