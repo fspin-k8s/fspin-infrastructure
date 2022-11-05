@@ -21,7 +21,7 @@ resource "google_project_iam_member" "fspin-k8s-iam-project-member" {
   member  = "serviceAccount:${google_service_account.fspin-k8s-nodes.email}"
 }
 
-# GKE Stable Cluster
+# GKE Cluster
 resource "google_container_cluster" "fspin" {
   provider                 = google-beta
   name                     = var.cluster_name
@@ -42,19 +42,20 @@ resource "google_container_cluster" "fspin" {
 
 # GKE Node Pool - Infrastructure
 resource "google_container_node_pool" "fspin-nodes" {
-  name               = "fspin-k8s-nodes"
-  cluster            = "${google_container_cluster.fspin.name}"
-  location           = var.zone
-  project            = "${google_project_service.fspin-gke.project}"
-  node_count         = 1
+  name              = "fspin-k8s-nodes"
+  cluster           = "${google_container_cluster.fspin.name}"
+  location          = var.zone
+  project           = "${google_project_service.fspin-gke.project}"
+  node_count        = 1
 
   autoscaling {
-    min_node_count   = 1
-    max_node_count   = 3
+    min_node_count  = 1
+    max_node_count  = 3
+    location_policy = "ANY"
   }
 
   node_config {
-    machine_type    = "e2-medium"
+    machine_type    = "n2-standard-2"
     service_account = google_service_account.fspin-k8s-nodes.email
     oauth_scopes    = [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -63,30 +64,30 @@ resource "google_container_node_pool" "fspin-nodes" {
 }
 
 # GKE Node Pool - Builders
-resource "google_container_node_pool" "fspin-nodes-builders" {
-  name               = "fspin-k8s-nodes-builders"
-  cluster            = "${google_container_cluster.fspin.name}"
-  location           = var.zone
-  project            = "${google_project_service.fspin-gke.project}"
-  node_count         = 0
+# resource "google_container_node_pool" "fspin-nodes-builders" {
+#   name               = "fspin-k8s-nodes-builders"
+#   cluster            = "${google_container_cluster.fspin.name}"
+#   location           = var.zone
+#   project            = "${google_project_service.fspin-gke.project}"
+#   node_count         = 0
 
-  autoscaling {
-    min_node_count   = 0
-    max_node_count   = 20
-  }
+#   autoscaling {
+#     min_node_count   = 0
+#     max_node_count   = 20
+#   }
 
-  node_config {
-    machine_type    = "e2-medium"
-    service_account = google_service_account.fspin-k8s-nodes.email
-    oauth_scopes    = [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ]
-    taint           = [
-        {
-            effect  = "NO_SCHEDULE"
-            key     = "fspin_builder"
-            value   = "true"
-        },
-    ]
-  }
-}
+#   node_config {
+#     machine_type    = "e2-medium"
+#     service_account = google_service_account.fspin-k8s-nodes.email
+#     oauth_scopes    = [
+#       "https://www.googleapis.com/auth/cloud-platform"
+#     ]
+#     taint           = [
+#         {
+#             effect  = "NO_SCHEDULE"
+#             key     = "fspin_builder"
+#             value   = "true"
+#         },
+#     ]
+#   }
+# }

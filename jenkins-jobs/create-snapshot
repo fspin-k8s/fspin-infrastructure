@@ -6,7 +6,8 @@ node {
        sleep 10
    }
    stage('Clone Git Repo') {
-      git 'https://github.com/fspin-k8s/fspin-infrastructure.git'
+      git branch: 'main',
+          url: 'https://github.com/fspin-k8s/fspin-infrastructure.git'
    }
    stage('Update Repo and Snapshot') {
        sh 'kubectl create -f k8s/fspin-update-repo-job.yaml'
