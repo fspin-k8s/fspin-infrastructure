@@ -85,8 +85,8 @@ pipeline {
       }
       stage('Cleanup') {
          steps {
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-source'
             sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-cinnamon'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-i3'
             sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-kde'
             sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-lxde'
             sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-lxqt'
