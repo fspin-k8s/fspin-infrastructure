@@ -25,7 +25,7 @@ spec:
           mountPath: /opt/prevent-scale-down
         resources:
           requests:
-            cpu: "100m"
+            cpu: "200m"
       volumes:
       - name: prevent-scale-down
         emptyDir: {}
