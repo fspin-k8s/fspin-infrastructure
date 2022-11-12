@@ -224,6 +224,8 @@ kubectl create -f k8s/cert-manager-cluster-issuer.yaml
 ### Install Jenkins
 Make sure you have already created the `jenkins-runner` podman image before running this step.
 
+*Do not proceed unless TLS is working.*
+
 Create the fspin-jenkins service account:
 ```console
 kubectl create -f k8s/jenkins-rbac-config.yaml
@@ -235,14 +237,6 @@ helm repo add jenkins https://charts.jenkins.io
 helm repo update
 helm install fspin-jenkins -f helm/jenkins-values.yaml jenkins/jenkins
 ```
-
-Setup the SSO for FAS users in the [Jenkins Global Security](https://jenkins.fspin.org/configureSecurity) settings:
-
-*Do not do unless TLS is working.*
-
-* Configure Global Security -> Authentication -> Security Realm -> OpenID SSO -> Provider URL: `https://id.fedoraproject.org`
-* Configure Global Security -> Authorization -> Authorization -> Matrix-based security -> Add user or group: `respins-sig`
-* Configure Global Security -> Authorization -> Authorization -> Matrix-based security -> Set "Administer" for "respins-sig"
 
 ### Install Jenkins Jobs
 TODO: Automate adding of Jenkins jobs. For now, manually create the pipeline jobs with the jobs defined in [jenkins-jobs](jenkins-jobs)

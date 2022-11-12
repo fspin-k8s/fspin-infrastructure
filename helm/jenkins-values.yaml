@@ -1,16 +1,12 @@
 controller:
   JCasC:
     securityRealm: |-
-      local:
-        allowsSignup: false
-        enableCaptcha: false
-        users:
-        - id: "${chart-admin-username}"
-          name: "Jenkins Admin"
-          password: "${chart-admin-password}"
+      openIdSso:
+        endpoint: "https://id.fedoraproject.org"
     authorizationStrategy: |-
-      loggedInUsersCanDoAnything:
-        allowAnonymousRead: false
+      globalMatrix:
+        permissions:
+        - "GROUP:Overall/Administer:respins-sig"
   disableRememberMe: true
   serviceType: ClusterIP
   ingress:
@@ -35,6 +31,7 @@ controller:
     - git
     - openid
     - matrix-auth
+    - matrix-project
     - configuration-as-code
 
 agent:
