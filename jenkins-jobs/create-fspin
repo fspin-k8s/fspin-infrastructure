@@ -9,91 +9,91 @@ pipeline {
       }
       stage ('Launch Compose') {
          parallel {
-            stage('f36 cinnamon') {
+            stage('f37 cinnamon') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-cinnamon.yaml'
-                  sh 'kubectl create -f jobs/run-f36-cinnamon.yaml'
-                  sh 'until kubectl get job/fspin-f36-cinnamon && kubectl get job/fspin-f36-cinnamon -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-cinnamon'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-cinnamon.yaml'
+                  sh 'kubectl create -f jobs/run-f37-cinnamon.yaml'
+                  sh 'until kubectl get job/fspin-f37-cinnamon && kubectl get job/fspin-f37-cinnamon -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-cinnamon'
                }
             }
-            stage('f36 i3') {
+            stage('f37 i3') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-i3.yaml'
-                  sh 'kubectl create -f jobs/run-f36-i3.yaml'
-                  sh 'until kubectl get job/fspin-f36-i3 && kubectl get job/fspin-f36-i3 -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-i3'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-i3.yaml'
+                  sh 'kubectl create -f jobs/run-f37-i3.yaml'
+                  sh 'until kubectl get job/fspin-f37-i3 && kubectl get job/fspin-f37-i3 -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-i3'
                }
             }
-            stage('f36 kde') {
+            stage('f37 kde') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-kde.yaml'
-                  sh 'kubectl create -f jobs/run-f36-kde.yaml'
-                  sh 'until kubectl get job/fspin-f36-kde && kubectl get job/fspin-f36-kde -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-kde'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-kde.yaml'
+                  sh 'kubectl create -f jobs/run-f37-kde.yaml'
+                  sh 'until kubectl get job/fspin-f37-kde && kubectl get job/fspin-f37-kde -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-kde'
                }
             }
-            stage('f36 lxde') {
+            stage('f37 lxde') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-lxde.yaml'
-                  sh 'kubectl create -f jobs/run-f36-lxde.yaml'
-                  sh 'until kubectl get job/fspin-f36-lxde && kubectl get job/fspin-f36-lxde -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-lxde'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-lxde.yaml'
+                  sh 'kubectl create -f jobs/run-f37-lxde.yaml'
+                  sh 'until kubectl get job/fspin-f37-lxde && kubectl get job/fspin-f37-lxde -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-lxde'
                }
             }
-            stage('f36 lxqt') {
+            stage('f37 lxqt') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-lxqt.yaml'
-                  sh 'kubectl create -f jobs/run-f36-lxqt.yaml'
-                  sh 'until kubectl get job/fspin-f36-lxqt && kubectl get job/fspin-f36-lxqt -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-lxqt'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-lxqt.yaml'
+                  sh 'kubectl create -f jobs/run-f37-lxqt.yaml'
+                  sh 'until kubectl get job/fspin-f37-lxqt && kubectl get job/fspin-f37-lxqt -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-lxqt'
                }
             }
-            stage('f36 mate-compiz') {
+            stage('f37 mate-compiz') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-mate-compiz.yaml'
-                  sh 'kubectl create -f jobs/run-f36-mate-compiz.yaml'
-                  sh 'until kubectl get job/fspin-f36-mate-compiz && kubectl get job/fspin-f36-mate-compiz -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-mate-compiz'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-mate-compiz.yaml'
+                  sh 'kubectl create -f jobs/run-f37-mate-compiz.yaml'
+                  sh 'until kubectl get job/fspin-f37-mate-compiz && kubectl get job/fspin-f37-mate-compiz -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-mate-compiz'
                }
             }
-            stage('f36 soas') {
+            stage('f37 soas') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-soas.yaml'
-                  sh 'kubectl create -f jobs/run-f36-soas.yaml'
-                  sh 'until kubectl get job/fspin-f36-soas && kubectl get job/fspin-f36-soas -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-soas'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-soas.yaml'
+                  sh 'kubectl create -f jobs/run-f37-soas.yaml'
+                  sh 'until kubectl get job/fspin-f37-soas && kubectl get job/fspin-f37-soas -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-soas'
                }
             }
-            stage('f36 workstation') {
+            stage('f37 workstation') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-workstation.yaml'
-                  sh 'kubectl create -f jobs/run-f36-workstation.yaml'
-                  sh 'until kubectl get job/fspin-f36-workstation && kubectl get job/fspin-f36-workstation -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-workstation'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-workstation.yaml'
+                  sh 'kubectl create -f jobs/run-f37-workstation.yaml'
+                  sh 'until kubectl get job/fspin-f37-workstation && kubectl get job/fspin-f37-workstation -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-workstation'
                }
             }
-            stage('f36 xfce') {
+            stage('f37 xfce') {
                steps {
-                  sh 'kubectl delete --ignore-not-found -f jobs/run-f36-xfce.yaml'
-                  sh 'kubectl create -f jobs/run-f36-xfce.yaml'
-                  sh 'until kubectl get job/fspin-f36-xfce && kubectl get job/fspin-f36-xfce -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
-                  sh 'kubectl logs job/fspin-f36-xfce'
+                  sh 'kubectl delete --ignore-not-found -f jobs/run-f37-xfce.yaml'
+                  sh 'kubectl create -f jobs/run-f37-xfce.yaml'
+                  sh 'until kubectl get job/fspin-f37-xfce && kubectl get job/fspin-f37-xfce -o json|jq -e \'.status|.conditions|all\'; do sleep 60; done'
+                  sh 'kubectl logs job/fspin-f37-xfce'
                }
             }
          }
       }
       stage('Cleanup') {
          steps {
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-cinnamon'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-i3'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-kde'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-lxde'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-lxqt'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-mate-compiz'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-soas'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-workstation'
-            sh 'kubectl delete --ignore-not-found job.batch/fspin-f36-xfce'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-cinnamon'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-i3'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-kde'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-lxde'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-lxqt'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-mate-compiz'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-soas'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-workstation'
+            sh 'kubectl delete --ignore-not-found job.batch/fspin-f37-xfce'
          }
       }
    }
