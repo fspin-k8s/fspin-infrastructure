@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fspin-f37-i3
+  labels:
+    jobgroup: lmc-spinner
+spec:
+  backoffLimit: 20
+  template:
+    metadata:
+      name: fspin-f37-i3
+      labels:
+        jobgroup: lmc-spinner
+    spec:
+      containers:
+      - name: build-f37-i3
+        image: gcr.io/fspin37-30bd0e8528/fspin-x86-64-livemedia-creator
+        env:
+          - name: TARGET
+            value: "i3"
+          - name: RELEASE
+            value: "37"
+        volumeMounts:
+        - name: prevent-scale-down
+          mountPath: /opt/prevent-scale-down
+        resources:
+          requests:
+            cpu: "100m"
+      volumes:
+      - name: prevent-scale-down
+        emptyDir: {}
+      restartPolicy: OnFailure
+      # nodeSelector:
+      #   cloud.google.com/gke-nodepool: fspin-k8s-nodes-builders
+      # tolerations:
+      # - effect: NoSchedule
+      #   key: "fspin_builder"
+      #   operator: Equal
+      #   value: "true"
