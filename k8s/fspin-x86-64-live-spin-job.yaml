@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: build-f${RELEASE}-$TARGET
-        image: gcr.io/fspin36-23276e975a/fspin-x86-64-livemedia-creator
+        image: gcr.io/fspin37-30bd0e8528/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
             value: "${TARGET}"
@@ -30,10 +30,10 @@ spec:
       - name: prevent-scale-down
         emptyDir: {}
       restartPolicy: OnFailure
-      nodeSelector:
-        cloud.google.com/gke-nodepool: fspin-k8s-nodes-builders
-      tolerations:
-      - effect: NoSchedule
-        key: "fspin_builder"
-        operator: Equal
-        value: "true"
+      # nodeSelector:
+      #   cloud.google.com/gke-nodepool: fspin-k8s-nodes-builders
+      # tolerations:
+      # - effect: NoSchedule
+      #   key: "fspin_builder"
+      #   operator: Equal
+      #   value: "true"

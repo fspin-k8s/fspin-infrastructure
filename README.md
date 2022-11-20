@@ -290,10 +290,10 @@ This updates the upstream base image with the latest snapshot updates and create
 Import upstream image (temporary until upstream adds this to the fedora-cloud resource in GCP):
 ```console
 gcloud cloud-shell ssh
-wget https://download.fedoraproject.org/pub/alt/unofficial/releases/36/x86_64/images/Fedora-Cloud-Base-GCP-36-20220506.n.0.x86_64.tar.gz
+wget https://kojipkgs.fedoraproject.org/packages/Fedora-Cloud-Base-GCP/37/20221110.n.0/images/Fedora-Cloud-Base-GCP-37-20221110.n.0.x86_64.tar.gz
 gsutil mb gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
-gsutil cp Fedora-Cloud-Base-GCP-36-20220506.n.0.x86_64.tar.gz gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
-gcloud compute images create fspin-fedora-cloud-base-gcp-36-20220506 --source-uri gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/Fedora-Cloud-Base-GCP-36-20220506.n.0.x86_64.tar.gz
+gsutil cp Fedora-Cloud-Base-GCP-37-20221110.n.0.x86_64.tar.gz gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
+gcloud compute images create fspin-fedora-cloud-base-gcp-37-20221110 --source-uri gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/Fedora-Cloud-Base-GCP-37-20221110.n.0.x86_64.tar.gz
 gsutil rm gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/*
 gsutil rb gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/
 ```
@@ -307,7 +307,7 @@ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-for RELEASE in 36
+for RELEASE in 37
 do
   export RELEASE="${RELEASE}"
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde i3
@@ -318,18 +318,18 @@ do
 done
 ```
 
-For example, create a F36 soas spin:
+For example, create a F37 soas spin:
 ```console
-kubectl create -f jobs/run-f36-soas.yaml
-kubectl logs -f job/fspin-f36-soas
-kubectl delete job/fspin-f36-soas
+kubectl create -f jobs/run-f37-soas.yaml
+kubectl logs -f job/fspin-f37-soas
+kubectl delete job/fspin-f37-soas
 ```
 
-For example, create a F36 workstation spin:
+For example, create a F37 workstation spin:
 ```console
-kubectl create -f jobs/run-f36-workstation.yaml
-kubectl logs -f job/fspin-f36-workstation
-kubectl delete job/fspin-f36-workstation
+kubectl create -f jobs/run-f37-workstation.yaml
+kubectl logs -f job/fspin-f37-workstation
+kubectl delete job/fspin-f37-workstation
 ```
 
 ### Run All

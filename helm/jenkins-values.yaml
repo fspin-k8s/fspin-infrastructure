@@ -35,7 +35,7 @@ controller:
     - configuration-as-code
 
 agent:
-  image: gcr.io/fspin36-23276e975a/fspin-jenkins-runner
+  image: gcr.io/fspin37-30bd0e8528/fspin-jenkins-runner
   tag: "latest"
   podName: fspin-jenkins-run
   resources:
