@@ -10,14 +10,14 @@
 Details on how to use Jenkins to create a respin and interact with the results.
 
 ### Install Tools
-Install gcloud CLI to make interacting with [GCS](https://cloud.google.com/storage/) easy via `gsutil`.
+Install gcloud CLI to make interacting with [GCP Resources](https://cloud.google.com/) easy via `gcloud`.
 
 Setup Google Cloud SDK repo:
 ```console
 sudo tee /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-cli]
 name=Google Cloud CLI
-baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-x86_64
 enabled=1
 gpgcheck=1
 repo_gpgcheck=0
@@ -26,9 +26,24 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
 EOM
 ```
 
+Setup [Terraform](https://www.terraform.io/) repo:
+```console
+sudo dnf install -y dnf-plugins-core
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+```
+
 Install required packages:
 ```console
-sudo dnf install google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat
+sudo dnf install google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat terraform kubernetes-client helm
+```
+
+Configure kubernetes authentication:
+```console
+mkdir -p ~/.bashrc.d
+tee ~/.bashrc.d/use-gke-cloud-auth-plugin << EORCD
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+EORCD
+source ~/.bashrc
 ```
 
 ### Login to Jenkins
@@ -50,16 +65,16 @@ The spin job launches a pipeline of builds that launch their own dedicated virtu
 The publish job takes the spin results and publishes them to a known location in the build-results GCS storage, combining the hashes and cleaning up. In the future this phase would also do activities such as generating deltas for packages installed, etc.
 
 ### Accessing the Results
-To download the results browse to the [build-results](http://build-results.fspin.org) and construct a download url manually to fetch files. Alternatively, use `gsutil` for easy access to this content.
+To download the results browse to the [build-results](http://build-results.fspin.org) and construct a download url manually to fetch files. Alternatively, use `gcloud storage` for easy access to this content.
 
 List what releases are available:
 ```console
-gsutil ls gs://build-results.fspin.org/releases/
+gcloud storage ls gs://build-results.fspin.org/releases/
 ```
 
 Download a published spin into httpd hosting:
 ```console
-gsutil -m cp -r gs://build-results.fspin.org/releases/YYYY-MM-DD/ /var/www/html/
+gcloud storage cp gs://build-results.fspin.org/releases/YYYY-MM-DD/ /var/www/html/ --recursive
 ```
 *Note: Current user needs to be able to write to destination.*
 
@@ -290,12 +305,14 @@ This updates the upstream base image with the latest snapshot updates and create
 Import upstream image (temporary until upstream adds this to the fedora-cloud resource in GCP):
 ```console
 gcloud cloud-shell ssh
-wget https://kojipkgs.fedoraproject.org/packages/Fedora-Cloud-Base-GCP/37/20221110.n.0/images/Fedora-Cloud-Base-GCP-37-20221110.n.0.x86_64.tar.gz
-gsutil mb gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
-gsutil cp Fedora-Cloud-Base-GCP-37-20221110.n.0.x86_64.tar.gz gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
-gcloud compute images create fspin-fedora-cloud-base-gcp-37-20221110 --source-uri gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/Fedora-Cloud-Base-GCP-37-20221110.n.0.x86_64.tar.gz
-gsutil rm gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/*
-gsutil rb gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/
+wget https://dl.fedoraproject.org/pub/fedora/linux/releases/37/Cloud/x86_64/images/Fedora-Cloud-Base-GCP-37-1.7.x86_64.tar.gz
+gcloud auth login --brief
+gcloud storage buckets create gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
+gcloud storage cp Fedora-Cloud-Base-GCP-37-1.7.x86_64.tar.gz gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
+gcloud compute images create fspin-fedora-cloud-base-gcp-37-1-7 --source-uri gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/Fedora-Cloud-Base-GCP-37-1.7.x86_64.tar.gz
+gcloud storage rm gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/*
+gcloud storage buckets delete gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/
+gcloud auth revoke
 ```
 
 ```console

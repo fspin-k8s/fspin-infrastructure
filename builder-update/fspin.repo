@@ -20,18 +20,7 @@ repo_gpgcheck=0
 
 [fspin-google-cloud-sdk]
 name=Google Cloud CLI - $basearch
-baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-$basearch
-enabled=1
-gpgcheck=1
-type=rpm-md
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-skip_if_unavailable=False
-repo_gpgcheck=0
-
-[fspin-google-cloud-ops-agent]
-name=Google Cloud Ops Agent - $basearch
-baseurl=https://packages.cloud.google.com/yum/repos/google-cloud-ops-agent-el8-$basearch-all
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-$basearch
 enabled=1
 gpgcheck=1
 type=rpm-md
