@@ -28,3 +28,10 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 skip_if_unavailable=False
 repo_gpgcheck=0
+
+#[fspin-fedora-updates-testing]
+#name=Fedora $releasever - $basearch - Test Updates
+#mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-testing-f$releasever&arch=$basearch
+#gpgcheck=1
+#gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+#enabled=1
