@@ -20,8 +20,6 @@ controller:
       - secretName: jenkins-fspin-org-tls
         hosts:
           - jenkins.fspin.org
-
-  tag: "latest"
   installLatestPlugins: true
   installPlugins:
     - kubernetes
@@ -35,8 +33,9 @@ controller:
     - configuration-as-code
 
 agent:
-  image: gcr.io/fspin37-30bd0e8528/fspin-jenkins-runner
-  tag: "latest"
+  image:
+    repository: gcr.io/fspin-40572d9516/fspin-jenkins-runner
+    tag: "latest"
   podName: fspin-jenkins-run
   resources:
     requests:

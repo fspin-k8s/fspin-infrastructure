@@ -26,15 +26,15 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
 EOM
 ```
 
-Setup [Terraform](https://www.terraform.io/) repo:
-```console
-sudo dnf install -y dnf-plugins-core
-sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-```
-
 Install required packages:
 ```console
-sudo dnf install google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat terraform kubernetes-client helm
+sudo dnf install dnf-plugins-core google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat kubernetes-client git podman helm
+```
+
+Install [Terraform](https://terraform.io/):
+```console
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+sudo dnf install terraform
 ```
 
 Configure kubernetes authentication:
@@ -88,7 +88,7 @@ Setup Google Cloud SDK repo:
 sudo tee /etc/yum.repos.d/google-cloud-sdk.repo << EOM
 [google-cloud-cli]
 name=Google Cloud CLI
-baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-x86_64
 enabled=1
 gpgcheck=1
 repo_gpgcheck=0
@@ -99,7 +99,7 @@ EOM
 
 Install required packages:
 ```console
-sudo dnf install dnf-plugins-core google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat git podman helm kubectl
+sudo dnf install dnf-plugins-core google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat kubernetes-client git podman helm
 ```
 
 Install [Terraform](https://terraform.io/):
@@ -305,11 +305,11 @@ This updates the upstream base image with the latest snapshot updates and create
 Import upstream image (temporary until upstream adds this to the fedora-cloud resource in GCP):
 ```console
 gcloud cloud-shell ssh
-wget https://dl.fedoraproject.org/pub/fedora/linux/releases/37/Cloud/x86_64/images/Fedora-Cloud-Base-GCP-37-1.7.x86_64.tar.gz
+wget https://dl.fedoraproject.org/pub/fedora/linux/releases/39/Cloud/x86_64/images/Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz
 gcloud auth login --brief
 gcloud storage buckets create gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
-gcloud storage cp Fedora-Cloud-Base-GCP-37-1.7.x86_64.tar.gz gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
-gcloud compute images create fspin-fedora-cloud-base-gcp-37-1-7 --source-uri gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/Fedora-Cloud-Base-GCP-37-1.7.x86_64.tar.gz
+gcloud storage cp Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
+gcloud compute images create fspin-fedora-cloud-base-gcp-39-1-5 --source-uri gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz
 gcloud storage rm gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/*
 gcloud storage buckets delete gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/
 gcloud auth revoke
@@ -324,7 +324,7 @@ kubectl delete job/fspin-x86-64-builder-update
 ### Creating Live Images
 Create the jobs for the defined live spins:
 ```console
-for RELEASE in 37
+for RELEASE in 39
 do
   export RELEASE="${RELEASE}"
   for TARGET in workstation xfce soas lxde lxqt cinnamon mate-compiz kde i3
@@ -335,18 +335,18 @@ do
 done
 ```
 
-For example, create a F37 soas spin:
+For example, create a F39 soas spin:
 ```console
-kubectl create -f jobs/run-f37-soas.yaml
-kubectl logs -f job/fspin-f37-soas
-kubectl delete job/fspin-f37-soas
+kubectl create -f jobs/run-f39-soas.yaml
+kubectl logs -f job/fspin-f39-soas
+kubectl delete job/fspin-f39-soas
 ```
 
-For example, create a F37 workstation spin:
+For example, create a F39 workstation spin:
 ```console
-kubectl create -f jobs/run-f37-workstation.yaml
-kubectl logs -f job/fspin-f37-workstation
-kubectl delete job/fspin-f37-workstation
+kubectl create -f jobs/run-f39-workstation.yaml
+kubectl logs -f job/fspin-f39-workstation
+kubectl delete job/fspin-f39-workstation
 ```
 
 ### Run All

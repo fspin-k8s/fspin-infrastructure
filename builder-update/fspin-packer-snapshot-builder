@@ -5,7 +5,7 @@ set -x
 export SNAPSHOT_ID=$(wget -q -O - https://repo.fspin.org/latest_snapshot)
 [[ -z "${SNAPSHOT_ID}" ]] && exit 1
 BUILDER_IMAGES=5
-FEDORA_VERSION=37
+FEDORA_VERSION=39
 envsubst '${SNAPSHOT_ID}' < "fspin.repo" > "fspin-snapshot.repo" && \
 envsubst '${SNAPSHOT_ID}' < "fspin-repo.ks" > "fspin-snapshot-repo.ks" && \
 envsubst '${SNAPSHOT_ID}' < "fspin-x86-64-builder.json" > "fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json" && \
@@ -14,6 +14,7 @@ envsubst '${SNAPSHOT_ID}' < "mock-fspin-x86_64.cfg" > "mock-snapshot-fspin-f${FE
 echo "export SNAPSHOT_ID=${SNAPSHOT_ID}" > snapshot_id && \
 echo "export SPIN_ID=`echo ${SNAPSHOT_ID}|awk -F- '{print $1$2$3}'`" >> snapshot_id && \
 echo "Creating builder for F${FEDORA_VERSION}..." && \
+/bin/packer plugins install github.com/hashicorp/googlecompute && \
 /bin/packer build -force /opt/fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json && \
 echo "Cleaning out stale images..."
 result=$?

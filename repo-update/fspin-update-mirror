@@ -6,7 +6,7 @@ MIRROR_HOST='ftp-chi.osuosl.org'
 MIRROR_PATH='fedora/linux'
 MIRROR_EXCLUDE='debug/*'
 MIRROR_SNAPSHOTS=5
-FEDORA_VERSION=37
+FEDORA_VERSION=39
 
 # Create paths
 mkdir -p /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ \

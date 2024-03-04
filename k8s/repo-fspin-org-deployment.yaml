@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: repo-nginx
-        image: gcr.io/fspin37-30bd0e8528/fspin-repo-server
+        image: gcr.io/fspin-40572d9516/fspin-repo-server
         ports:
         - containerPort: 80
         volumeMounts:

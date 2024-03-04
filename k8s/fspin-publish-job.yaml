@@ -7,6 +7,6 @@ spec:
     spec:
       containers:
       - name: fspin-publish
-        image: gcr.io/fspin37-30bd0e8528/fspin-publish
+        image: gcr.io/fspin-40572d9516/fspin-publish
       restartPolicy: Never
   backoffLimit: 1
