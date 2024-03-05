@@ -1,0 +1,79 @@
+pipeline {
+    agent none
+
+    environment {
+        MIRROR_HOST="${params['Mirror Host']}"
+        MIRROR_PATH="${params['Mirror Path']}"
+        MIRROR_EXCLUDE="${params['Mirror Exclude']}"
+        MIRROR_SNAPSHOTS="${params['Snapshot Count']}"
+        FEDORA_VERSION="${params['Release Version']}"
+    }
+
+    stages {
+        stage("Shutdown Repo") {
+            agent { label "fspin-jenkins-run" }
+            steps {
+                sh "kubectl delete --ignore-not-found deploy/repo-fspin-org-deployment"
+                sleep 10
+            }
+        }
+        stage("Update Repo and Snapshot") {
+            agent { label "fspin-jenkins-repo" }
+            
+            environment {
+                SNAPSHOT_ID=sh(returnStdout: true, script: "date --utc +%F-%s").trim()
+            }
+            
+            steps {
+                sh """
+                    mkdir -p /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ \
+                    /mirror/latest/updates/${FEDORA_VERSION}/x86_64/
+                """
+                echo "Updating local copy of F${FEDORA_VERSION} x86_64 mirror from ${MIRROR_HOST}..."
+                sh """
+                    rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} \
+                    ${MIRROR_HOST}::${MIRROR_PATH}/releases/${FEDORA_VERSION}/Everything/x86_64/os/ \
+                    /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ || exit 1
+                """
+                sh """
+                    rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} \
+                    ${MIRROR_HOST}::${MIRROR_PATH}/updates/${FEDORA_VERSION}/Everything/x86_64/ \
+                    /mirror/latest/updates/${FEDORA_VERSION}/x86_64/ || exit 1
+                """
+                echo "Updating local copy of F${FEDORA_VERSION} x86_64 mirror from main mirror..."
+                sh """
+                    rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} \
+                    dl.fedoraproject.org::fedora-linux-releases/${FEDORA_VERSION}/Everything/x86_64/os/ \
+                    /mirror/latest/releases/${FEDORA_VERSION}/Everything/x86_64/os/ || exit 1
+                """
+                sh """
+                    rsync -Pavy --delete-after --exclude ${MIRROR_EXCLUDE} \
+                    dl.fedoraproject.org::fedora-linux-updates/${FEDORA_VERSION}/Everything/x86_64/ \
+                    /mirror/latest/updates/${FEDORA_VERSION}/x86_64/ || exit 1
+                """
+                echo "Creating ${SNAPSHOT_ID}..."
+                sh "mkdir -p /mirror/${SNAPSHOT_ID}/"
+                sh "cp -val /mirror/latest/* /mirror/${SNAPSHOT_ID}/"
+                sh "echo ${SNAPSHOT_ID} > /mirror/latest_snapshot"
+                echo "Cleaning out old snapshots..."
+                echo ""
+                echo "FIXME: port snapshot cleanup logic"
+                echo ""
+                echo "Snapshot ${SNAPSHOT_ID} is ready for use!"
+                echo "Current storage used:"
+                sh "df -h /mirror | tee /mirror/storage_usage"
+            }
+        }
+        stage("Start Repo") {
+            agent { label "fspin-jenkins-run" }
+            steps {
+                git branch: "main",
+                url: "https://github.com/fspin-k8s/fspin-infrastructure.git"
+                echo ""
+                echo "run kubectl create -f k8s/repo-fspin-org-deployment.yaml"
+                echo ""
+                sh "until wget -q -O /dev/null https://repo.fspin.org/; do sleep 10; done"
+            }
+        }
+    }
+}

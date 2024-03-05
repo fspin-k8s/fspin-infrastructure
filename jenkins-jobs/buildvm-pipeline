@@ -1,0 +1,55 @@
+pipeline {
+    agent none
+
+    environment {
+        UPDATES_TESTING="${params['Enable Updates Testing']}"
+        IMAGE_SNAPSHOTS="${params['Image Count']}"
+        FEDORA_VERSION="${params['Release Version']}"
+    }
+
+    stages {
+        stage("Update Image") {
+            agent { label "fspin-jenkins-run" }
+            
+            environment {
+                SNAPSHOT_ID=sh(returnStdout: true, script: "wget -q -O - https://repo.fspin.org/latest_snapshot").trim()
+                SPIN_ID=sh(returnStdout: true, script: "wget -q -O - https://repo.fspin.org/latest_snapshot|awk -F- '{print \$1\$2\$3}'").trim()
+            }
+            
+            steps {
+                
+                git branch: "main",
+                url: "https://github.com/fspin-k8s/fspin-infrastructure.git"
+                sh "mkdir builder_update"
+                sh """
+                    envsubst '\${SNAPSHOT_ID}' < "builder-update/fspin.repo" > "builder_update/fspin-snapshot.repo"
+                """
+                sh """
+                    envsubst '\${SNAPSHOT_ID}' < "builder-update/fspin-repo.ks" > "builder_update/fspin-snapshot-repo.ks"
+                """
+                sh """
+                    envsubst '\${SNAPSHOT_ID}' < "builder-update/fspin-x86-64-builder.json" > "fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json"
+                """
+                sh """
+                    envsubst '\${FEDORA_VERSION}' < "fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json" > "builder_update/fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json"
+                """
+                sh """
+                    envsubst '\${SNAPSHOT_ID}' < "builder-update/mock-fspin-x86_64.cfg" > "builder_update/mock-snapshot-fspin-f${FEDORA_VERSION}-x86_64.cfg"
+                """
+                sh """
+                    echo "export SNAPSHOT_ID=${SNAPSHOT_ID}" > builder_update/snapshot_id
+                """
+                sh """
+                    echo "export SPIN_ID=${SPIN_ID}" >> builder_update/snapshot_id
+                """
+                echo "Creating builder for F${FEDORA_VERSION}..."
+                sh "/usr/local/bin/packer plugins install github.com/hashicorp/googlecompute"
+                sh "/usr/local/bin/packer build -force builder_update/fspin-snapshot-${FEDORA_VERSION}-x86-64-builder.json"
+                echo "Cleaning out stale images..."
+                echo ""
+                echo "FIXME: port image cleanup logic"
+                echo ""
+            }
+        }
+    }
+}

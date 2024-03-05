@@ -1,59 +1,18 @@
 # Fspin k8s Based Infrastructure
 ![Architecture](docs/architecture.png)
 
-* TODO: Automate pipeline based on SCM events.
-* TODO: Automate openqa testing.
-* TODO: Make everything more generic.
-* TODO: A lot.
+* TODO: Port from k8s jobs to Jenkins jobs
+* TODO: Make more generic and continue to factor out manual steps
+* TODO: Enable running on a standalone Jenkins instance without cloud services
 
 ## Creating a Respin - SIG Members
 Details on how to use Jenkins to create a respin and interact with the results.
-
-### Install Tools
-Install gcloud CLI to make interacting with [GCP Resources](https://cloud.google.com/) easy via `gcloud`.
-
-Setup Google Cloud SDK repo:
-```console
-sudo tee /etc/yum.repos.d/google-cloud-sdk.repo << EOM
-[google-cloud-cli]
-name=Google Cloud CLI
-baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-x86_64
-enabled=1
-gpgcheck=1
-repo_gpgcheck=0
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-       https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOM
-```
-
-Install required packages:
-```console
-sudo dnf install dnf-plugins-core google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin libxcrypt-compat kubernetes-client git podman helm
-```
-
-Install [Terraform](https://terraform.io/):
-```console
-sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
-sudo dnf install terraform
-```
-
-Configure kubernetes authentication:
-```console
-mkdir -p ~/.bashrc.d
-tee ~/.bashrc.d/use-gke-cloud-auth-plugin << EORCD
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-EORCD
-source ~/.bashrc
-```
 
 ### Login to Jenkins
 [Jenkins](https://jenkins.fspin.org/) is configured to run all of the needed jobs. Login with your FAS account with spin SIG membership.
 
 ### Overview
-Update the repo from upstream, create a new snapshot and builder via `create-snapshot`. 
-Create a spin using the latest snapshot and matching builder via `create-fspin`. 
-Publish the results of a the spin via `publish-fspin`. 
-Results publish to [build-results](http://build-results.fspin.org) GCS.
+Update the repo from upstream and create a new repository snapshot. Then a build machine image is updated against that snapshot. A spin is then created using the latest snapshot and matching builder. Results are then published to [GCS](https://cloud.google.com/storage) and a distribution server.
 
 ### Create a Snapshot
 The snapshot job updates the repos to match current upstream, creates a time based snapshot of the repos, boots and updates the official image to the snapshot and creates a builder from that instance. This builder is now used for all spin activities to ensure all installed package and the running kernel matches the spin target.
@@ -63,20 +22,6 @@ The spin job launches a pipeline of builds that launch their own dedicated virtu
 
 ### Publish the Results
 The publish job takes the spin results and publishes them to a known location in the build-results GCS storage, combining the hashes and cleaning up. In the future this phase would also do activities such as generating deltas for packages installed, etc.
-
-### Accessing the Results
-To download the results browse to the [build-results](http://build-results.fspin.org) and construct a download url manually to fetch files. Alternatively, use `gcloud storage` for easy access to this content.
-
-List what releases are available:
-```console
-gcloud storage ls gs://build-results.fspin.org/releases/
-```
-
-Download a published spin into httpd hosting:
-```console
-gcloud storage cp gs://build-results.fspin.org/releases/YYYY-MM-DD/ /var/www/html/ --recursive
-```
-*Note: Current user needs to be able to write to destination.*
 
 ## Developer Quickstart
 These are very specific to the fspin project.
@@ -121,6 +66,15 @@ Authenticate and setup [ADC](https://cloud.google.com/sdk/gcloud/reference/auth/
 gcloud auth login --brief
 gcloud auth application-default login
 gcloud auth configure-docker
+```
+
+Configure kubernetes authentication:
+```console
+mkdir -p ~/.bashrc.d
+tee ~/.bashrc.d/use-gke-cloud-auth-plugin << EORCD
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+EORCD
+source ~/.bashrc
 ```
 
 ### Setup GCP Infrastructure
@@ -256,19 +210,13 @@ helm install fspin-jenkins -f helm/jenkins-values.yaml jenkins/jenkins
 ### Install Jenkins Jobs
 TODO: Automate adding of Jenkins jobs. For now, manually create the pipeline jobs with the jobs defined in [jenkins-jobs](jenkins-jobs)
 
-### Create/Update Repo
-Make sure you have already created the `repo-update` and `repo-server` podman images before running this step.
 
-If repo already deployed, delete repo hosting (does not delete repo data):
-```console
-kubectl delete deploy repo-fspin-org-deployment
-```
+### Create Empty Repo
+Make sure you have already created the `repo-server` podman images before running this step.
 
-Run the repo update/snapshot job:
+Create the mirror storage volume:
 ```console
-kubectl create -f k8s/fspin-update-repo-job.yaml
-kubectl logs -f job/fspin-repo-update
-kubectl delete job/fspin-repo-update
+kubectl create -f k8s/fspin-mirror-storage-pvc.yaml
 ```
 
 Create the repo server deployment:
@@ -276,22 +224,22 @@ Create the repo server deployment:
 kubectl create -f k8s/repo-fspin-org-deployment.yaml
 ```
 
-Create the repo server service (if not already created):
+Create the repo server service:
 ```console
 kubectl create -f k8s/repo-fspin-org-service.yaml
 ```
 
-Create the repo server ingress (if not already created):
+Create the repo server ingress:
 ```console
 kubectl create -f k8s/repo-fspin-org-ingress.yaml
 ```
 
-Create the retry repo server ingress (if not already created):
+Create the retry repo server ingress:
 ```console
 kubectl create -f k8s/repo-retry-fspin-org-ingress.yaml
 ```
 
-Create the repo server horizontal pod autoscaler (if not already created):
+Create the repo server horizontal pod autoscaler:
 ```console
 kubectl create -f k8s/repo-fspin-org-autoscaler.yaml
 ```

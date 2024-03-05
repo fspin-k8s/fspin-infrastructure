@@ -12,8 +12,8 @@ controller:
   ingress:
     enabled: true
     hostName: "jenkins.fspin.org"
+    ingressClassName: nginx
     annotations:
-      kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
       certmanager.k8s.io/acme-challenge-type: http01
     tls:
@@ -31,12 +31,14 @@ controller:
     - matrix-auth
     - matrix-project
     - configuration-as-code
+    - job-dsl
 
 agent:
   image:
     repository: gcr.io/fspin-40572d9516/fspin-jenkins-runner
     tag: "latest"
   podName: fspin-jenkins-run
+  customJenkinsLabels: fspin-jenkins-run
   resources:
     requests:
       cpu: "200m"
@@ -44,6 +46,19 @@ agent:
     limits:
       cpu: "1"
       memory: "1Gi"
+
+additionalAgents:
+  fspin-jenkins-repo:
+    podName: fspin-jenkins-repo
+    customJenkinsLabels: fspin-jenkins-repo
+    # Not working, need to manually set in the container template
+    # advanced settings for this agent:
+    runAsUser: 0
+    volumes:
+    - type: persistentVolumeClaim
+      claimName: "fspin-mirror-pvc"
+      mountPath: "/mirror"
+      readOnly: false
 
 serviceAccountAgent:
   name: fspin-jenkins-agent

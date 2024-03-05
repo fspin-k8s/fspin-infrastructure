@@ -37,8 +37,7 @@ spec:
           periodSeconds: 15
       volumes:
       - name: fspin-mirror-storage
-        gcePersistentDisk:
-          pdName: fspin-mirror-storage
-          fsType: ext4
+        persistentVolumeClaim:
+          claimName: fspin-mirror-pvc
           readOnly: true
 
