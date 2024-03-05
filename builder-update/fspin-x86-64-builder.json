@@ -10,8 +10,8 @@
       "use_os_login": "true",
       "temporary_key_pair_type": "ed25519",
       "zone": "us-central1-f",
-      "name": "fspin-39-x86-64-${SNAPSHOT_ID}",
-      "image_name": "fspin-39-x86-64-${SNAPSHOT_ID}",
+      "name": "fspin-${FEDORA_VERSION}-x86-64-${SNAPSHOT_ID}",
+      "image_name": "fspin-${FEDORA_VERSION}-x86-64-${SNAPSHOT_ID}",
       "disk_type": "pd-ssd",
       "disk_size": "30",
       "machine_type": "e2-standard-4"
@@ -20,20 +20,20 @@
   "provisioners": [
     {
      "type": "file",
-     "source": "/opt",
+     "source": "builder_update",
      "destination": "/tmp"
     },
     {
       "type": "shell",
       "inline": [
-	"sudo cp -r /tmp/opt/* /opt/",
+	"sudo cp -r /tmp/builder_update/* /opt/",
 	"sudo dnf -y clean all",
 	"sudo dnf -y config-manager --set-disabled '*'",
 	"sudo cp /opt/fspin-snapshot.repo /etc/yum.repos.d/",
 	"sudo dnf -y config-manager --set-enabled 'fspin-*'",
 	"sudo dnf -y install google-cloud-cli vim-enhanced mock qemu-user-static transmission-cli git pykickstart",
 	"sudo sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config",
-	"sudo cp /opt/mock-snapshot-fspin-f39-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg",
+	"sudo cp /opt/mock-snapshot-fspin-f${FEDORA_VERSION}-x86_64.cfg /etc/mock/fspin-snapshot-x86_64.cfg",
   "sudo dnf -y update"
       ]
     }
