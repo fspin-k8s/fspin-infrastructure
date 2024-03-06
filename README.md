@@ -212,7 +212,7 @@ TODO: Automate adding of Jenkins jobs. For now, manually create the pipeline job
 
 
 ### Create Empty Repo
-Make sure you have already created the `repo-server` podman images before running this step.
+Make sure you have already created the `repo-server` podman image before running this step.
 
 Create the mirror storage volume:
 ```console

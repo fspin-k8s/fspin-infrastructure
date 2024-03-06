@@ -22,7 +22,7 @@ pipeline {
             
             environment {
                 SNAPSHOT_ID=sh(returnStdout: true, script: "date --utc +%F-%s").trim()
-            }
+            }   
             
             steps {
                 sh """
@@ -56,9 +56,12 @@ pipeline {
                 sh "cp -val /mirror/latest/* /mirror/${SNAPSHOT_ID}/"
                 sh "echo ${SNAPSHOT_ID} > /mirror/latest_snapshot"
                 echo "Cleaning out old snapshots..."
-                echo ""
-                echo "FIXME: port snapshot cleanup logic"
-                echo ""
+                sh """
+                    find /mirror -maxdepth 1 -name '*-*-*-*' -type d -exec stat -c '%Y %n' {} + |
+                    sort -rn |
+                    awk 'NR > 5 {print \$2}' |
+                    xargs rm -rf
+                """
                 echo "Snapshot ${SNAPSHOT_ID} is ready for use!"
                 echo "Current storage used:"
                 sh "df -h /mirror | tee /mirror/storage_usage"
@@ -69,9 +72,7 @@ pipeline {
             steps {
                 git branch: "main",
                 url: "https://github.com/fspin-k8s/fspin-infrastructure.git"
-                echo ""
-                echo "run kubectl create -f k8s/repo-fspin-org-deployment.yaml"
-                echo ""
+                sh "kubectl create -f k8s/repo-fspin-org-deployment.yaml"
                 sh "until wget -q -O /dev/null https://repo.fspin.org/; do sleep 10; done"
             }
         }
