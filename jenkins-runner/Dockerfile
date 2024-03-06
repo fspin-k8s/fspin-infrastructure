@@ -1,15 +1,42 @@
 FROM docker.io/jenkins/inbound-agent:latest-alpine
 
 ENV PACKER_VERSION 1.10.1
+ENV CLOUD_SDK_VERSION 467.0.0
+ENV KUBECTL_VERSION v1.29.2
+ENV PATH /google-cloud-sdk/bin:$PATH
 
 USER root
 
 RUN set -x && \
-    apk --update add jq rsync findutils wget unzip gettext libintl
+    apk --no-cache upgrade && apk --no-cache add \
+        curl \
+        python3 \
+        py3-crcmod \
+        py3-openssl \
+        bash \
+        libc6-compat \
+        openssh-client \
+        git \
+        gnupg \
+        jq \
+        rsync \
+        findutils \
+        wget \
+        unzip \
+        gettext \
+        libintl
 
 RUN set -x && \
-    LATEST_KUBECTL=$(wget -qO - https://storage.googleapis.com/kubernetes-release/release/stable.txt) && \
-    wget -q https://storage.googleapis.com/kubernetes-release/release/${LATEST_KUBECTL}/bin/linux/amd64/kubectl && \
+    curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
+    tar xzf google-cloud-cli-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
+    rm google-cloud-cli-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
+    mv google-cloud-sdk / && \
+    gcloud config set core/disable_usage_reporting true && \
+    gcloud config set component_manager/disable_update_check true && \
+    gcloud config set metrics/environment github_docker_image
+
+RUN set -x && \
+    wget -q https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl
 
@@ -21,3 +48,5 @@ RUN set -x && \
     rm packer_${PACKER_VERSION}_linux_amd64.zip
 
 USER jenkins
+RUN set -x && \
+    /usr/local/bin/packer plugins install github.com/hashicorp/googlecompute
