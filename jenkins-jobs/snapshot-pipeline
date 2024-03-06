@@ -59,8 +59,8 @@ pipeline {
                 sh """
                     find /mirror -maxdepth 1 -name '*-*-*-*' -type d -exec stat -c '%Y %n' {} + |
                     sort -rn |
-                    awk 'NR > 5 {print \$2}' |
-                    xargs rm -rf
+                    awk 'NR > ${MIRROR_SNAPSHOTS} {print \$2}' |
+                    xargs -r rm -rf
                 """
                 echo "Snapshot ${SNAPSHOT_ID} is ready for use!"
                 echo "Current storage used:"
