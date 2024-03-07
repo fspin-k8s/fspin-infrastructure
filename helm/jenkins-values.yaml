@@ -7,6 +7,13 @@ controller:
       globalMatrix:
         permissions:
         - "GROUP:Overall/Administer:respins-sig"
+    configScripts:
+      seed-jobs: |
+        security:
+          globalJobDslSecurityConfiguration:
+            useScriptSecurity: false
+        jobs:
+          - url: https://raw.githubusercontent.com/fspin-k8s/fspin-infrastructure/main/jenkins-jobs/seed_pipelines.groovy
   disableRememberMe: true
   serviceType: ClusterIP
   ingress:
@@ -32,6 +39,8 @@ controller:
     - matrix-project
     - configuration-as-code
     - job-dsl
+    - pipeline-stage-view
+    - pipeline-graph-view
 
 agent:
   image:
