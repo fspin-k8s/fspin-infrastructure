@@ -252,15 +252,14 @@ This updates the upstream base image with the latest snapshot updates and create
 
 Import upstream image (temporary until upstream adds this to the fedora-cloud resource in GCP):
 ```console
-gcloud cloud-shell ssh
+gcloud cloud-shell ssh --authorize-session
+export TEMP_BUCKET=fspin-images-create-$(date --utc +%F-%s)
 wget https://dl.fedoraproject.org/pub/fedora/linux/releases/39/Cloud/x86_64/images/Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz
-gcloud auth login --brief
-gcloud storage buckets create gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
-gcloud storage cp Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!
-gcloud compute images create fspin-fedora-cloud-base-gcp-39-1-5 --source-uri gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz
-gcloud storage rm gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/*
-gcloud storage buckets delete gs://SOME_BUCKET_VALID_NAME_THAT_IS_NEW_WITH_NO_DATA!/
-gcloud auth revoke
+gcloud storage buckets create gs://${TEMP_BUCKET}
+gcloud storage cp Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz gs://${TEMP_BUCKET}
+gcloud compute images create fspin-fedora-cloud-base-gcp-39-1-5 --source-uri gs://${TEMP_BUCKET}/Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz
+gcloud storage rm gs://${TEMP_BUCKET}/*
+gcloud storage buckets delete gs://${TEMP_BUCKET}/
 ```
 
 ```console
