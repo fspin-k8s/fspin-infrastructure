@@ -14,19 +14,25 @@ resource "google_project" "fspin" {
   billing_account = "${var.billing_id}"
 }
 
-# Enable GCE
+# Enable GCE - Builder VMs, Compute for GKE
 resource "google_project_service" "fspin-gce" {
   project = "${google_project.fspin.project_id}"
-  service = "container.googleapis.com"
+  service = "compute.googleapis.com"
 }
 
-# Enable GKE
-resource "google_project_service" "fspin-gke" {
+# Enable GCS - Results Storage
+resource "google_project_service" "fspin-gcs" {
   project = "${google_project.fspin.project_id}"
+  service = "storage.googleapis.com"
+}
+
+# Enable GKE - Kubernetes Cluster
+resource "google_project_service" "fspin-gke" {
+  project = "${google_project_service.fspin-gce.project}"
   service = "container.googleapis.com"
 }
 
-# Enable DNS
+# Enable DNS - Dynamic DNS for k8s Resources
 resource "google_project_service" "fspin-dns" {
   project = "${google_project.fspin.project_id}"
   service = "dns.googleapis.com"
