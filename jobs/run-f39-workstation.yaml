@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: build-f39-workstation
-        image: gcr.io/fspin-40572d9516/fspin-x86-64-livemedia-creator
+        image: gcr.io/fspin-ba0660e7cf/fspin-x86-64-livemedia-creator
         env:
           - name: TARGET
             value: "workstation"

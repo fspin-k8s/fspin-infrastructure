@@ -2,9 +2,9 @@
   "builders": [
     {
       "type": "googlecompute",
-      "project_id": "fspin-40572d9516",
+      "project_id": "fspin-ba0660e7cf",
       "image_family": "fspin",
-      "source_image_project_id": "fspin-40572d9516",
+      "source_image_project_id": "fspin-ba0660e7cf",
       "source_image": "fspin-fedora-cloud-base-gcp-39-1-5",
       "ssh_username": "packer",
       "use_os_login": "true",
