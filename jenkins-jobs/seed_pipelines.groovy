@@ -4,8 +4,8 @@ pipelineJob("snapshot-pipeline") {
 	parameters {
 		choiceParam("Release Version", [39, 40], "Fedora release version.")
 		stringParam("Snapshot Count", "5", "Number of snapshots to keep on mirror storage.")
-		stringParam("Mirror Host", "ftp-chi.osuosl.org", "Mirror to sync from for initial pass. Always checks upstream main mirror after first pass.")
-		stringParam("Mirror Path", "fedora/linux", "Base Fedora path on the mirror.")
+		stringParam("Mirror Host", "ohioix.mm.fcix.net", "Mirror to sync from for initial pass. Always checks upstream main mirror after first pass.")
+		stringParam("Mirror Path", "fedora-enchilada/linux", "Base Fedora path on the mirror.")
 		stringParam("Mirror Exclude", "debug/*", "Pathspec in the mirror to not pull down.")
 	}
 	definition {
