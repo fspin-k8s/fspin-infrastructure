@@ -1,0 +1,86 @@
+pipeline {
+    agent { label "fspin-jenkins-run" }
+    
+    environment {
+        UPDATES_TESTING="${params['Enable Updates Testing']}"
+        FEDORA_VERSION="${params['Release Version']}"
+        SPIN_VERSION="${params['Spin Flavor']}"
+        PROJECT_NAME="${params['Project Name']}"
+        COMPUTE_ZONE="${params['Zone']}"
+        MACHINE_TYPE="${params['Machine Type']}"
+        COMPUTE_PREEMPT="${params['Preemptable']}"
+        LATEST_IMAGE=sh(returnStdout: true, script: "gcloud compute images list --filter='name~fspin-${FEDORA_VERSION}-x86-64' --sort-by='~creationTimestamp' --limit=1 --format='json(NAME)'|jq -r .[].name").trim()
+        INSTANCE_NAME=sh(returnStdout: true, script: "echo ${LATEST_IMAGE}-\$(cat /proc/sys/kernel/random/uuid|awk -F- '{print \$1}')-${SPIN_VERSION}").trim()
+        RESULTS_LOCATION="gs://${PROJECT_NAME}-fspin-build-results/live/${INSTANCE_NAME}/"
+    }
+
+    stages {
+        stage("Provision VM") {
+            steps {
+                echo "Starting VM for ${SPIN_VERSION} on ${INSTANCE_NAME} using base image ${LATEST_IMAGE}..."
+                sh """
+                    gcloud compute instances create ${INSTANCE_NAME} \
+                    --preemptible --zone ${COMPUTE_ZONE} \
+                    --image ${LATEST_IMAGE} \
+                    --boot-disk-size 30GB \
+                    --boot-disk-type pd-ssd \
+                    --local-ssd interface=NVME \
+                    --machine-type ${MACHINE_TYPE} \
+                    --scopes storage-rw
+                """
+                echo "Attempting to connect to VM..."
+                sh """
+                    TRIES="0"
+                    LIMIT="10"
+                    SLEEP="30"
+                    while [[ \$TRIES -lt \$LIMIT ]]; do
+                           gcloud compute ssh ${INSTANCE_NAME} \
+                           --zone ${COMPUTE_ZONE} \
+                           --command 'uptime' && break || \
+                           sleep \$SLEEP && \
+                           let TRIES=TRIES+1
+                    done
+                """
+            }
+        }
+        stage ("Running Re-Spin") {
+            steps {
+                git branch: "main",
+                url: "https://github.com/fspin-k8s/fspin-infrastructure.git"
+                echo "Connecting to VM to re-spin ${SPIN_VERSION}..."
+                sh """
+                    export RELEASE=${FEDORA_VERSION}
+                    export SPIN_NAME=${SPIN_VERSION}
+                    envsubst '\${RELEASE} \${SPIN_NAME}' < "lmc-create-spin/fspin-x86-64-template" > "build_script"
+                    chmod +x build_script
+                    gcloud compute scp build_script ${INSTANCE_NAME}:/tmp/build_script --zone ${COMPUTE_ZONE}
+                """
+                sh """
+                    gcloud compute ssh ${INSTANCE_NAME} \
+                    --zone ${COMPUTE_ZONE} \
+                    --command "sudo /tmp/build_script"
+                """
+            }
+        }
+        stage ("Saving Results") {
+            steps {
+                sh """
+                    gcloud compute ssh ${INSTANCE_NAME} \
+                    --zone ${COMPUTE_ZONE} \
+                    --command "gcloud storage cp /var/lib/mock/*/root/var/lmc/* ${RESULTS_LOCATION} --continue-on-error"
+                """
+                echo "Results copied to: ${RESULTS_LOCATION}"
+            }
+        }
+        stage ("Shutting Down VM") {
+            steps {
+                echo "Deleting ${INSTANCE_NAME}..."
+                sh """
+                    gcloud -q compute instances delete ${INSTANCE_NAME} \
+                    --zone ${COMPUTE_ZONE} \
+                    --delete-disks all
+                """
+            }
+        }
+    }
+}

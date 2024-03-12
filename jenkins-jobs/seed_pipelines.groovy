@@ -44,3 +44,30 @@ pipelineJob("builder-pipeline") {
 		}
 	}
 }
+pipelineJob("spin-pipeline") {
+	description("Run a specific re-spin for the requested spin flavor.")
+	displayName("Run Spin")
+	keepDependencies(false)
+	parameters {
+		choiceParam("Release Version", [39, 40], "Fedora release version.")
+		choiceParam("Spin Flavor", ["workstation", "xfce", "soas", "lxde", "lxqt", "cinnamon", "mate-compiz", "kde", "i3"], "The spin flavor to re-spin.  Must be defined in the https://pagure.io/fedora-kickstarts/ repository.")
+		booleanParam("Enable Updates Testing", false, "FIXME: Enable the updates-testing repository for the re-spin.  Does not affect repository contents.")
+		stringParam("Project Name", "fspin-ba0660e7cf", "GCP project name. FIXME: Factor out.")
+		stringParam("Zone", "us-central1-f", "Compute zone to launch the VM.")
+		stringParam("Machine Type", "n1-standard-4", "Compute machine type for the VM.")
+		booleanParam("Preemptable", true, "FIXME: Use preemptible compute. (Always enabled.)")
+	}
+	definition {
+		cpsScm {
+                        scm {
+                                git {
+                                        remote {
+                                                url 'https://github.com/fspin-k8s/fspin-infrastructure.git'
+                                        }
+                                        branch('main')
+                                }
+                        }
+                        scriptPath('jenkins-jobs/spin-pipeline')
+                }
+        }
+}
