@@ -24,5 +24,6 @@ transmission-create -p -s 2048 \
 	-c "ISO SHA512SUM: $(cat CHECKSUM512*)" \
 	-t http://respins.fedorainfracloud.org:6969/announce \
 	-o F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID}.iso.torrent \
-	F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID}.iso
+	F${RELEASE}-${SPIN_SHORT_NAME}-x86_64-LIVE-${SPIN_ID}.iso && \
+chmod 0644 *
 popd

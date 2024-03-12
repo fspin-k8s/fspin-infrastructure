@@ -27,7 +27,7 @@ pipelineJob("builder-pipeline") {
 	displayName("Update Build VM Image")
 	parameters {
 		choiceParam("Release Version", [39, 40], "Fedora release version.")
-		booleanParam("Enable Updates Testing", false, "Enable the updates-testing repository for the builder update.  Does not affect repository contents.")
+		booleanParam("Enable Updates Testing", false, "FIXME: Enable the updates-testing repository for the builder update.  Does not affect repository contents.")
 		stringParam("Image Count", "5", "Number of machine images to keep in GCE.")
 	}
 	definition {
