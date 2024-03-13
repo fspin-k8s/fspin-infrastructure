@@ -1,0 +1,181 @@
+pipeline {
+    agent none
+
+    environment {
+        FEDORA_VERSION="${params['Release Version']}"
+        UPDATES_TESTING="${params['Enable Updates Testing']}"
+        PROJECT_NAME="${params['Project Name']}"
+        COMPUTE_ZONE="${params['Zone']}"
+        MACHINE_TYPE="${params['Machine Type']}"
+        COMPUTE_PREEMPT="${params['Preemptable']}"
+    }
+    
+    stages {
+        stage ("Run All"){
+            parallel {
+                stage("Workstation") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} Workstation spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "workstation"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+                stage("XFCE") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} XFCE spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "xfce"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+                stage("SoaS") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} SoaS spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "soas"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+                stage("LXDE") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} LXDE spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "lxde"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+                stage("LXQT") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} LXQT spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "lxqt"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+                stage("Cinnamon") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} Cinnamon spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "cinnamon"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+                stage("MATE Compiz") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} MATE Compiz spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "mate-compiz"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+                stage("KDE") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} KDE spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "kde"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+                stage("i3") {
+                    agent { label "fspin-jenkins-run" }
+                    steps {
+                        echo "Starting F${FEDORA_VERSION} i3 spin..."
+                        build job: 'spin-pipeline',
+                        parameters: [
+                            string(name: 'Release Version', value: "${FEDORA_VERSION}"),
+                            string(name: 'Enable Updates Testing', value: "${UPDATES_TESTING}"),
+                            string(name: 'Spin Flavor', value: "i3"),
+                            string(name: 'Project Name', value: "${PROJECT_NAME}"),
+                            string(name: 'Zone', value: "${COMPUTE_ZONE}"),
+                            string(name: 'Machine Type', value: "${MACHINE_TYPE}"),
+                            string(name: 'Preemptable', value: "${COMPUTE_PREEMPT}")
+                        ],
+                        propagate: true,
+                        wait: true
+                    }
+                }
+            }
+        }
+    }
+}
