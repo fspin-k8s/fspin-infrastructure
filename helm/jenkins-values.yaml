@@ -48,6 +48,7 @@ agent:
     tag: "latest"
   podName: fspin-jenkins-run
   customJenkinsLabels: fspin-jenkins-run
+  containerCap: 30
   resources:
     requests:
       cpu: "200m"
