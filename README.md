@@ -1,7 +1,6 @@
 # Fspin k8s Based Infrastructure
 ![Architecture](docs/architecture.png)
 
-* TODO: Port from k8s jobs to Jenkins jobs
 * TODO: Make more generic and continue to factor out manual steps
 * TODO: Enable running on a standalone Jenkins instance without cloud services
 
@@ -60,7 +59,7 @@ git clone git@github.com:fspin-k8s/fspin-infrastructure.git
 cd fspin-infrastructure
 ```
 
-### Setup GCP Environment
+### Setup [GCP](https://cloud.google.com/) Environment
 Authenticate and setup [ADC](https://cloud.google.com/sdk/gcloud/reference/auth/application-default) and helpers:
 ```console
 gcloud auth login --brief
@@ -130,10 +129,10 @@ Import upstream image (temporary until upstream adds this to the fedora-cloud re
 ```console
 gcloud cloud-shell ssh --authorize-session
 export TEMP_BUCKET=fspin-images-create-$(date --utc +%F-%s)
-wget https://dl.fedoraproject.org/pub/fedora/linux/releases/39/Cloud/x86_64/images/Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz
+wget https://dl.fedoraproject.org/pub/fedora/linux/releases/40/Cloud/x86_64/images/Fedora-Cloud-Base-GCE.x86_64-40-1.14.tar.gz
 gcloud storage buckets create gs://${TEMP_BUCKET}
-gcloud storage cp Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz gs://${TEMP_BUCKET}
-gcloud compute images create fspin-fedora-cloud-base-gcp-39-1-5 --source-uri gs://${TEMP_BUCKET}/Fedora-Cloud-Base-GCP-39-1.5.x86_64.tar.gz
+gcloud storage cp Fedora-Cloud-Base-GCE.x86_64-40-1.14.tar.gz gs://${TEMP_BUCKET}
+gcloud compute images create fspin-fedora-cloud-base-gce-40-1-14 --source-uri gs://${TEMP_BUCKET}/Fedora-Cloud-Base-GCE.x86_64-40-1.14.tar.gz
 gcloud storage rm gs://${TEMP_BUCKET}/*
 gcloud storage buckets delete gs://${TEMP_BUCKET}/
 ```
@@ -170,7 +169,7 @@ Install [cert-manager](https://cert-manager.io/) using helm:
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm install fspin-tls jetstack/cert-manager \
-  --set installCRDs=true \
+  --set crds.enabled=true \
   --set ingressShim.defaultIssuerName=letsencrypt-prod \
   --set ingressShim.defaultIssuerKind=ClusterIssuer \
   --set ingressShim.defaultIssuerGroup=cert-manager.io
@@ -182,24 +181,25 @@ kubectl create -f k8s/cert-manager-cluster-issuer.yaml
 ```
 
 ### Install Jenkins
-Make sure you have already created the `jenkins-runner` podman image before running this step.
-
-*Do not proceed unless TLS is working.*
+Make sure you have already created and pushed the `jenkins-runner` podman image before running this step.
 
 Create the fspin-jenkins service account:
 ```console
 kubectl create -f k8s/jenkins-rbac-config.yaml
 ```
 
-Install Jenkins using helm:
+Install [Jenkins](https://www.jenkins.io/) using helm:
 ```console
 helm repo add jenkins https://charts.jenkins.io
 helm repo update
 helm install fspin-jenkins -f helm/jenkins-values.yaml jenkins/jenkins
 ```
 
+*** FIXME: fspin-jenkins-repo pod template requires "Run As User ID" = 0 ***
+https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml#L1128
+
 ### Create Empty Repo
-Make sure you have already created the `repo-server` podman image before running these steps.
+Make sure you have already created and pushed the `repo-server` podman image before running these steps.
 
 Create the mirror storage volume:
 ```console

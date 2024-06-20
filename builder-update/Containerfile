@@ -1,6 +1,6 @@
 FROM docker.io/google/cloud-sdk:alpine
 
-ENV PACKER_VERSION 1.10.1
+ENV PACKER_VERSION 1.11.0
 
 RUN set -x \
        && apk --update add wget unzip gettext libintl jq

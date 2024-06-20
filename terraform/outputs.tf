@@ -10,7 +10,7 @@ output "region" {
 
 output "zone" {
   value       = local.zone
-  description = "GCP Project"
+  description = "GCP Zone"
 }
 
 output "cluster_name" {

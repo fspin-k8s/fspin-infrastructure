@@ -28,13 +28,7 @@ resource "google_container_cluster" "fspin" {
   location                 = var.zone
   project                  = "${google_project_service.fspin-gke.project}"
   release_channel {
-    channel                = "STABLE"
-  }
-  monitoring_config {
-    enable_components      = ["SYSTEM_COMPONENTS", "APISERVER", "CONTROLLER_MANAGER", "SCHEDULER"]
-    managed_prometheus {
-      enabled              = false
-    }
+    channel                = "REGULAR"
   }
   remove_default_node_pool = true
   deletion_protection      = false
@@ -50,7 +44,7 @@ resource "google_container_node_pool" "fspin-nodes" {
   node_count        = 1
 
   autoscaling {
-    min_node_count  = 1
+    min_node_count  = 0
     max_node_count  = 3
   }
 
